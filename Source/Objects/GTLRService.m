@@ -1206,7 +1206,7 @@ static NSDictionary *MergeDictionaries(NSDictionary *recessiveDict, NSDictionary
                                                       objectClassResolver:objectClassResolver];
         parsedObject = batchResult;
       } else {
-        GTLR_DEBUG_ASSERT(0, @"Got unexpected content type '%@'", contentType);
+        //GTLR_DEBUG_ASSERT(0, @"Got unexpected content type '%@'", contentType);
       }
     }  // isJSON
 
