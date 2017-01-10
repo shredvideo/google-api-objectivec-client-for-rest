@@ -145,12 +145,26 @@
 //
 
 @implementation GTLRIdentityToolkit_RelyingpartyCreateAuthUriRequest
-@dynamic appId, clientId, context, continueUri, hostedDomain,
-         identifierProperty, oauthConsumerKey, oauthScope, openidRealm, otaApp,
-         providerId;
+@dynamic appId, authFlowType, clientId, context, continueUri, customParameter,
+         hostedDomain, identifierProperty, oauthConsumerKey, oauthScope,
+         openidRealm, otaApp, providerId, sessionId;
 
 + (NSDictionary<NSString *, NSString *> *)propertyToJSONKeyMap {
   return @{ @"identifierProperty" : @"identifier" };
+}
+
+@end
+
+
+// ----------------------------------------------------------------------------
+//
+//   GTLRIdentityToolkit_RelyingpartyCreateAuthUriRequestCustomParameter
+//
+
+@implementation GTLRIdentityToolkit_RelyingpartyCreateAuthUriRequestCustomParameter
+
++ (Class)classForAdditionalProperties {
+  return [NSString class];
 }
 
 @end
@@ -202,8 +216,9 @@
 
 @implementation GTLRIdentityToolkit_RelyingpartyGetProjectConfigResponse
 @dynamic allowPasswordUser, apiKey, authorizedDomains, changeEmailTemplate,
-         enableAnonymousUser, idpConfig, legacyResetPasswordTemplate, projectId,
-         resetPasswordTemplate, useEmailSending, verifyEmailTemplate;
+         dynamicLinksDomain, enableAnonymousUser, idpConfig,
+         legacyResetPasswordTemplate, projectId, resetPasswordTemplate,
+         useEmailSending, verifyEmailTemplate;
 
 + (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
   NSDictionary<NSString *, Class> *map = @{
@@ -322,8 +337,8 @@
 //
 
 @implementation GTLRIdentityToolkit_RelyingpartySignupNewUserRequest
-@dynamic captchaChallenge, captchaResponse, displayName, email, idToken,
-         instanceId, password;
+@dynamic captchaChallenge, captchaResponse, disabled, displayName, email,
+         emailVerified, idToken, instanceId, password, photoUrl;
 @end
 
 
@@ -333,8 +348,8 @@
 //
 
 @implementation GTLRIdentityToolkit_RelyingpartyUploadAccountRequest
-@dynamic delegatedProjectNumber, hashAlgorithm, memoryCost, rounds,
-         saltSeparator, signerKey, users;
+@dynamic allowOverwrite, delegatedProjectNumber, hashAlgorithm, memoryCost,
+         rounds, saltSeparator, sanityCheck, signerKey, targetProjectId, users;
 
 + (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
   NSDictionary<NSString *, Class> *map = @{
@@ -353,7 +368,8 @@
 
 @implementation GTLRIdentityToolkit_RelyingpartyVerifyAssertionRequest
 @dynamic delegatedProjectNumber, idToken, instanceId, pendingIdToken, postBody,
-         requestUri, returnRefreshToken, returnSecureToken, sessionId;
+         requestUri, returnIdpCredential, returnRefreshToken, returnSecureToken,
+         sessionId;
 @end
 
 
@@ -384,7 +400,7 @@
 //
 
 @implementation GTLRIdentityToolkit_ResetPasswordResponse
-@dynamic email, kind;
+@dynamic email, kind, newEmail, requestType;
 @end
 
 
@@ -461,9 +477,9 @@
 //
 
 @implementation GTLRIdentityToolkit_UserInfo
-@dynamic createdAt, disabled, displayName, email, emailVerified, lastLoginAt,
-         localId, passwordHash, passwordUpdatedAt, photoUrl, providerUserInfo,
-         salt, validSince, version;
+@dynamic createdAt, customAuth, disabled, displayName, email, emailVerified,
+         lastLoginAt, localId, passwordHash, passwordUpdatedAt, photoUrl,
+         providerUserInfo, rawPassword, salt, screenName, validSince, version;
 
 + (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
   NSDictionary<NSString *, Class> *map = @{
@@ -481,7 +497,8 @@
 //
 
 @implementation GTLRIdentityToolkit_UserInfoProviderUserInfoItem
-@dynamic displayName, email, federatedId, photoUrl, providerId, rawId;
+@dynamic displayName, email, federatedId, photoUrl, providerId, rawId,
+         screenName;
 @end
 
 
@@ -492,12 +509,12 @@
 
 @implementation GTLRIdentityToolkit_VerifyAssertionResponse
 @dynamic action, appInstallationUrl, appScheme, context, dateOfBirth,
-         displayName, email, emailRecycled, emailVerified, expiresIn,
-         federatedId, firstName, fullName, idToken, inputEmail, kind, language,
-         lastName, localId, needConfirmation, needEmail, nickName,
+         displayName, email, emailRecycled, emailVerified, errorMessage,
+         expiresIn, federatedId, firstName, fullName, idToken, inputEmail, kind,
+         language, lastName, localId, needConfirmation, needEmail, nickName,
          oauthAccessToken, oauthAuthorizationCode, oauthExpireIn, oauthIdToken,
          oauthRequestToken, oauthScope, oauthTokenSecret, originalEmail,
-         photoUrl, providerId, refreshToken, screenName, timeZone,
+         photoUrl, providerId, rawUserInfo, refreshToken, screenName, timeZone,
          verifiedProvider;
 
 + (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {

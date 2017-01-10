@@ -134,7 +134,7 @@
 //
 
 @implementation GTLRStorage_BucketLifecycleRuleItemAction
-@dynamic type;
+@dynamic storageClass, type;
 @end
 
 
@@ -144,7 +144,15 @@
 //
 
 @implementation GTLRStorage_BucketLifecycleRuleItemCondition
-@dynamic age, createdBefore, isLive, numNewerVersions;
+@dynamic age, createdBefore, isLive, matchesStorageClass, numNewerVersions;
+
++ (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
+  NSDictionary<NSString *, Class> *map = @{
+    @"matchesStorageClass" : [NSString class]
+  };
+  return map;
+}
+
 @end
 
 
@@ -292,7 +300,8 @@
          contentEncoding, contentLanguage, contentType, crc32c,
          customerEncryption, ETag, generation, identifier, kind, md5Hash,
          mediaLink, metadata, metageneration, name, owner, selfLink, size,
-         storageClass, timeCreated, timeDeleted, updated;
+         storageClass, timeCreated, timeDeleted, timeStorageClassUpdated,
+         updated;
 
 + (NSDictionary<NSString *, NSString *> *)propertyToJSONKeyMap {
   NSDictionary<NSString *, NSString *> *map = @{
@@ -386,7 +395,7 @@
 
 + (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
   NSDictionary<NSString *, Class> *map = @{
-    @"items" : [NSObject class]
+    @"items" : [GTLRStorage_ObjectAccessControl class]
   };
   return map;
 }

@@ -451,6 +451,31 @@ NSString * const kGTLRAndroidEnterpriseRequestModeWaitForNotifications = @"waitF
 
 @end
 
+@implementation GTLRAndroidEnterpriseQuery_EnterprisesCreateWebToken
+
+@dynamic enterpriseId;
+
++ (instancetype)queryWithObject:(GTLRAndroidEnterprise_AdministratorWebTokenSpec *)object
+                   enterpriseId:(NSString *)enterpriseId {
+  if (object == nil) {
+    GTLR_DEBUG_ASSERT(object != nil, @"Got a nil object");
+    return nil;
+  }
+  NSArray *pathParams = @[ @"enterpriseId" ];
+  NSString *pathURITemplate = @"enterprises/{enterpriseId}/createWebToken";
+  GTLRAndroidEnterpriseQuery_EnterprisesCreateWebToken *query =
+    [[self alloc] initWithPathURITemplate:pathURITemplate
+                               HTTPMethod:@"POST"
+                       pathParameterNames:pathParams];
+  query.bodyObject = object;
+  query.enterpriseId = enterpriseId;
+  query.expectedObjectClass = [GTLRAndroidEnterprise_AdministratorWebToken class];
+  query.loggingName = @"androidenterprise.enterprises.createWebToken";
+  return query;
+}
+
+@end
+
 @implementation GTLRAndroidEnterpriseQuery_EnterprisesDelete
 
 @dynamic enterpriseId;

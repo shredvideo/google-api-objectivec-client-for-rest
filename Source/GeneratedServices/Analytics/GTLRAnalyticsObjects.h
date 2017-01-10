@@ -65,6 +65,8 @@
 @class GTLRAnalytics_GoalUrlDestinationDetailsStepsItem;
 @class GTLRAnalytics_GoalVisitNumPagesDetails;
 @class GTLRAnalytics_GoalVisitTimeOnSiteDetails;
+@class GTLRAnalytics_IncludeConditions;
+@class GTLRAnalytics_LinkedForeignAccount;
 @class GTLRAnalytics_McfDataColumnHeadersItem;
 @class GTLRAnalytics_McfDataProfileInfo;
 @class GTLRAnalytics_McfDataQuery;
@@ -82,6 +84,10 @@
 @class GTLRAnalytics_RealtimeDataProfileInfo;
 @class GTLRAnalytics_RealtimeDataQuery;
 @class GTLRAnalytics_RealtimeDataTotalsForAllResults;
+@class GTLRAnalytics_RemarketingAudience;
+@class GTLRAnalytics_RemarketingAudienceAudienceDefinition;
+@class GTLRAnalytics_RemarketingAudienceStateBasedAudienceDefinition;
+@class GTLRAnalytics_RemarketingAudienceStateBasedAudienceDefinitionExcludeConditions;
 @class GTLRAnalytics_Segment;
 @class GTLRAnalytics_UnsampledReport;
 @class GTLRAnalytics_UnsampledReportCloudStorageDownloadDetails;
@@ -1933,6 +1939,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, strong, nullable) NSNumber *containsSampledData;
 
+/**
+ *  The last refreshed time in seconds for Analytics data.
+ *
+ *  Uses NSNumber of longLongValue.
+ */
+@property(nonatomic, strong, nullable) NSNumber *dataLastRefreshed;
+
 @property(nonatomic, strong, nullable) GTLRAnalytics_GaDataDataTable *dataTable;
 
 /**
@@ -2474,6 +2487,104 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
+ *  JSON template for an Analytics Remarketing Include Conditions.
+ */
+@interface GTLRAnalytics_IncludeConditions : GTLRObject
+
+/**
+ *  The look-back window lets you specify a time frame for evaluating the
+ *  behavior that qualifies users for your audience. For example, if your
+ *  filters include users from Central Asia, and Transactions Greater than 2,
+ *  and you set the look-back window to 14 days, then any user from Central Asia
+ *  whose cumulative transactions exceed 2 during the last 14 days is added to
+ *  the audience.
+ *
+ *  Uses NSNumber of intValue.
+ */
+@property(nonatomic, strong, nullable) NSNumber *daysToLookBack;
+
+/**
+ *  Boolean indicating whether this segment is a smart list.
+ *  https://support.google.com/analytics/answer/4628577
+ *
+ *  Uses NSNumber of boolValue.
+ */
+@property(nonatomic, strong, nullable) NSNumber *isSmartList;
+
+/** Resource type for include conditions. */
+@property(nonatomic, copy, nullable) NSString *kind;
+
+/**
+ *  Number of days (in the range 1 to 540) a user remains in the audience.
+ *
+ *  Uses NSNumber of intValue.
+ */
+@property(nonatomic, strong, nullable) NSNumber *membershipDurationDays;
+
+/**
+ *  The segment condition that will cause a user to be added to an audience.
+ */
+@property(nonatomic, copy, nullable) NSString *segment;
+
+@end
+
+
+/**
+ *  JSON template for an Analytics Remarketing Audience Foreign Link.
+ */
+@interface GTLRAnalytics_LinkedForeignAccount : GTLRObject
+
+/** Account ID to which this linked foreign account belongs. */
+@property(nonatomic, copy, nullable) NSString *accountId;
+
+/**
+ *  Boolean indicating whether this is eligible for search.
+ *
+ *  Uses NSNumber of boolValue.
+ */
+@property(nonatomic, strong, nullable) NSNumber *eligibleForSearch;
+
+/**
+ *  Entity ad account link ID.
+ *
+ *  identifier property maps to 'id' in JSON (to avoid Objective C's 'id').
+ */
+@property(nonatomic, copy, nullable) NSString *identifier;
+
+/**
+ *  Internal ID for the web property to which this linked foreign account
+ *  belongs.
+ */
+@property(nonatomic, copy, nullable) NSString *internalWebPropertyId;
+
+/** Resource type for linked foreign account. */
+@property(nonatomic, copy, nullable) NSString *kind;
+
+/**
+ *  The foreign account ID. For example the an AdWords `linkedAccountId` has the
+ *  following format XXX-XXX-XXXX.
+ */
+@property(nonatomic, copy, nullable) NSString *linkedAccountId;
+
+/** Remarketing audience ID to which this linked foreign account belongs. */
+@property(nonatomic, copy, nullable) NSString *remarketingAudienceId;
+
+/** The status of this foreign account link. */
+@property(nonatomic, copy, nullable) NSString *status;
+
+/** The type of the foreign account. For example `ADWORDS_LINKS`. */
+@property(nonatomic, copy, nullable) NSString *type;
+
+/**
+ *  Web property ID of the form UA-XXXXX-YY to which this linked foreign account
+ *  belongs.
+ */
+@property(nonatomic, copy, nullable) NSString *webPropertyId;
+
+@end
+
+
+/**
  *  Multi-Channel Funnels data for a given view (profile).
  */
 @interface GTLRAnalytics_McfData : GTLRObject
@@ -2741,9 +2852,10 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  The currency type associated with this view (profile), defaults to USD. The
  *  supported values are:
- *  ARS, AUD, BGN, BRL, CAD, CHF, CNY, CZK, DKK, EUR, GBP, HKD, HUF, IDR, INR,
- *  JPY, KRW, LTL, MXN, NOK, NZD, PHP, PLN, RUB, SEK, THB, TRY, TWD, USD, VND,
- *  ZAR
+ *  USD, JPY, EUR, GBP, AUD, KRW, BRL, CNY, DKK, RUB, SEK, NOK, PLN, TRY, TWD,
+ *  HKD, THB, IDR, ARS, MXN, VND, PHP, INR, CHF, CAD, CZK, NZD, HUF, BGN, LTL,
+ *  ZAR, UAH, AED, BOB, CLP, COP, EGP, HRK, ILS, MAD, MYR, PEN, PKR, RON, RSD,
+ *  SAR, SGD, VEF, LVL
  */
 @property(nonatomic, copy, nullable) NSString *currency;
 
@@ -3272,6 +3384,180 @@ NS_ASSUME_NONNULL_BEGIN
  *        fetch them all at once.
  */
 @interface GTLRAnalytics_RealtimeDataTotalsForAllResults : GTLRObject
+@end
+
+
+/**
+ *  JSON template for an Analytics remarketing audience.
+ */
+@interface GTLRAnalytics_RemarketingAudience : GTLRObject
+
+/** Account ID to which this remarketing audience belongs. */
+@property(nonatomic, copy, nullable) NSString *accountId;
+
+/**
+ *  The simple audience definition that will cause a user to be added to an
+ *  audience.
+ */
+@property(nonatomic, strong, nullable) GTLRAnalytics_RemarketingAudienceAudienceDefinition *audienceDefinition;
+
+/** The type of audience, either SIMPLE or STATE_BASED. */
+@property(nonatomic, copy, nullable) NSString *audienceType;
+
+/** Time this remarketing audience was created. */
+@property(nonatomic, strong, nullable) GTLRDateTime *created;
+
+/**
+ *  The description of this remarketing audience.
+ *
+ *  Remapped to 'descriptionProperty' to avoid NSObject's 'description'.
+ */
+@property(nonatomic, copy, nullable) NSString *descriptionProperty;
+
+/**
+ *  Remarketing Audience ID.
+ *
+ *  identifier property maps to 'id' in JSON (to avoid Objective C's 'id').
+ */
+@property(nonatomic, copy, nullable) NSString *identifier;
+
+/**
+ *  Internal ID for the web property to which this remarketing audience belongs.
+ */
+@property(nonatomic, copy, nullable) NSString *internalWebPropertyId;
+
+/** Collection type. */
+@property(nonatomic, copy, nullable) NSString *kind;
+
+/**
+ *  The linked ad accounts associated with this remarketing audience. A
+ *  remarketing audience can have only one linkedAdAccount currently.
+ */
+@property(nonatomic, strong, nullable) NSArray<GTLRAnalytics_LinkedForeignAccount *> *linkedAdAccounts;
+
+/** The views (profiles) that this remarketing audience is linked to. */
+@property(nonatomic, strong, nullable) NSArray<NSString *> *linkedViews;
+
+/** The name of this remarketing audience. */
+@property(nonatomic, copy, nullable) NSString *name;
+
+/**
+ *  A state based audience definition that will cause a user to be added or
+ *  removed from an audience.
+ */
+@property(nonatomic, strong, nullable) GTLRAnalytics_RemarketingAudienceStateBasedAudienceDefinition *stateBasedAudienceDefinition;
+
+/** Time this remarketing audience was last modified. */
+@property(nonatomic, strong, nullable) GTLRDateTime *updated;
+
+/**
+ *  Web property ID of the form UA-XXXXX-YY to which this remarketing audience
+ *  belongs.
+ */
+@property(nonatomic, copy, nullable) NSString *webPropertyId;
+
+@end
+
+
+/**
+ *  The simple audience definition that will cause a user to be added to an
+ *  audience.
+ */
+@interface GTLRAnalytics_RemarketingAudienceAudienceDefinition : GTLRObject
+
+/** Defines the conditions to include users to the audience. */
+@property(nonatomic, strong, nullable) GTLRAnalytics_IncludeConditions *includeConditions;
+
+@end
+
+
+/**
+ *  A state based audience definition that will cause a user to be added or
+ *  removed from an audience.
+ */
+@interface GTLRAnalytics_RemarketingAudienceStateBasedAudienceDefinition : GTLRObject
+
+/** Defines the conditions to exclude users from the audience. */
+@property(nonatomic, strong, nullable) GTLRAnalytics_RemarketingAudienceStateBasedAudienceDefinitionExcludeConditions *excludeConditions;
+
+/** Defines the conditions to include users to the audience. */
+@property(nonatomic, strong, nullable) GTLRAnalytics_IncludeConditions *includeConditions;
+
+@end
+
+
+/**
+ *  Defines the conditions to exclude users from the audience.
+ */
+@interface GTLRAnalytics_RemarketingAudienceStateBasedAudienceDefinitionExcludeConditions : GTLRObject
+
+/** Whether to make the exclusion TEMPORARY or PERMANENT. */
+@property(nonatomic, copy, nullable) NSString *exclusionDuration;
+
+/**
+ *  The segment condition that will cause a user to be removed from an audience.
+ */
+@property(nonatomic, copy, nullable) NSString *segment;
+
+@end
+
+
+/**
+ *  A remarketing audience collection lists Analytics remarketing audiences to
+ *  which the user has access. Each resource in the collection corresponds to a
+ *  single Analytics remarketing audience.
+ *
+ *  @note This class supports NSFastEnumeration and indexed subscripting over
+ *        its "items" property.
+ */
+@interface GTLRAnalytics_RemarketingAudiences : GTLRCollectionObject
+
+/**
+ *  A list of remarketing audiences.
+ *
+ *  @note This property is used to support NSFastEnumeration and indexed
+ *        subscripting on this class.
+ */
+@property(nonatomic, strong, nullable) NSArray<GTLRAnalytics_RemarketingAudience *> *items;
+
+/**
+ *  The maximum number of resources the response can contain, regardless of the
+ *  actual number of resources returned. Its value ranges from 1 to 1000 with a
+ *  value of 1000 by default, or otherwise specified by the max-results query
+ *  parameter.
+ *
+ *  Uses NSNumber of intValue.
+ */
+@property(nonatomic, strong, nullable) NSNumber *itemsPerPage;
+
+/** Collection type. */
+@property(nonatomic, copy, nullable) NSString *kind;
+
+/** Link to next page for this remarketing audience collection. */
+@property(nonatomic, copy, nullable) NSString *nextLink;
+
+/** Link to previous page for this view (profile) collection. */
+@property(nonatomic, copy, nullable) NSString *previousLink;
+
+/**
+ *  The starting index of the resources, which is 1 by default or otherwise
+ *  specified by the start-index query parameter.
+ *
+ *  Uses NSNumber of intValue.
+ */
+@property(nonatomic, strong, nullable) NSNumber *startIndex;
+
+/**
+ *  The total number of results for the query, regardless of the number of
+ *  results in the response.
+ *
+ *  Uses NSNumber of intValue.
+ */
+@property(nonatomic, strong, nullable) NSNumber *totalResults;
+
+/** Email ID of the authenticated user */
+@property(nonatomic, copy, nullable) NSString *username;
+
 @end
 
 

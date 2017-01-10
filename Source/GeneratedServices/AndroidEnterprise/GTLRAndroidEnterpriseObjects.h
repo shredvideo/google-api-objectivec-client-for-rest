@@ -64,6 +64,55 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
+ *  A token authorizing an administrator to access an iframe.
+ */
+@interface GTLRAndroidEnterprise_AdministratorWebToken : GTLRObject
+
+/**
+ *  Identifies what kind of resource this is. Value: the fixed string
+ *  "androidenterprise#administratorWebToken".
+ */
+@property(nonatomic, copy, nullable) NSString *kind;
+
+/**
+ *  An opaque token to be passed to the Play front-end to generate an iframe.
+ */
+@property(nonatomic, copy, nullable) NSString *token;
+
+@end
+
+
+/**
+ *  Specification for a token used to generate iframes. The token specifies what
+ *  data the admin is allowed to modify and the URI the iframe is allowed to
+ *  communiate with.
+ */
+@interface GTLRAndroidEnterprise_AdministratorWebTokenSpec : GTLRObject
+
+/**
+ *  Identifies what kind of resource this is. Value: the fixed string
+ *  "androidenterprise#administratorWebTokenSpec".
+ */
+@property(nonatomic, copy, nullable) NSString *kind;
+
+/**
+ *  The URI of the parent frame hosting the iframe. To prevent XSS, the iframe
+ *  may not be hosted at other URIs. This URI must be https.
+ */
+@property(nonatomic, copy, nullable) NSString *parent;
+
+/**
+ *  The list of permissions the admin is granted within the iframe. The admin
+ *  will only be allowed to view an iframe if they have all of the permissions
+ *  associated with it. The only valid value is "approveApps" that will allow
+ *  the admin to access the iframe in "approve" mode.
+ */
+@property(nonatomic, strong, nullable) NSArray<NSString *> *permission;
+
+@end
+
+
+/**
  *  Represents the list of app restrictions available to be pre-configured for
  *  the product.
  */
@@ -103,7 +152,10 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface GTLRAndroidEnterprise_AppRestrictionsSchemaRestriction : GTLRObject
 
-/** The default value of the restriction. */
+/**
+ *  The default value of the restriction. bundle and bundleArray restrictions
+ *  never have a default value.
+ */
 @property(nonatomic, strong, nullable) GTLRAndroidEnterprise_AppRestrictionsSchemaRestrictionRestrictionValue *defaultValue;
 
 /**
@@ -122,7 +174,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  For choice or multiselect restrictions, the list of possible entries'
- *  machine-readable values.
+ *  machine-readable values. These values should be used in the configuration,
+ *  either as a single string value for a choice restriction or in a stringArray
+ *  for a multiselect restriction.
  */
 @property(nonatomic, strong, nullable) NSArray<NSString *> *entryValue;
 
@@ -133,7 +187,9 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *key;
 
 /**
- *  For bundle or bundleArray restrictions, the list of nested restrictions.
+ *  For bundle or bundleArray restrictions, the list of nested restrictions. A
+ *  bundle restriction is always nested within a bundleArray restriction, and a
+ *  bundleArray restriction is at most two levels deep.
  */
 @property(nonatomic, strong, nullable) NSArray<GTLRAndroidEnterprise_AppRestrictionsSchemaRestriction *> *nestedRestriction;
 
@@ -370,11 +426,19 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *kind;
 
 /**
- *  The mechanism by which this device is managed by the EMM. "managedDevice"
- *  means that the EMM's app is a device owner. "managedProfile" means that the
- *  EMM's app is the profile owner (and there is a separate personal profile
- *  which is not managed). "containerApp" means that the EMM's app is managing
- *  the Android for Work container app on the device.
+ *  Identifies the extent to which the device is controlled by an Android for
+ *  Work EMM in various deployment configurations.
+ *  Possible values include:
+ *  - "managedDevice", a device that has the EMM's device policy controller
+ *  (DPC) as the device owner,
+ *  - "managedProfile", a device that has a work profile managed by the DPC (DPC
+ *  is profile owner) in addition to a separate, personal profile that is
+ *  unavailable to the DPC,
+ *  - "containerApp", a device running the Android for Work App. The Android for
+ *  Work App is managed by the DPC,
+ *  - "unmanagedProfile", a device that has been allowed (by the domain's admin,
+ *  using the Admin Console to enable the privilege) to use Android for Work
+ *  apps or Google Apps for Work, but the profile is itself not owned by a DPC.
  */
 @property(nonatomic, copy, nullable) NSString *managementType;
 
@@ -1283,6 +1347,17 @@ NS_ASSUME_NONNULL_BEGIN
 /** The list of product IDs making up the set of products. */
 @property(nonatomic, strong, nullable) NSArray<NSString *> *productId;
 
+/**
+ *  The interpretation of this product set. "unknown" should never be sent and
+ *  ignored if received. "whitelist" means that this product set constitutes a
+ *  whitelist. "includeAll" means that all products are accessible, including
+ *  products that are approved, not approved, and even products where approval
+ *  has been revoked. If the value is "includeAll", the value of the productId
+ *  field is therefore ignored. If a value is not supplied, it is interpreted to
+ *  be "whitelist" for backwards compatibility.
+ */
+@property(nonatomic, copy, nullable) NSString *productSetBehavior;
+
 @end
 
 
@@ -1493,6 +1568,17 @@ NS_ASSUME_NONNULL_BEGIN
  *  "androidenterprise#storeLayout".
  */
 @property(nonatomic, copy, nullable) NSString *kind;
+
+/**
+ *  The store layout type. By default, this value is set to "basic". If set to
+ *  "custom", "homepageId" must be specified. If set to "basic", the layout will
+ *  consist of all approved apps accessible by the user, split in pages of 100
+ *  each; in this case, "homepageId" must not be specified. The "basic" setting
+ *  takes precedence over any existing collections setup for this enterprise (if
+ *  any). Should the enterprise use collectionViewers for controlling access
+ *  rights, these will still be respected.
+ */
+@property(nonatomic, copy, nullable) NSString *storeLayoutType;
 
 @end
 

@@ -22,6 +22,8 @@
 @class GTLRDeploymentManager_Deployment;
 @class GTLRDeploymentManager_DeploymentsCancelPreviewRequest;
 @class GTLRDeploymentManager_DeploymentsStopRequest;
+@class GTLRDeploymentManager_Policy;
+@class GTLRDeploymentManager_TestPermissionsRequest;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -166,6 +168,42 @@ GTLR_EXTERN NSString * const kGTLRDeploymentManagerDeletePolicyDelete;
 @end
 
 /**
+ *  Gets the access control policy for a resource. May be empty if no such
+ *  policy or resource exists.
+ *
+ *  Method: deploymentmanager.deployments.getIamPolicy
+ *
+ *  Authorization scope(s):
+ *    @c kGTLRAuthScopeDeploymentManagerCloudPlatform
+ *    @c kGTLRAuthScopeDeploymentManagerNdevCloudman
+ */
+@interface GTLRDeploymentManagerQuery_DeploymentsGetIamPolicy : GTLRDeploymentManagerQuery
+// Previous library name was
+//   +[GTLQueryDeploymentManager queryForDeploymentsGetIamPolicyWithproject:resource:]
+
+/** Project ID for this request. */
+@property(nonatomic, copy, nullable) NSString *project;
+
+/** Name of the resource for this request. */
+@property(nonatomic, copy, nullable) NSString *resource;
+
+/**
+ *  Fetches a @c GTLRDeploymentManager_Policy.
+ *
+ *  Gets the access control policy for a resource. May be empty if no such
+ *  policy or resource exists.
+ *
+ *  @param project Project ID for this request.
+ *  @param resource Name of the resource for this request.
+ *
+ *  @returns GTLRDeploymentManagerQuery_DeploymentsGetIamPolicy
+ */
++ (instancetype)queryWithProject:(NSString *)project
+                        resource:(NSString *)resource;
+
+@end
+
+/**
  *  Creates a deployment and all of the resources described by the deployment
  *  manifest.
  *
@@ -259,6 +297,18 @@ GTLR_EXTERN NSString * const kGTLRDeploymentManagerDeletePolicyDelete;
  *        range 0..500).
  */
 @property(nonatomic, assign) NSUInteger maxResults;
+
+/**
+ *  Sorts list results by a certain order. By default, results are returned in
+ *  alphanumerical order based on the resource name.
+ *  You can also sort results in descending order based on the creation
+ *  timestamp using orderBy="creationTimestamp desc". This sorts results based
+ *  on the creationTimestamp field in reverse chronological order (newest result
+ *  first). Use this to sort resources like operations so that the newest
+ *  operation is returned first.
+ *  Currently, only sorting by name or creationTimestamp desc is supported.
+ */
+@property(nonatomic, copy, nullable) NSString *orderBy;
 
 /**
  *  Specifies a page token to use. Set pageToken to the nextPageToken returned
@@ -367,6 +417,44 @@ GTLR_EXTERN NSString * const kGTLRDeploymentManagerDeletePolicyDelete;
 @end
 
 /**
+ *  Sets the access control policy on the specified resource. Replaces any
+ *  existing policy.
+ *
+ *  Method: deploymentmanager.deployments.setIamPolicy
+ *
+ *  Authorization scope(s):
+ *    @c kGTLRAuthScopeDeploymentManagerCloudPlatform
+ *    @c kGTLRAuthScopeDeploymentManagerNdevCloudman
+ */
+@interface GTLRDeploymentManagerQuery_DeploymentsSetIamPolicy : GTLRDeploymentManagerQuery
+// Previous library name was
+//   +[GTLQueryDeploymentManager queryForDeploymentsSetIamPolicyWithObject:project:resource:]
+
+/** Project ID for this request. */
+@property(nonatomic, copy, nullable) NSString *project;
+
+/** Name of the resource for this request. */
+@property(nonatomic, copy, nullable) NSString *resource;
+
+/**
+ *  Fetches a @c GTLRDeploymentManager_Policy.
+ *
+ *  Sets the access control policy on the specified resource. Replaces any
+ *  existing policy.
+ *
+ *  @param object The @c GTLRDeploymentManager_Policy to include in the query.
+ *  @param project Project ID for this request.
+ *  @param resource Name of the resource for this request.
+ *
+ *  @returns GTLRDeploymentManagerQuery_DeploymentsSetIamPolicy
+ */
++ (instancetype)queryWithObject:(GTLRDeploymentManager_Policy *)object
+                        project:(NSString *)project
+                       resource:(NSString *)resource;
+
+@end
+
+/**
  *  Stops an ongoing operation. This does not roll back any work that has
  *  already been completed, but prevents any new work from being started.
  *
@@ -402,6 +490,43 @@ GTLR_EXTERN NSString * const kGTLRDeploymentManagerDeletePolicyDelete;
 + (instancetype)queryWithObject:(GTLRDeploymentManager_DeploymentsStopRequest *)object
                         project:(NSString *)project
                      deployment:(NSString *)deployment;
+
+@end
+
+/**
+ *  Returns permissions that a caller has on the specified resource.
+ *
+ *  Method: deploymentmanager.deployments.testIamPermissions
+ *
+ *  Authorization scope(s):
+ *    @c kGTLRAuthScopeDeploymentManagerCloudPlatform
+ *    @c kGTLRAuthScopeDeploymentManagerNdevCloudman
+ */
+@interface GTLRDeploymentManagerQuery_DeploymentsTestIamPermissions : GTLRDeploymentManagerQuery
+// Previous library name was
+//   +[GTLQueryDeploymentManager queryForDeploymentsTestIamPermissionsWithObject:project:resource:]
+
+/** Project ID for this request. */
+@property(nonatomic, copy, nullable) NSString *project;
+
+/** Name of the resource for this request. */
+@property(nonatomic, copy, nullable) NSString *resource;
+
+/**
+ *  Fetches a @c GTLRDeploymentManager_TestPermissionsResponse.
+ *
+ *  Returns permissions that a caller has on the specified resource.
+ *
+ *  @param object The @c GTLRDeploymentManager_TestPermissionsRequest to include
+ *    in the query.
+ *  @param project Project ID for this request.
+ *  @param resource Name of the resource for this request.
+ *
+ *  @returns GTLRDeploymentManagerQuery_DeploymentsTestIamPermissions
+ */
++ (instancetype)queryWithObject:(GTLRDeploymentManager_TestPermissionsRequest *)object
+                        project:(NSString *)project
+                       resource:(NSString *)resource;
 
 @end
 
@@ -580,6 +705,18 @@ GTLR_EXTERN NSString * const kGTLRDeploymentManagerDeletePolicyDelete;
 @property(nonatomic, assign) NSUInteger maxResults;
 
 /**
+ *  Sorts list results by a certain order. By default, results are returned in
+ *  alphanumerical order based on the resource name.
+ *  You can also sort results in descending order based on the creation
+ *  timestamp using orderBy="creationTimestamp desc". This sorts results based
+ *  on the creationTimestamp field in reverse chronological order (newest result
+ *  first). Use this to sort resources like operations so that the newest
+ *  operation is returned first.
+ *  Currently, only sorting by name or creationTimestamp desc is supported.
+ */
+@property(nonatomic, copy, nullable) NSString *orderBy;
+
+/**
  *  Specifies a page token to use. Set pageToken to the nextPageToken returned
  *  by a previous list request to get the next page of results.
  */
@@ -692,6 +829,18 @@ GTLR_EXTERN NSString * const kGTLRDeploymentManagerDeletePolicyDelete;
  *        range 0..500).
  */
 @property(nonatomic, assign) NSUInteger maxResults;
+
+/**
+ *  Sorts list results by a certain order. By default, results are returned in
+ *  alphanumerical order based on the resource name.
+ *  You can also sort results in descending order based on the creation
+ *  timestamp using orderBy="creationTimestamp desc". This sorts results based
+ *  on the creationTimestamp field in reverse chronological order (newest result
+ *  first). Use this to sort resources like operations so that the newest
+ *  operation is returned first.
+ *  Currently, only sorting by name or creationTimestamp desc is supported.
+ */
+@property(nonatomic, copy, nullable) NSString *orderBy;
 
 /**
  *  Specifies a page token to use. Set pageToken to the nextPageToken returned
@@ -814,6 +963,18 @@ GTLR_EXTERN NSString * const kGTLRDeploymentManagerDeletePolicyDelete;
 @property(nonatomic, assign) NSUInteger maxResults;
 
 /**
+ *  Sorts list results by a certain order. By default, results are returned in
+ *  alphanumerical order based on the resource name.
+ *  You can also sort results in descending order based on the creation
+ *  timestamp using orderBy="creationTimestamp desc". This sorts results based
+ *  on the creationTimestamp field in reverse chronological order (newest result
+ *  first). Use this to sort resources like operations so that the newest
+ *  operation is returned first.
+ *  Currently, only sorting by name or creationTimestamp desc is supported.
+ */
+@property(nonatomic, copy, nullable) NSString *orderBy;
+
+/**
  *  Specifies a page token to use. Set pageToken to the nextPageToken returned
  *  by a previous list request to get the next page of results.
  */
@@ -890,6 +1051,18 @@ GTLR_EXTERN NSString * const kGTLRDeploymentManagerDeletePolicyDelete;
  *        range 0..500).
  */
 @property(nonatomic, assign) NSUInteger maxResults;
+
+/**
+ *  Sorts list results by a certain order. By default, results are returned in
+ *  alphanumerical order based on the resource name.
+ *  You can also sort results in descending order based on the creation
+ *  timestamp using orderBy="creationTimestamp desc". This sorts results based
+ *  on the creationTimestamp field in reverse chronological order (newest result
+ *  first). Use this to sort resources like operations so that the newest
+ *  operation is returned first.
+ *  Currently, only sorting by name or creationTimestamp desc is supported.
+ */
+@property(nonatomic, copy, nullable) NSString *orderBy;
 
 /**
  *  Specifies a page token to use. Set pageToken to the nextPageToken returned

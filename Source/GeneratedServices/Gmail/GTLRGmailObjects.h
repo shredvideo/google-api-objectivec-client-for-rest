@@ -217,6 +217,25 @@ GTLR_EXTERN NSString * const kGTLRGmail_WatchRequest_LabelFilterAction_Include;
 
 
 /**
+ *  GTLRGmail_BatchModifyMessagesRequest
+ */
+@interface GTLRGmail_BatchModifyMessagesRequest : GTLRObject
+
+/** A list of label IDs to add to messages. */
+@property(nonatomic, strong, nullable) NSArray<NSString *> *addLabelIds;
+
+/**
+ *  The IDs of the messages to modify. There is a limit of 1000 ids per request.
+ */
+@property(nonatomic, strong, nullable) NSArray<NSString *> *ids;
+
+/** A list of label IDs to remove from messages. */
+@property(nonatomic, strong, nullable) NSArray<NSString *> *removeLabelIds;
+
+@end
+
+
+/**
  *  A draft email in the user's mailbox.
  */
 @interface GTLRGmail_Draft : GTLRObject
@@ -876,10 +895,10 @@ GTLR_EXTERN NSString * const kGTLRGmail_WatchRequest_LabelFilterAction_Include;
 @property(nonatomic, copy, nullable) NSString *attachmentId;
 
 /**
- *  The body data of a MIME message part. May be empty for MIME container types
- *  that have no message body or when the body data is sent as a separate
- *  attachment. An attachment ID is present if the body data is contained in a
- *  separate attachment.
+ *  The body data of a MIME message part as a base64url encoded string. May be
+ *  empty for MIME container types that have no message body or when the body
+ *  data is sent as a separate attachment. An attachment ID is present if the
+ *  body data is contained in a separate attachment.
  *
  *  Contains encoded binary data; GTLRBase64 can encode/decode (probably
  *  web-safe format).
@@ -887,7 +906,7 @@ GTLR_EXTERN NSString * const kGTLRGmail_WatchRequest_LabelFilterAction_Include;
 @property(nonatomic, copy, nullable) NSString *data;
 
 /**
- *  Total number of bytes in the body of the message part.
+ *  Number of bytes for the message part data (encoding notwithstanding).
  *
  *  Uses NSNumber of intValue.
  */
@@ -1012,7 +1031,7 @@ GTLR_EXTERN NSString * const kGTLRGmail_WatchRequest_LabelFilterAction_Include;
  *  Settings associated with a send-as alias, which can be either the primary
  *  login address associated with the account or a custom "from" address.
  *  Send-as aliases correspond to the "Send Mail As" feature in the web
- *  interface. See for more details.
+ *  interface.
  */
 @interface GTLRGmail_SendAs : GTLRObject
 
@@ -1074,8 +1093,7 @@ GTLR_EXTERN NSString * const kGTLRGmail_WatchRequest_LabelFilterAction_Include;
 
 /**
  *  Whether Gmail should treat this address as an alias for the user's primary
- *  email address. See for more details. This setting only applies to custom
- *  "from" aliases.
+ *  email address. This setting only applies to custom "from" aliases.
  *
  *  Uses NSNumber of boolValue.
  */
@@ -1171,7 +1189,7 @@ GTLR_EXTERN NSString * const kGTLRGmail_WatchRequest_LabelFilterAction_Include;
 
 /**
  *  Vacation auto-reply settings for an account. These settings correspond to
- *  the "Vacation responder" feature in the web interface. See for more details.
+ *  the "Vacation responder" feature in the web interface.
  */
 @interface GTLRGmail_VacationSettings : GTLRObject
 

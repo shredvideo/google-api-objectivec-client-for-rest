@@ -20,6 +20,7 @@
 
 @class GTLRIdentityToolkit_EmailTemplate;
 @class GTLRIdentityToolkit_IdpConfig;
+@class GTLRIdentityToolkit_RelyingpartyCreateAuthUriRequestCustomParameter;
 @class GTLRIdentityToolkit_SetAccountInfoResponseProviderUserInfoItem;
 @class GTLRIdentityToolkit_UploadAccountResponseErrorItem;
 @class GTLRIdentityToolkit_UserInfo;
@@ -271,6 +272,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, copy, nullable) NSString *appId;
 
+/**
+ *  Explicitly specify the auth flow type. Currently only support "CODE_FLOW"
+ *  type. The field is only used for Google provider.
+ */
+@property(nonatomic, copy, nullable) NSString *authFlowType;
+
 /** The relying party OAuth client ID. */
 @property(nonatomic, copy, nullable) NSString *clientId;
 
@@ -284,6 +291,14 @@ NS_ASSUME_NONNULL_BEGIN
  *  The URI to which the IDP redirects the user after the federated login flow.
  */
 @property(nonatomic, copy, nullable) NSString *continueUri;
+
+/**
+ *  The query parameter that client can customize by themselves in auth url. The
+ *  following parameters are reserved for server so that they cannot be
+ *  customized by clients: client_id, response_type, scope, redirect_uri, state,
+ *  oauth_token.
+ */
+@property(nonatomic, strong, nullable) GTLRIdentityToolkit_RelyingpartyCreateAuthUriRequestCustomParameter *customParameter;
 
 /**
  *  The hosted domain to restrict sign-in to accounts at that domain for Google
@@ -324,6 +339,24 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, copy, nullable) NSString *providerId;
 
+/** The session_id passed by client. */
+@property(nonatomic, copy, nullable) NSString *sessionId;
+
+@end
+
+
+/**
+ *  The query parameter that client can customize by themselves in auth url. The
+ *  following parameters are reserved for server so that they cannot be
+ *  customized by clients: client_id, response_type, scope, redirect_uri, state,
+ *  oauth_token.
+ *
+ *  @note This class is documented as having more properties of NSString. Use @c
+ *        -additionalJSONKeys and @c -additionalPropertyForName: to get the list
+ *        of properties and then fetch them; or @c -additionalProperties to
+ *        fetch them all at once.
+ */
+@interface GTLRIdentityToolkit_RelyingpartyCreateAuthUriRequestCustomParameter : GTLRObject
 @end
 
 
@@ -423,6 +456,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** Change email template. */
 @property(nonatomic, strong, nullable) GTLRIdentityToolkit_EmailTemplate *changeEmailTemplate;
+
+@property(nonatomic, copy, nullable) NSString *dynamicLinksDomain;
 
 /**
  *  Whether anonymous user is enabled.
@@ -697,11 +732,25 @@ NS_ASSUME_NONNULL_BEGIN
 /** Response to the captcha. */
 @property(nonatomic, copy, nullable) NSString *captchaResponse;
 
+/**
+ *  Whether to disable the user. Only can be used by service account.
+ *
+ *  Uses NSNumber of boolValue.
+ */
+@property(nonatomic, strong, nullable) NSNumber *disabled;
+
 /** The name of the user. */
 @property(nonatomic, copy, nullable) NSString *displayName;
 
 /** The email of the user. */
 @property(nonatomic, copy, nullable) NSString *email;
+
+/**
+ *  Mark the email as verified or not. Only can be used by service account.
+ *
+ *  Uses NSNumber of boolValue.
+ */
+@property(nonatomic, strong, nullable) NSNumber *emailVerified;
 
 /** The GITKit token of the authenticated user. */
 @property(nonatomic, copy, nullable) NSString *idToken;
@@ -712,6 +761,9 @@ NS_ASSUME_NONNULL_BEGIN
 /** The new password of the user. */
 @property(nonatomic, copy, nullable) NSString *password;
 
+/** The photo url of the user. */
+@property(nonatomic, copy, nullable) NSString *photoUrl;
+
 @end
 
 
@@ -719,6 +771,13 @@ NS_ASSUME_NONNULL_BEGIN
  *  Request to upload user account in batch.
  */
 @interface GTLRIdentityToolkit_RelyingpartyUploadAccountRequest : GTLRObject
+
+/**
+ *  Whether allow overwrite existing account when user local_id exists.
+ *
+ *  Uses NSNumber of boolValue.
+ */
+@property(nonatomic, strong, nullable) NSNumber *allowOverwrite;
 
 /**
  *  GCP project number of the requesting delegated app. Currently only intended
@@ -754,12 +813,26 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *saltSeparator;
 
 /**
+ *  If true, backend will do sanity check(including duplicate email and
+ *  federated id) when uploading account.
+ *
+ *  Uses NSNumber of boolValue.
+ */
+@property(nonatomic, strong, nullable) NSNumber *sanityCheck;
+
+/**
  *  The key for to hash the password.
  *
  *  Contains encoded binary data; GTLRBase64 can encode/decode (probably
  *  web-safe format).
  */
 @property(nonatomic, copy, nullable) NSString *signerKey;
+
+/**
+ *  Specify which project (field value is actually project id) to operate. Only
+ *  used when provided credential.
+ */
+@property(nonatomic, copy, nullable) NSString *targetProjectId;
 
 /** The account info to be stored. */
 @property(nonatomic, strong, nullable) NSArray<GTLRIdentityToolkit_UserInfo *> *users;
@@ -800,6 +873,14 @@ NS_ASSUME_NONNULL_BEGIN
  *  login result params added by the IDP.
  */
 @property(nonatomic, copy, nullable) NSString *requestUri;
+
+/**
+ *  Whether return 200 and IDP credential rather than throw exception when
+ *  federated id is already linked.
+ *
+ *  Uses NSNumber of boolValue.
+ */
+@property(nonatomic, strong, nullable) NSNumber *returnIdpCredential;
 
 /**
  *  Whether to return refresh tokens.
@@ -904,11 +985,20 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface GTLRIdentityToolkit_ResetPasswordResponse : GTLRObject
 
-/** The user's email. */
+/**
+ *  The user's email. If the out-of-band code is for email recovery, the user's
+ *  original email.
+ */
 @property(nonatomic, copy, nullable) NSString *email;
 
 /** The fixed string "identitytoolkit#ResetPasswordResponse". */
 @property(nonatomic, copy, nullable) NSString *kind;
+
+/** If the out-of-band code is for email recovery, the user's new email. */
+@property(nonatomic, copy, nullable) NSString *newEmail NS_RETURNS_NOT_RETAINED;
+
+/** The request type. */
+@property(nonatomic, copy, nullable) NSString *requestType;
 
 @end
 
@@ -1068,6 +1158,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong, nullable) NSNumber *createdAt;
 
 /**
+ *  Whether the user is authenticated by the developer.
+ *
+ *  Uses NSNumber of boolValue.
+ */
+@property(nonatomic, strong, nullable) NSNumber *customAuth;
+
+/**
  *  Whether the user is disabled.
  *
  *  Uses NSNumber of boolValue.
@@ -1118,6 +1215,9 @@ NS_ASSUME_NONNULL_BEGIN
 /** The IDP of the user. */
 @property(nonatomic, strong, nullable) NSArray<GTLRIdentityToolkit_UserInfoProviderUserInfoItem *> *providerUserInfo;
 
+/** The user's plain text password. */
+@property(nonatomic, copy, nullable) NSString *rawPassword;
+
 /**
  *  The user's password salt.
  *
@@ -1125,6 +1225,9 @@ NS_ASSUME_NONNULL_BEGIN
  *  web-safe format).
  */
 @property(nonatomic, copy, nullable) NSString *salt;
+
+/** User's screen name at Twitter or login name at Github. */
+@property(nonatomic, copy, nullable) NSString *screenName;
 
 /**
  *  Timestamp in seconds for valid login token.
@@ -1169,6 +1272,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** User's raw identifier directly returned from IDP. */
 @property(nonatomic, copy, nullable) NSString *rawId;
+
+/** User's screen name at Twitter or login name at Github. */
+@property(nonatomic, copy, nullable) NSString *screenName;
 
 @end
 
@@ -1219,6 +1325,9 @@ NS_ASSUME_NONNULL_BEGIN
  *  Uses NSNumber of boolValue.
  */
 @property(nonatomic, strong, nullable) NSNumber *emailVerified;
+
+/** Client error code. */
+@property(nonatomic, copy, nullable) NSString *errorMessage;
 
 /**
  *  If idToken is STS id token, then this field will be expiration time of STS
@@ -1323,10 +1432,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, copy, nullable) NSString *providerId;
 
+/** Raw IDP-returned user info. */
+@property(nonatomic, copy, nullable) NSString *rawUserInfo;
+
 /** If idToken is STS id token, then this field will be refresh token. */
 @property(nonatomic, copy, nullable) NSString *refreshToken;
 
-/** The screen_name of a Twitter user. */
+/** The screen_name of a Twitter user or the login name at Github. */
 @property(nonatomic, copy, nullable) NSString *screenName;
 
 /** The timezone of the user. */

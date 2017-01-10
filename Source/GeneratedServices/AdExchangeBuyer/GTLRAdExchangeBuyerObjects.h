@@ -28,6 +28,7 @@
 @class GTLRAdExchangeBuyer_Creative;
 @class GTLRAdExchangeBuyer_CreativeCorrectionsItem;
 @class GTLRAdExchangeBuyer_CreativeCorrectionsItemContextsItem;
+@class GTLRAdExchangeBuyer_CreativeDealIdsDealStatusesItem;
 @class GTLRAdExchangeBuyer_CreativeFilteringReasons;
 @class GTLRAdExchangeBuyer_CreativeFilteringReasonsReasonsItem;
 @class GTLRAdExchangeBuyer_CreativeNativeAd;
@@ -142,10 +143,11 @@ NS_ASSUME_NONNULL_BEGIN
  *  The protocol that the bidder endpoint is using. By default, OpenRTB
  *  protocols use JSON, except PROTOCOL_OPENRTB_PROTOBUF.
  *  PROTOCOL_OPENRTB_PROTOBUF uses protobuf encoding over the latest OpenRTB
- *  protocol version, which is 2.3 right now. Allowed values:
+ *  protocol version, which is 2.4 right now. Allowed values:
  *  - PROTOCOL_ADX
  *  - PROTOCOL_OPENRTB_2_2
  *  - PROTOCOL_OPENRTB_2_3
+ *  - PROTOCOL_OPENRTB_2_4
  *  - PROTOCOL_OPENRTB_PROTOBUF
  */
 @property(nonatomic, copy, nullable) NSString *bidProtocol;
@@ -509,7 +511,10 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, strong, nullable) NSArray<NSString *> *languages;
 
-/** If nativeAd is set, HTMLSnippet and videoURL should not be set. */
+/**
+ *  If nativeAd is set, HTMLSnippet and the videoURL outside of nativeAd should
+ *  not be set. (The videoURL inside nativeAd can be set.)
+ */
 @property(nonatomic, strong, nullable) GTLRAdExchangeBuyer_CreativeNativeAd *nativeAd;
 
 /**
@@ -567,7 +572,10 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, strong, nullable) NSNumber *version;
 
-/** The url to fetch a video ad. If set, HTMLSnippet should not be set. */
+/**
+ *  The URL to fetch a video ad. If set, HTMLSnippet and the nativeAd should not
+ *  be set. Note, this is different from resource.native_ad.video_url above.
+ */
 @property(nonatomic, copy, nullable) NSString *videoURL;
 
 /**
@@ -616,7 +624,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- *  If nativeAd is set, HTMLSnippet and videoURL should not be set.
+ *  If nativeAd is set, HTMLSnippet and the videoURL outside of nativeAd should
+ *  not be set. (The videoURL inside nativeAd can be set.)
  */
 @interface GTLRAdExchangeBuyer_CreativeNativeAd : GTLRObject
 
@@ -630,6 +639,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** A label for the button that the user is supposed to click. */
 @property(nonatomic, copy, nullable) NSString *callToAction;
+
+/** The URL that the browser/SDK will load when the user clicks the ad. */
+@property(nonatomic, copy, nullable) NSString *clickLinkUrl;
 
 /** The URL to use for click tracking. */
 @property(nonatomic, copy, nullable) NSString *clickTrackingUrl;
@@ -658,6 +670,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** The URL to the app store to purchase/download the promoted app. */
 @property(nonatomic, copy, nullable) NSString *store;
+
+/**
+ *  The URL of the XML VAST for a native ad. Note this is a separate field from
+ *  resource.video_url.
+ */
+@property(nonatomic, copy, nullable) NSString *videoURL;
 
 @end
 
@@ -861,6 +879,45 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
+ *  The external deal ids associated with a creative.
+ */
+@interface GTLRAdExchangeBuyer_CreativeDealIds : GTLRObject
+
+/** A list of external deal ids and ARC approval status. */
+@property(nonatomic, strong, nullable) NSArray<GTLRAdExchangeBuyer_CreativeDealIdsDealStatusesItem *> *dealStatuses;
+
+/** Resource type. */
+@property(nonatomic, copy, nullable) NSString *kind;
+
+@end
+
+
+/**
+ *  GTLRAdExchangeBuyer_CreativeDealIdsDealStatusesItem
+ */
+@interface GTLRAdExchangeBuyer_CreativeDealIdsDealStatusesItem : GTLRObject
+
+/** ARC approval status. */
+@property(nonatomic, copy, nullable) NSString *arcStatus;
+
+/**
+ *  External deal ID.
+ *
+ *  Uses NSNumber of longLongValue.
+ */
+@property(nonatomic, strong, nullable) NSNumber *dealId;
+
+/**
+ *  Publisher ID.
+ *
+ *  Uses NSNumber of intValue.
+ */
+@property(nonatomic, strong, nullable) NSNumber *webPropertyId;
+
+@end
+
+
+/**
  *  The creatives feed lists the active creatives for the Ad Exchange buyer
  *  accounts that the user has access to. Each entry in the feed corresponds to
  *  a single creative.
@@ -944,6 +1001,13 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** Visibilty of the URL in bid requests. */
 @property(nonatomic, copy, nullable) NSString *brandingType;
+
+/**
+ *  Indicates that this ExternalDealId exists under at least two different
+ *  AdxInventoryDeals. Currently, the only case that the same ExternalDealId
+ *  will exist is programmatic cross sell case.
+ */
+@property(nonatomic, copy, nullable) NSString *crossListedExternalDealIdType;
 
 /**
  *  Description for the proposed terms of the deal.
@@ -1416,6 +1480,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *inventoryDescription;
 
 /**
+ *  Indicates whether the current deal is a RFP template. RFP template is
+ *  created by buyer and not based on seller created products.
+ *
+ *  Uses NSNumber of boolValue.
+ */
+@property(nonatomic, strong, nullable) NSNumber *isRfpTemplate;
+
+/**
  *  Identifies what kind of resource this is. Value: the fixed string
  *  "adexchangebuyer#marketplaceDeal".
  */
@@ -1878,6 +1950,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong, nullable) NSArray<NSNumber *> *supportedCreativeAttributes;
 
 /**
+ *  Requests containing the specified type of user data will match. Possible
+ *  values are HOSTED_MATCH_DATA, which means the request is cookie-targetable
+ *  and has a match in the buyer's hosted match table, and COOKIE_OR_IDFA, which
+ *  means the request has either a targetable cookie or an iOS IDFA.
+ */
+@property(nonatomic, strong, nullable) NSArray<NSString *> *userIdentifierDataRequired;
+
+/**
  *  Requests containing any of these user list ids will match.
  *
  *  Uses NSNumber of longLongValue.
@@ -2253,6 +2333,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** Private data for buyer. (hidden from seller). */
 @property(nonatomic, strong, nullable) GTLRAdExchangeBuyer_PrivateData *buyerPrivateData;
+
+/** IDs of DBM advertisers permission to this proposal. */
+@property(nonatomic, strong, nullable) NSArray<NSString *> *dbmAdvertiserIds;
 
 /**
  *  When an proposal is in an accepted state, indicates whether the buyer has

@@ -19,7 +19,9 @@
 #endif
 
 @class GTLRCloudBuild_Build;
+@class GTLRCloudBuild_BuildTrigger;
 @class GTLRCloudBuild_CancelBuildRequest;
+@class GTLRCloudBuild_CancelOperationRequest;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -30,6 +32,55 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** Selector specifying which fields to include in a partial response. */
 @property(nonatomic, copy, nullable) NSString *fields;
+
+@end
+
+/**
+ *  Starts asynchronous cancellation on a long-running operation. The server
+ *  makes a best effort to cancel the operation, but success is not
+ *  guaranteed. If the server doesn't support this method, it returns
+ *  `google.rpc.Code.UNIMPLEMENTED`. Clients can use
+ *  Operations.GetOperation or
+ *  other methods to check whether the cancellation succeeded or whether the
+ *  operation completed despite cancellation. On successful cancellation,
+ *  the operation is not deleted; instead, it becomes an operation with
+ *  an Operation.error value with a google.rpc.Status.code of 1,
+ *  corresponding to `Code.CANCELLED`.
+ *
+ *  Method: cloudbuild.operations.cancel
+ *
+ *  Authorization scope(s):
+ *    @c kGTLRAuthScopeCloudBuildCloudPlatform
+ */
+@interface GTLRCloudBuildQuery_OperationsCancel : GTLRCloudBuildQuery
+// Previous library name was
+//   +[GTLQueryCloudBuild queryForOperationsCancelWithObject:name:]
+
+/** The name of the operation resource to be cancelled. */
+@property(nonatomic, copy, nullable) NSString *name;
+
+/**
+ *  Fetches a @c GTLRCloudBuild_Empty.
+ *
+ *  Starts asynchronous cancellation on a long-running operation. The server
+ *  makes a best effort to cancel the operation, but success is not
+ *  guaranteed. If the server doesn't support this method, it returns
+ *  `google.rpc.Code.UNIMPLEMENTED`. Clients can use
+ *  Operations.GetOperation or
+ *  other methods to check whether the cancellation succeeded or whether the
+ *  operation completed despite cancellation. On successful cancellation,
+ *  the operation is not deleted; instead, it becomes an operation with
+ *  an Operation.error value with a google.rpc.Status.code of 1,
+ *  corresponding to `Code.CANCELLED`.
+ *
+ *  @param object The @c GTLRCloudBuild_CancelOperationRequest to include in the
+ *    query.
+ *  @param name The name of the operation resource to be cancelled.
+ *
+ *  @returns GTLRCloudBuildQuery_OperationsCancel
+ */
++ (instancetype)queryWithObject:(GTLRCloudBuild_CancelOperationRequest *)object
+                           name:(NSString *)name;
 
 @end
 
@@ -243,6 +294,9 @@ NS_ASSUME_NONNULL_BEGIN
 // Previous library name was
 //   +[GTLQueryCloudBuild queryForProjectsBuildsListWithprojectId:]
 
+/** The raw filter text to constrain the results. */
+@property(nonatomic, copy, nullable) NSString *filter;
+
 /** Number of results to return in the list. */
 @property(nonatomic, assign) NSInteger pageSize;
 
@@ -268,6 +322,175 @@ NS_ASSUME_NONNULL_BEGIN
  *        information.
  */
 + (instancetype)queryWithProjectId:(NSString *)projectId;
+
+@end
+
+/**
+ *  Creates a new BuildTrigger.
+ *  This API is experimental.
+ *
+ *  Method: cloudbuild.projects.triggers.create
+ *
+ *  Authorization scope(s):
+ *    @c kGTLRAuthScopeCloudBuildCloudPlatform
+ */
+@interface GTLRCloudBuildQuery_ProjectsTriggersCreate : GTLRCloudBuildQuery
+// Previous library name was
+//   +[GTLQueryCloudBuild queryForProjectsTriggersCreateWithObject:projectId:]
+
+/** ID of the project for which to configure automatic builds. */
+@property(nonatomic, copy, nullable) NSString *projectId;
+
+/**
+ *  Fetches a @c GTLRCloudBuild_BuildTrigger.
+ *
+ *  Creates a new BuildTrigger.
+ *  This API is experimental.
+ *
+ *  @param object The @c GTLRCloudBuild_BuildTrigger to include in the query.
+ *  @param projectId ID of the project for which to configure automatic builds.
+ *
+ *  @returns GTLRCloudBuildQuery_ProjectsTriggersCreate
+ */
++ (instancetype)queryWithObject:(GTLRCloudBuild_BuildTrigger *)object
+                      projectId:(NSString *)projectId;
+
+@end
+
+/**
+ *  Deletes an BuildTrigger by its project ID and trigger ID.
+ *  This API is experimental.
+ *
+ *  Method: cloudbuild.projects.triggers.delete
+ *
+ *  Authorization scope(s):
+ *    @c kGTLRAuthScopeCloudBuildCloudPlatform
+ */
+@interface GTLRCloudBuildQuery_ProjectsTriggersDelete : GTLRCloudBuildQuery
+// Previous library name was
+//   +[GTLQueryCloudBuild queryForProjectsTriggersDeleteWithprojectId:triggerId:]
+
+/** ID of the project that owns the trigger. */
+@property(nonatomic, copy, nullable) NSString *projectId;
+
+/** ID of the BuildTrigger to delete. */
+@property(nonatomic, copy, nullable) NSString *triggerId;
+
+/**
+ *  Fetches a @c GTLRCloudBuild_Empty.
+ *
+ *  Deletes an BuildTrigger by its project ID and trigger ID.
+ *  This API is experimental.
+ *
+ *  @param projectId ID of the project that owns the trigger.
+ *  @param triggerId ID of the BuildTrigger to delete.
+ *
+ *  @returns GTLRCloudBuildQuery_ProjectsTriggersDelete
+ */
++ (instancetype)queryWithProjectId:(NSString *)projectId
+                         triggerId:(NSString *)triggerId;
+
+@end
+
+/**
+ *  Gets information about a BuildTrigger.
+ *  This API is experimental.
+ *
+ *  Method: cloudbuild.projects.triggers.get
+ *
+ *  Authorization scope(s):
+ *    @c kGTLRAuthScopeCloudBuildCloudPlatform
+ */
+@interface GTLRCloudBuildQuery_ProjectsTriggersGet : GTLRCloudBuildQuery
+// Previous library name was
+//   +[GTLQueryCloudBuild queryForProjectsTriggersGetWithprojectId:triggerId:]
+
+/** ID of the project that owns the trigger. */
+@property(nonatomic, copy, nullable) NSString *projectId;
+
+/** ID of the BuildTrigger to get. */
+@property(nonatomic, copy, nullable) NSString *triggerId;
+
+/**
+ *  Fetches a @c GTLRCloudBuild_BuildTrigger.
+ *
+ *  Gets information about a BuildTrigger.
+ *  This API is experimental.
+ *
+ *  @param projectId ID of the project that owns the trigger.
+ *  @param triggerId ID of the BuildTrigger to get.
+ *
+ *  @returns GTLRCloudBuildQuery_ProjectsTriggersGet
+ */
++ (instancetype)queryWithProjectId:(NSString *)projectId
+                         triggerId:(NSString *)triggerId;
+
+@end
+
+/**
+ *  Lists existing BuildTrigger.
+ *  This API is experimental.
+ *
+ *  Method: cloudbuild.projects.triggers.list
+ *
+ *  Authorization scope(s):
+ *    @c kGTLRAuthScopeCloudBuildCloudPlatform
+ */
+@interface GTLRCloudBuildQuery_ProjectsTriggersList : GTLRCloudBuildQuery
+// Previous library name was
+//   +[GTLQueryCloudBuild queryForProjectsTriggersListWithprojectId:]
+
+/** ID of the project for which to list BuildTriggers. */
+@property(nonatomic, copy, nullable) NSString *projectId;
+
+/**
+ *  Fetches a @c GTLRCloudBuild_ListBuildTriggersResponse.
+ *
+ *  Lists existing BuildTrigger.
+ *  This API is experimental.
+ *
+ *  @param projectId ID of the project for which to list BuildTriggers.
+ *
+ *  @returns GTLRCloudBuildQuery_ProjectsTriggersList
+ */
++ (instancetype)queryWithProjectId:(NSString *)projectId;
+
+@end
+
+/**
+ *  Updates an BuildTrigger by its project ID and trigger ID.
+ *  This API is experimental.
+ *
+ *  Method: cloudbuild.projects.triggers.patch
+ *
+ *  Authorization scope(s):
+ *    @c kGTLRAuthScopeCloudBuildCloudPlatform
+ */
+@interface GTLRCloudBuildQuery_ProjectsTriggersPatch : GTLRCloudBuildQuery
+// Previous library name was
+//   +[GTLQueryCloudBuild queryForProjectsTriggersPatchWithObject:projectId:triggerId:]
+
+/** ID of the project that owns the trigger. */
+@property(nonatomic, copy, nullable) NSString *projectId;
+
+/** ID of the BuildTrigger to update. */
+@property(nonatomic, copy, nullable) NSString *triggerId;
+
+/**
+ *  Fetches a @c GTLRCloudBuild_BuildTrigger.
+ *
+ *  Updates an BuildTrigger by its project ID and trigger ID.
+ *  This API is experimental.
+ *
+ *  @param object The @c GTLRCloudBuild_BuildTrigger to include in the query.
+ *  @param projectId ID of the project that owns the trigger.
+ *  @param triggerId ID of the BuildTrigger to update.
+ *
+ *  @returns GTLRCloudBuildQuery_ProjectsTriggersPatch
+ */
++ (instancetype)queryWithObject:(GTLRCloudBuild_BuildTrigger *)object
+                      projectId:(NSString *)projectId
+                      triggerId:(NSString *)triggerId;
 
 @end
 

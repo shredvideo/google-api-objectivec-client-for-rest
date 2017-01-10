@@ -234,7 +234,7 @@ GTLR_EXTERN NSString * const kGTLRFitness_Device_Type_Watch;
 
 
 /**
- *  GTLRFitness_AggregateRequest
+ *  Next id: 10
  */
 @interface GTLRFitness_AggregateRequest : GTLRObject
 
@@ -784,6 +784,13 @@ GTLR_EXTERN NSString * const kGTLRFitness_Device_Type_Watch;
 @property(nonatomic, strong, nullable) NSArray<GTLRFitness_Session *> *deletedSession;
 
 /**
+ *  Flag to indicate server has more data to transfer
+ *
+ *  Uses NSNumber of boolValue.
+ */
+@property(nonatomic, strong, nullable) NSNumber *hasMoreData;
+
+/**
  *  The continuation token, which is used to page through large result sets.
  *  Provide this value in a subsequent request to return the next page of
  *  results.
@@ -888,7 +895,7 @@ GTLR_EXTERN NSString * const kGTLRFitness_Device_Type_Watch;
 /**
  *  Holder object for the value of a single field in a data point.
  *  A field value has a particular format and is only ever set to one of an
- *  integer or a floating point value.
+ *  integer or a floating point value. LINT.IfChange
  */
 @interface GTLRFitness_Value : GTLRObject
 

@@ -24,6 +24,7 @@
 @class GTLRCivicInfo_Candidate;
 @class GTLRCivicInfo_Channel;
 @class GTLRCivicInfo_Contest;
+@class GTLRCivicInfo_ContextParams;
 @class GTLRCivicInfo_DivisionSearchResult;
 @class GTLRCivicInfo_Election;
 @class GTLRCivicInfo_ElectionOfficial;
@@ -32,10 +33,14 @@
 @class GTLRCivicInfo_Office;
 @class GTLRCivicInfo_Official;
 @class GTLRCivicInfo_PollingLocation;
+@class GTLRCivicInfo_PostalAddress;
 @class GTLRCivicInfo_RepresentativeInfoDataDivisions;
 @class GTLRCivicInfo_RepresentativeInfoResponseDivisions;
 @class GTLRCivicInfo_SimpleAddressType;
 @class GTLRCivicInfo_Source;
+@class GTLRCivicInfo_VoterInfoRequest;
+@class GTLRCivicInfo_VoterInfoResponse;
+@class GTLRCivicInfo_VoterInfoSegmentResult;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -158,7 +163,11 @@ NS_ASSUME_NONNULL_BEGIN
 /** The email address for the candidate's campaign. */
 @property(nonatomic, copy, nullable) NSString *email;
 
-/** The candidate's name. */
+/**
+ *  The candidate's name. If this is a joint ticket it will indicate the name of
+ *  the candidate at the top of a ticket followed by a / and that name of
+ *  candidate at the bottom of the ticket. e.g. "Mitt Romney / Paul Ryan"
+ */
 @property(nonatomic, copy, nullable) NSString *name;
 
 /**
@@ -267,8 +276,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  The set of ballot responses for the referendum. A ballot response represents
  *  a line on the ballot. Common examples might include "yes" or "no" for
- *  referenda, or a judge's name for a retention contest. This field is only
- *  populated for contests of type 'Referendum'.
+ *  referenda. This field is only populated for contests of type 'Referendum'.
  */
 @property(nonatomic, strong, nullable) NSArray<NSString *> *referendumBallotResponses;
 
@@ -347,9 +355,40 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  The type of contest. Usually this will be 'General', 'Primary', or 'Run-off'
- *  for contests with candidates. For referenda this will be 'Referendum'.
+ *  for contests with candidates. For referenda this will be 'Referendum'. For
+ *  Retention contests this will typically be 'Retention'.
  */
 @property(nonatomic, copy, nullable) NSString *type;
+
+@end
+
+
+/**
+ *  GTLRCivicInfo_ContextParams
+ */
+@interface GTLRCivicInfo_ContextParams : GTLRObject
+
+@property(nonatomic, copy, nullable) NSString *clientProfile;
+
+@end
+
+
+/**
+ *  A request to look up representative information for a single division.
+ */
+@interface GTLRCivicInfo_DivisionRepresentativeInfoRequest : GTLRObject
+
+@property(nonatomic, strong, nullable) GTLRCivicInfo_ContextParams *contextParams;
+
+@end
+
+
+/**
+ *  A search request for political geographies.
+ */
+@interface GTLRCivicInfo_DivisionSearchRequest : GTLRObject
+
+@property(nonatomic, strong, nullable) GTLRCivicInfo_ContextParams *contextParams;
 
 @end
 
@@ -450,6 +489,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
+ *  GTLRCivicInfo_ElectionsQueryRequest
+ */
+@interface GTLRCivicInfo_ElectionsQueryRequest : GTLRObject
+
+@property(nonatomic, strong, nullable) GTLRCivicInfo_ContextParams *contextParams;
+
+@end
+
+
+/**
  *  The list of elections available for this version of the API.
  */
 @interface GTLRCivicInfo_ElectionsQueryResponse : GTLRObject
@@ -478,6 +527,8 @@ NS_ASSUME_NONNULL_BEGIN
  *  identifier property maps to 'id' in JSON (to avoid Objective C's 'id').
  */
 @property(nonatomic, copy, nullable) NSString *identifier;
+
+@property(nonatomic, copy, nullable) NSString *kgForeignKey;
 
 /** The name of the district. */
 @property(nonatomic, copy, nullable) NSString *name;
@@ -662,6 +713,53 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
+ *  GTLRCivicInfo_PostalAddress
+ */
+@interface GTLRCivicInfo_PostalAddress : GTLRObject
+
+@property(nonatomic, strong, nullable) NSArray<NSString *> *addressLines;
+@property(nonatomic, copy, nullable) NSString *administrativeAreaName;
+@property(nonatomic, copy, nullable) NSString *countryName;
+@property(nonatomic, copy, nullable) NSString *countryNameCode;
+@property(nonatomic, copy, nullable) NSString *dependentLocalityName;
+@property(nonatomic, copy, nullable) NSString *dependentThoroughfareLeadingType;
+@property(nonatomic, copy, nullable) NSString *dependentThoroughfareName;
+@property(nonatomic, copy, nullable) NSString *dependentThoroughfarePostDirection;
+@property(nonatomic, copy, nullable) NSString *dependentThoroughfarePreDirection;
+@property(nonatomic, copy, nullable) NSString *dependentThoroughfaresConnector;
+@property(nonatomic, copy, nullable) NSString *dependentThoroughfaresIndicator;
+@property(nonatomic, copy, nullable) NSString *dependentThoroughfaresType;
+@property(nonatomic, copy, nullable) NSString *dependentThoroughfareTrailingType;
+@property(nonatomic, copy, nullable) NSString *firmName;
+
+/**
+ *  isDisputed
+ *
+ *  Uses NSNumber of boolValue.
+ */
+@property(nonatomic, strong, nullable) NSNumber *isDisputed;
+
+@property(nonatomic, copy, nullable) NSString *languageCode;
+@property(nonatomic, copy, nullable) NSString *localityName;
+@property(nonatomic, copy, nullable) NSString *postalCodeNumber;
+@property(nonatomic, copy, nullable) NSString *postalCodeNumberExtension;
+@property(nonatomic, copy, nullable) NSString *postBoxNumber;
+@property(nonatomic, copy, nullable) NSString *premiseName;
+@property(nonatomic, copy, nullable) NSString *recipientName;
+@property(nonatomic, copy, nullable) NSString *sortingCode;
+@property(nonatomic, copy, nullable) NSString *subAdministrativeAreaName;
+@property(nonatomic, copy, nullable) NSString *subPremiseName;
+@property(nonatomic, copy, nullable) NSString *thoroughfareLeadingType;
+@property(nonatomic, copy, nullable) NSString *thoroughfareName;
+@property(nonatomic, copy, nullable) NSString *thoroughfareNumber;
+@property(nonatomic, copy, nullable) NSString *thoroughfarePostDirection;
+@property(nonatomic, copy, nullable) NSString *thoroughfarePreDirection;
+@property(nonatomic, copy, nullable) NSString *thoroughfareTrailingType;
+
+@end
+
+
+/**
  *  GTLRCivicInfo_RepresentativeInfoData
  */
 @interface GTLRCivicInfo_RepresentativeInfoData : GTLRObject
@@ -693,6 +791,17 @@ NS_ASSUME_NONNULL_BEGIN
  *        fetch them; or @c -additionalProperties to fetch them all at once.
  */
 @interface GTLRCivicInfo_RepresentativeInfoDataDivisions : GTLRObject
+@end
+
+
+/**
+ *  A request for political geography and representative information for an
+ *  address.
+ */
+@interface GTLRCivicInfo_RepresentativeInfoRequest : GTLRObject
+
+@property(nonatomic, strong, nullable) GTLRCivicInfo_ContextParams *contextParams;
+
 @end
 
 
@@ -788,6 +897,17 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
+ *  A request for information about a voter.
+ */
+@interface GTLRCivicInfo_VoterInfoRequest : GTLRObject
+
+@property(nonatomic, strong, nullable) GTLRCivicInfo_ContextParams *contextParams;
+@property(nonatomic, strong, nullable) GTLRCivicInfo_VoterInfoSegmentResult *voterInfoSegmentResult;
+
+@end
+
+
+/**
  *  The result of a voter info lookup query.
  */
 @interface GTLRCivicInfo_VoterInfoResponse : GTLRObject
@@ -846,6 +966,25 @@ NS_ASSUME_NONNULL_BEGIN
  *  US, there will only be one element in this array.
  */
 @property(nonatomic, strong, nullable) NSArray<GTLRCivicInfo_AdministrationRegion *> *state;
+
+@end
+
+
+/**
+ *  GTLRCivicInfo_VoterInfoSegmentResult
+ */
+@interface GTLRCivicInfo_VoterInfoSegmentResult : GTLRObject
+
+/**
+ *  generatedMillis
+ *
+ *  Uses NSNumber of longLongValue.
+ */
+@property(nonatomic, strong, nullable) NSNumber *generatedMillis;
+
+@property(nonatomic, strong, nullable) GTLRCivicInfo_PostalAddress *postalAddress;
+@property(nonatomic, strong, nullable) GTLRCivicInfo_VoterInfoRequest *request;
+@property(nonatomic, strong, nullable) GTLRCivicInfo_VoterInfoResponse *response;
 
 @end
 

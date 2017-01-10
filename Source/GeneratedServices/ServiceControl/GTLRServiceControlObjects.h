@@ -4,7 +4,8 @@
 // API:
 //   Google Service Control API (servicecontrol/v1)
 // Description:
-//   The Service Control API
+//   Google Service Control provides control plane functionality to managed
+//   services, such as logging, monitoring, and status checks.
 // Documentation:
 //   https://cloud.google.com/service-control/
 
@@ -156,56 +157,56 @@ GTLR_EXTERN NSString * const kGTLRServiceControl_CheckError_Code_ServiceStatusUn
 // GTLRServiceControl_LogEntry.severity
 
 /**
- *  A person must take an action immediately.
+ *  (700) A person must take an action immediately.
  *
  *  Value: "ALERT"
  */
 GTLR_EXTERN NSString * const kGTLRServiceControl_LogEntry_Severity_Alert;
 /**
- *  Critical events cause more severe problems or brief outages.
+ *  (600) Critical events cause more severe problems or outages.
  *
  *  Value: "CRITICAL"
  */
 GTLR_EXTERN NSString * const kGTLRServiceControl_LogEntry_Severity_Critical;
 /**
- *  Debug or trace information.
+ *  (100) Debug or trace information.
  *
  *  Value: "DEBUG"
  */
 GTLR_EXTERN NSString * const kGTLRServiceControl_LogEntry_Severity_Debug;
 /**
- *  The log entry has no assigned severity level.
+ *  (0) The log entry has no assigned severity level.
  *
  *  Value: "DEFAULT"
  */
 GTLR_EXTERN NSString * const kGTLRServiceControl_LogEntry_Severity_Default;
 /**
- *  One or more systems are unusable.
+ *  (800) One or more systems are unusable.
  *
  *  Value: "EMERGENCY"
  */
 GTLR_EXTERN NSString * const kGTLRServiceControl_LogEntry_Severity_Emergency;
 /**
- *  Error events are likely to cause problems.
+ *  (500) Error events are likely to cause problems.
  *
  *  Value: "ERROR"
  */
 GTLR_EXTERN NSString * const kGTLRServiceControl_LogEntry_Severity_Error;
 /**
- *  Routine information, such as ongoing status or performance.
+ *  (200) Routine information, such as ongoing status or performance.
  *
  *  Value: "INFO"
  */
 GTLR_EXTERN NSString * const kGTLRServiceControl_LogEntry_Severity_Info;
 /**
- *  Normal but significant events, such as start up, shut down, or
- *  configuration.
+ *  (300) Normal but significant events, such as start up, shut down, or
+ *  a configuration change.
  *
  *  Value: "NOTICE"
  */
 GTLR_EXTERN NSString * const kGTLRServiceControl_LogEntry_Severity_Notice;
 /**
- *  Warning events might cause problems.
+ *  (400) Warning events might cause problems.
  *
  *  Value: "WARNING"
  */
@@ -215,20 +216,16 @@ GTLR_EXTERN NSString * const kGTLRServiceControl_LogEntry_Severity_Warning;
 // GTLRServiceControl_Operation.importance
 
 /**
- *  The operation contains significant monetary value or audit trail.
  *  The API implementation doesn't cache and aggregate the data.
- *  Deduplication based on `operation_id` is performed for monetary
- *  values. If the method returns successfully, it's guaranteed that
- *  the data are persisted in durable storage.
+ *  If the method returns successfully, it's guaranteed that the data has
+ *  been persisted in durable storage.
  *
  *  Value: "HIGH"
  */
 GTLR_EXTERN NSString * const kGTLRServiceControl_Operation_Importance_High;
 /**
- *  The operation doesn't contain significant monetary value or audit
- *  trail. The API implementation may cache and aggregate the data.
- *  There is no deduplication based on `operation_id`. The data
- *  may be lost when rare and unexpected system failures occur.
+ *  The API implementation may cache and aggregate the data.
+ *  The data may be lost when rare and unexpected system failures occur.
  *
  *  Value: "LOW"
  */
@@ -309,6 +306,14 @@ GTLR_EXTERN NSString * const kGTLRServiceControl_Operation_Importance_Low;
 /** The operation to be checked. */
 @property(nonatomic, strong, nullable) GTLRServiceControl_Operation *operation;
 
+/**
+ *  Specifies which version of service configuration should be used to process
+ *  the request.
+ *  If unspecified or no matching version can be found, the
+ *  latest one will be used.
+ */
+@property(nonatomic, copy, nullable) NSString *serviceConfigId;
+
 @end
 
 
@@ -330,6 +335,9 @@ GTLR_EXTERN NSString * const kGTLRServiceControl_Operation_Importance_Low;
  *  Used for logging and diagnostics purposes.
  */
 @property(nonatomic, copy, nullable) NSString *operationId;
+
+/** The actual config id used to process the request. */
+@property(nonatomic, copy, nullable) NSString *serviceConfigId;
 
 @end
 
@@ -546,25 +554,25 @@ GTLR_EXTERN NSString * const kGTLRServiceControl_Operation_Importance_Low;
  *  `LogSeverity.DEFAULT`.
  *
  *  Likely values:
- *    @arg @c kGTLRServiceControl_LogEntry_Severity_Alert A person must take an
- *        action immediately. (Value: "ALERT")
- *    @arg @c kGTLRServiceControl_LogEntry_Severity_Critical Critical events
- *        cause more severe problems or brief outages. (Value: "CRITICAL")
- *    @arg @c kGTLRServiceControl_LogEntry_Severity_Debug Debug or trace
+ *    @arg @c kGTLRServiceControl_LogEntry_Severity_Alert (700) A person must
+ *        take an action immediately. (Value: "ALERT")
+ *    @arg @c kGTLRServiceControl_LogEntry_Severity_Critical (600) Critical
+ *        events cause more severe problems or outages. (Value: "CRITICAL")
+ *    @arg @c kGTLRServiceControl_LogEntry_Severity_Debug (100) Debug or trace
  *        information. (Value: "DEBUG")
- *    @arg @c kGTLRServiceControl_LogEntry_Severity_Default The log entry has no
- *        assigned severity level. (Value: "DEFAULT")
- *    @arg @c kGTLRServiceControl_LogEntry_Severity_Emergency One or more
+ *    @arg @c kGTLRServiceControl_LogEntry_Severity_Default (0) The log entry
+ *        has no assigned severity level. (Value: "DEFAULT")
+ *    @arg @c kGTLRServiceControl_LogEntry_Severity_Emergency (800) One or more
  *        systems are unusable. (Value: "EMERGENCY")
- *    @arg @c kGTLRServiceControl_LogEntry_Severity_Error Error events are
+ *    @arg @c kGTLRServiceControl_LogEntry_Severity_Error (500) Error events are
  *        likely to cause problems. (Value: "ERROR")
- *    @arg @c kGTLRServiceControl_LogEntry_Severity_Info Routine information,
- *        such as ongoing status or performance. (Value: "INFO")
- *    @arg @c kGTLRServiceControl_LogEntry_Severity_Notice Normal but
+ *    @arg @c kGTLRServiceControl_LogEntry_Severity_Info (200) Routine
+ *        information, such as ongoing status or performance. (Value: "INFO")
+ *    @arg @c kGTLRServiceControl_LogEntry_Severity_Notice (300) Normal but
  *        significant events, such as start up, shut down, or
- *        configuration. (Value: "NOTICE")
- *    @arg @c kGTLRServiceControl_LogEntry_Severity_Warning Warning events might
- *        cause problems. (Value: "WARNING")
+ *        a configuration change. (Value: "NOTICE")
+ *    @arg @c kGTLRServiceControl_LogEntry_Severity_Warning (400) Warning events
+ *        might cause problems. (Value: "WARNING")
  */
 @property(nonatomic, copy, nullable) NSString *severity;
 
@@ -737,21 +745,17 @@ GTLR_EXTERN NSString * const kGTLRServiceControl_Operation_Importance_Low;
 @property(nonatomic, strong, nullable) GTLRDateTime *endTime;
 
 /**
- *  The importance of the data contained in the operation.
+ *  DO NOT USE. This is an experimental field.
  *
  *  Likely values:
- *    @arg @c kGTLRServiceControl_Operation_Importance_High The operation
- *        contains significant monetary value or audit trail.
- *        The API implementation doesn't cache and aggregate the data.
- *        Deduplication based on `operation_id` is performed for monetary
- *        values. If the method returns successfully, it's guaranteed that
- *        the data are persisted in durable storage. (Value: "HIGH")
- *    @arg @c kGTLRServiceControl_Operation_Importance_Low The operation doesn't
- *        contain significant monetary value or audit
- *        trail. The API implementation may cache and aggregate the data.
- *        There is no deduplication based on `operation_id`. The data
- *        may be lost when rare and unexpected system failures occur. (Value:
- *        "LOW")
+ *    @arg @c kGTLRServiceControl_Operation_Importance_High The API
+ *        implementation doesn't cache and aggregate the data.
+ *        If the method returns successfully, it's guaranteed that the data has
+ *        been persisted in durable storage. (Value: "HIGH")
+ *    @arg @c kGTLRServiceControl_Operation_Importance_Low The API
+ *        implementation may cache and aggregate the data.
+ *        The data may be lost when rare and unexpected system failures occur.
+ *        (Value: "LOW")
  */
 @property(nonatomic, copy, nullable) NSString *importance;
 
@@ -866,6 +870,14 @@ GTLR_EXTERN NSString * const kGTLRServiceControl_Operation_Importance_Low;
  */
 @property(nonatomic, strong, nullable) NSArray<GTLRServiceControl_Operation *> *operations;
 
+/**
+ *  Specifies which version of service config should be used to process the
+ *  request.
+ *  If unspecified or no matching version can be found, the
+ *  latest one will be used.
+ */
+@property(nonatomic, copy, nullable) NSString *serviceConfigId;
+
 @end
 
 
@@ -885,10 +897,14 @@ GTLR_EXTERN NSString * const kGTLRServiceControl_Operation_Importance_Low;
  *  `Operations` in the request succeeded. Each
  *  `Operation` that failed processing has a corresponding item
  *  in this list.
- *  3. A failed RPC status indicates a complete failure where none of the
- *  `Operations` in the request succeeded.
+ *  3. A failed RPC status indicates a general non-deterministic failure.
+ *  When this happens, it's impossible to know which of the
+ *  'Operations' in the request succeeded or failed.
  */
 @property(nonatomic, strong, nullable) NSArray<GTLRServiceControl_ReportError *> *reportErrors;
+
+/** The actual config id used to process the request. */
+@property(nonatomic, copy, nullable) NSString *serviceConfigId;
 
 @end
 

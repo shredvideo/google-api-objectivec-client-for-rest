@@ -28,6 +28,15 @@ NSString * const kGTLRSheetsMajorDimensionColumns              = @"COLUMNS";
 NSString * const kGTLRSheetsMajorDimensionDimensionUnspecified = @"DIMENSION_UNSPECIFIED";
 NSString * const kGTLRSheetsMajorDimensionRows                 = @"ROWS";
 
+// responseDateTimeRenderOption
+NSString * const kGTLRSheetsResponseDateTimeRenderOptionFormattedString = @"FORMATTED_STRING";
+NSString * const kGTLRSheetsResponseDateTimeRenderOptionSerialNumber = @"SERIAL_NUMBER";
+
+// responseValueRenderOption
+NSString * const kGTLRSheetsResponseValueRenderOptionFormattedValue = @"FORMATTED_VALUE";
+NSString * const kGTLRSheetsResponseValueRenderOptionFormula   = @"FORMULA";
+NSString * const kGTLRSheetsResponseValueRenderOptionUnformattedValue = @"UNFORMATTED_VALUE";
+
 // valueInputOption
 NSString * const kGTLRSheetsValueInputOptionInputValueOptionUnspecified = @"INPUT_VALUE_OPTION_UNSPECIFIED";
 NSString * const kGTLRSheetsValueInputOptionRaw                = @"RAW";
@@ -150,7 +159,9 @@ NSString * const kGTLRSheetsValueRenderOptionUnformattedValue = @"UNFORMATTED_VA
 
 @implementation GTLRSheetsQuery_SpreadsheetsValuesAppend
 
-@dynamic insertDataOption, range, spreadsheetId, valueInputOption;
+@dynamic includeValuesInResponse, insertDataOption, range,
+         responseDateTimeRenderOption, responseValueRenderOption, spreadsheetId,
+         valueInputOption;
 
 + (instancetype)queryWithObject:(GTLRSheets_ValueRange *)object
                   spreadsheetId:(NSString *)spreadsheetId
@@ -172,6 +183,31 @@ NSString * const kGTLRSheetsValueRenderOptionUnformattedValue = @"UNFORMATTED_VA
   query.range = range;
   query.expectedObjectClass = [GTLRSheets_AppendValuesResponse class];
   query.loggingName = @"sheets.spreadsheets.values.append";
+  return query;
+}
+
+@end
+
+@implementation GTLRSheetsQuery_SpreadsheetsValuesBatchClear
+
+@dynamic spreadsheetId;
+
++ (instancetype)queryWithObject:(GTLRSheets_BatchClearValuesRequest *)object
+                  spreadsheetId:(NSString *)spreadsheetId {
+  if (object == nil) {
+    GTLR_DEBUG_ASSERT(object != nil, @"Got a nil object");
+    return nil;
+  }
+  NSArray *pathParams = @[ @"spreadsheetId" ];
+  NSString *pathURITemplate = @"v4/spreadsheets/{spreadsheetId}/values:batchClear";
+  GTLRSheetsQuery_SpreadsheetsValuesBatchClear *query =
+    [[self alloc] initWithPathURITemplate:pathURITemplate
+                               HTTPMethod:@"POST"
+                       pathParameterNames:pathParams];
+  query.bodyObject = object;
+  query.spreadsheetId = spreadsheetId;
+  query.expectedObjectClass = [GTLRSheets_BatchClearValuesResponse class];
+  query.loggingName = @"sheets.spreadsheets.values.batchClear";
   return query;
 }
 
@@ -229,6 +265,35 @@ NSString * const kGTLRSheetsValueRenderOptionUnformattedValue = @"UNFORMATTED_VA
 
 @end
 
+@implementation GTLRSheetsQuery_SpreadsheetsValuesClear
+
+@dynamic range, spreadsheetId;
+
++ (instancetype)queryWithObject:(GTLRSheets_ClearValuesRequest *)object
+                  spreadsheetId:(NSString *)spreadsheetId
+                          range:(NSString *)range {
+  if (object == nil) {
+    GTLR_DEBUG_ASSERT(object != nil, @"Got a nil object");
+    return nil;
+  }
+  NSArray *pathParams = @[
+    @"range", @"spreadsheetId"
+  ];
+  NSString *pathURITemplate = @"v4/spreadsheets/{spreadsheetId}/values/{range}:clear";
+  GTLRSheetsQuery_SpreadsheetsValuesClear *query =
+    [[self alloc] initWithPathURITemplate:pathURITemplate
+                               HTTPMethod:@"POST"
+                       pathParameterNames:pathParams];
+  query.bodyObject = object;
+  query.spreadsheetId = spreadsheetId;
+  query.range = range;
+  query.expectedObjectClass = [GTLRSheets_ClearValuesResponse class];
+  query.loggingName = @"sheets.spreadsheets.values.clear";
+  return query;
+}
+
+@end
+
 @implementation GTLRSheetsQuery_SpreadsheetsValuesGet
 
 @dynamic dateTimeRenderOption, majorDimension, range, spreadsheetId,
@@ -255,7 +320,8 @@ NSString * const kGTLRSheetsValueRenderOptionUnformattedValue = @"UNFORMATTED_VA
 
 @implementation GTLRSheetsQuery_SpreadsheetsValuesUpdate
 
-@dynamic range, spreadsheetId, valueInputOption;
+@dynamic includeValuesInResponse, range, responseDateTimeRenderOption,
+         responseValueRenderOption, spreadsheetId, valueInputOption;
 
 + (instancetype)queryWithObject:(GTLRSheets_ValueRange *)object
                   spreadsheetId:(NSString *)spreadsheetId

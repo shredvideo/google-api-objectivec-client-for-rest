@@ -4,7 +4,8 @@
 // API:
 //   Google Service Control API (servicecontrol/v1)
 // Description:
-//   The Service Control API
+//   Google Service Control provides control plane functionality to managed
+//   services, such as logging, monitoring, and status checks.
 // Documentation:
 //   https://cloud.google.com/service-control/
 
@@ -37,6 +38,9 @@ NS_ASSUME_NONNULL_BEGIN
  *  Checks an operation with Google Service Control to decide whether
  *  the given operation should proceed. It should be called before the
  *  operation is executed.
+ *  If feasible, the client should cache the check results and reuse them for
+ *  up to 60s. In case of server errors, the client may rely on the cached
+ *  results for longer time.
  *  This method requires the `servicemanagement.services.check` permission
  *  on the specified service. For more information, see
  *  [Google Cloud IAM](https://cloud.google.com/iam).
@@ -64,6 +68,9 @@ NS_ASSUME_NONNULL_BEGIN
  *  Checks an operation with Google Service Control to decide whether
  *  the given operation should proceed. It should be called before the
  *  operation is executed.
+ *  If feasible, the client should cache the check results and reuse them for
+ *  up to 60s. In case of server errors, the client may rely on the cached
+ *  results for longer time.
  *  This method requires the `servicemanagement.services.check` permission
  *  on the specified service. For more information, see
  *  [Google Cloud IAM](https://cloud.google.com/iam).
@@ -85,6 +92,11 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Reports operations to Google Service Control. It should be called
  *  after the operation is completed.
+ *  If feasible, the client should aggregate reporting data for up to 5s to
+ *  reduce API traffic. Limiting aggregation to 5s is to reduce data loss
+ *  during client crashes. Clients should carefully choose the aggregation
+ *  window to avoid data loss risk more than 0.01% for business and
+ *  compliance reasons.
  *  This method requires the `servicemanagement.services.report` permission
  *  on the specified service. For more information, see
  *  [Google Cloud IAM](https://cloud.google.com/iam).
@@ -111,6 +123,11 @@ NS_ASSUME_NONNULL_BEGIN
  *
  *  Reports operations to Google Service Control. It should be called
  *  after the operation is completed.
+ *  If feasible, the client should aggregate reporting data for up to 5s to
+ *  reduce API traffic. Limiting aggregation to 5s is to reduce data loss
+ *  during client crashes. Clients should carefully choose the aggregation
+ *  window to avoid data loss risk more than 0.01% for business and
+ *  compliance reasons.
  *  This method requires the `servicemanagement.services.report` permission
  *  on the specified service. For more information, see
  *  [Google Cloud IAM](https://cloud.google.com/iam).

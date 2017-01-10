@@ -33,6 +33,7 @@ NSString * const kGTLRAdExchangeBuyerOpenAuctionStatusFilterNotChecked = @"not_c
 NSString * const kGTLRAdExchangeBuyerUpdateActionAccept        = @"accept";
 NSString * const kGTLRAdExchangeBuyerUpdateActionCancel        = @"cancel";
 NSString * const kGTLRAdExchangeBuyerUpdateActionPropose       = @"propose";
+NSString * const kGTLRAdExchangeBuyerUpdateActionProposeAndAccept = @"proposeAndAccept";
 NSString * const kGTLRAdExchangeBuyerUpdateActionUnknownAction = @"unknownAction";
 NSString * const kGTLRAdExchangeBuyerUpdateActionUpdateFinalized = @"updateFinalized";
 
@@ -86,7 +87,7 @@ NSString * const kGTLRAdExchangeBuyerUpdateActionUpdateFinalized = @"updateFinal
 
 @implementation GTLRAdExchangeBuyerQuery_AccountsPatch
 
-@dynamic identifier;
+@dynamic confirmUnsafeAccountChange, identifier;
 
 + (NSDictionary<NSString *, NSString *> *)parameterNameMap {
   return @{ @"identifier" : @"id" };
@@ -115,7 +116,7 @@ NSString * const kGTLRAdExchangeBuyerUpdateActionUpdateFinalized = @"updateFinal
 
 @implementation GTLRAdExchangeBuyerQuery_AccountsUpdate
 
-@dynamic identifier;
+@dynamic confirmUnsafeAccountChange, identifier;
 
 + (NSDictionary<NSString *, NSString *> *)parameterNameMap {
   return @{ @"identifier" : @"id" };
@@ -345,6 +346,29 @@ NSString * const kGTLRAdExchangeBuyerUpdateActionUpdateFinalized = @"updateFinal
                        pathParameterNames:nil];
   query.expectedObjectClass = [GTLRAdExchangeBuyer_CreativesList class];
   query.loggingName = @"adexchangebuyer.creatives.list";
+  return query;
+}
+
+@end
+
+@implementation GTLRAdExchangeBuyerQuery_CreativesListDeals
+
+@dynamic accountId, buyerCreativeId;
+
++ (instancetype)queryWithAccountId:(NSInteger)accountId
+                   buyerCreativeId:(NSString *)buyerCreativeId {
+  NSArray *pathParams = @[
+    @"accountId", @"buyerCreativeId"
+  ];
+  NSString *pathURITemplate = @"creatives/{accountId}/{buyerCreativeId}/listDeals";
+  GTLRAdExchangeBuyerQuery_CreativesListDeals *query =
+    [[self alloc] initWithPathURITemplate:pathURITemplate
+                               HTTPMethod:nil
+                       pathParameterNames:pathParams];
+  query.accountId = accountId;
+  query.buyerCreativeId = buyerCreativeId;
+  query.expectedObjectClass = [GTLRAdExchangeBuyer_CreativeDealIds class];
+  query.loggingName = @"adexchangebuyer.creatives.listDeals";
   return query;
 }
 

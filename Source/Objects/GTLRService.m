@@ -18,9 +18,6 @@
 #endif
 
 #import <TargetConditionals.h>
-#if TARGET_OS_MAC
-#include <sys/utsname.h>
-#endif
 
 #if TARGET_OS_IPHONE
 #import <UIKit/UIKit.h>
@@ -34,9 +31,12 @@
 
 #import "GTMMIMEDocument.h"
 
+#ifndef STRIP_GTM_FETCH_LOGGING
+  #error GTMSessionFetcher headers should have defaulted this if it wasn't already defined.
+#endif
+
 NSString *const kGTLRServiceErrorDomain = @"com.google.GTLRServiceDomain";
 NSString *const kGTLRErrorObjectDomain = @"com.google.GTLRErrorObjectDomain";
-NSString *const kGTLRServiceErrorStringKey = @"error";
 NSString *const kGTLRServiceErrorBodyDataKey = @"body";
 NSString *const kGTLRServiceErrorContentIDKey = @"contentID";
 NSString *const kGTLRStructuredErrorKey = @"GTLRStructuredError";
@@ -769,7 +769,7 @@ static NSDictionary *MergeDictionaries(NSDictionary *recessiveDict, NSDictionary
             // error response visible in the error object.
             NSString *reasonStr = [[NSString alloc] initWithData:(NSData * _Nonnull)data
                                                         encoding:NSUTF8StringEncoding];
-            NSDictionary *userInfo = @{ NSLocalizedFailureReasonErrorKey : reasonStr };
+            NSDictionary *userInfo = @{ NSLocalizedDescriptionKey : reasonStr };
             error = [NSError errorWithDomain:kGTMSessionFetcherStatusDomain
                                         code:status
                                     userInfo:userInfo];
@@ -1582,7 +1582,7 @@ static NSDictionary *MergeDictionaries(NSDictionary *recessiveDict, NSDictionary
         // Report a fetch failure for this part that lacks a JSON error.
         NSString *errorStr = responsePart.statusString;
         NSDictionary *userInfo = @{
-          kGTLRServiceErrorStringKey : (errorStr ?: @"<unknown>"),
+          NSLocalizedDescriptionKey : (errorStr ?: @"<unknown>"),
         };
         NSError *httpError = [NSError errorWithDomain:kGTLRServiceErrorDomain
                                                  code:GTLRServiceErrorBatchResponseStatusCode

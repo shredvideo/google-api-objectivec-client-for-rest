@@ -20,6 +20,7 @@
 
 @class GTLRGmail_AutoForwarding;
 @class GTLRGmail_BatchDeleteMessagesRequest;
+@class GTLRGmail_BatchModifyMessagesRequest;
 @class GTLRGmail_Draft;
 @class GTLRGmail_Filter;
 @class GTLRGmail_ForwardingAddress;
@@ -387,6 +388,7 @@ GTLR_EXTERN NSString * const kGTLRGmailInternalDateSourceReceivedTime;
  *  Authorization scope(s):
  *    @c kGTLRAuthScopeGmailCompose
  *    @c kGTLRAuthScopeGmailMailGoogleCom
+ *    @c kGTLRAuthScopeGmailMetadata
  *    @c kGTLRAuthScopeGmailModify
  *    @c kGTLRAuthScopeGmailReadonly
  */
@@ -424,6 +426,7 @@ GTLR_EXTERN NSString * const kGTLRGmailInternalDateSourceReceivedTime;
  *
  *  Authorization scope(s):
  *    @c kGTLRAuthScopeGmailMailGoogleCom
+ *    @c kGTLRAuthScopeGmailMetadata
  *    @c kGTLRAuthScopeGmailModify
  *    @c kGTLRAuthScopeGmailReadonly
  */
@@ -579,6 +582,7 @@ GTLR_EXTERN NSString * const kGTLRGmailInternalDateSourceReceivedTime;
  *  Authorization scope(s):
  *    @c kGTLRAuthScopeGmailLabels
  *    @c kGTLRAuthScopeGmailMailGoogleCom
+ *    @c kGTLRAuthScopeGmailMetadata
  *    @c kGTLRAuthScopeGmailModify
  *    @c kGTLRAuthScopeGmailReadonly
  */
@@ -625,6 +629,7 @@ GTLR_EXTERN NSString * const kGTLRGmailInternalDateSourceReceivedTime;
  *  Authorization scope(s):
  *    @c kGTLRAuthScopeGmailLabels
  *    @c kGTLRAuthScopeGmailMailGoogleCom
+ *    @c kGTLRAuthScopeGmailMetadata
  *    @c kGTLRAuthScopeGmailModify
  *    @c kGTLRAuthScopeGmailReadonly
  */
@@ -839,6 +844,45 @@ GTLR_EXTERN NSString * const kGTLRGmailInternalDateSourceReceivedTime;
 @end
 
 /**
+ *  Modifies labels on the given labels.
+ *
+ *  Method: gmail.users.messages.batchModify
+ *
+ *  Authorization scope(s):
+ *    @c kGTLRAuthScopeGmailMailGoogleCom
+ *    @c kGTLRAuthScopeGmailModify
+ */
+@interface GTLRGmailQuery_UsersMessagesBatchModify : GTLRGmailQuery
+// Previous library name was
+//   +[GTLQueryGmail queryForUsersMessagesBatchModifyWithObject:userId:]
+
+/**
+ *  The user's email address. The special value me can be used to indicate the
+ *  authenticated user.
+ *
+ *  @note If not set, the documented server-side default will be me.
+ */
+@property(nonatomic, copy, nullable) NSString *userId;
+
+/**
+ *  Upon successful completion, the callback's object and error parameters will
+ *  be nil. This query does not fetch an object.
+ *
+ *  Modifies labels on the given labels.
+ *
+ *  @param object The @c GTLRGmail_BatchModifyMessagesRequest to include in the
+ *    query.
+ *  @param userId The user's email address. The special value me can be used to
+ *    indicate the authenticated user. (Default me)
+ *
+ *  @returns GTLRGmailQuery_UsersMessagesBatchModify
+ */
++ (instancetype)queryWithObject:(GTLRGmail_BatchModifyMessagesRequest *)object
+                         userId:(NSString *)userId;
+
+@end
+
+/**
  *  Immediately and permanently deletes the specified message. This operation
  *  cannot be undone. Prefer messages.trash instead.
  *
@@ -891,6 +935,7 @@ GTLR_EXTERN NSString * const kGTLRGmailInternalDateSourceReceivedTime;
  *
  *  Authorization scope(s):
  *    @c kGTLRAuthScopeGmailMailGoogleCom
+ *    @c kGTLRAuthScopeGmailMetadata
  *    @c kGTLRAuthScopeGmailModify
  *    @c kGTLRAuthScopeGmailReadonly
  */
@@ -1099,6 +1144,7 @@ GTLR_EXTERN NSString * const kGTLRGmailInternalDateSourceReceivedTime;
  *
  *  Authorization scope(s):
  *    @c kGTLRAuthScopeGmailMailGoogleCom
+ *    @c kGTLRAuthScopeGmailMetadata
  *    @c kGTLRAuthScopeGmailModify
  *    @c kGTLRAuthScopeGmailReadonly
  */
@@ -1131,7 +1177,8 @@ GTLR_EXTERN NSString * const kGTLRGmailInternalDateSourceReceivedTime;
 /**
  *  Only return messages matching the specified query. Supports the same query
  *  format as the Gmail search box. For example, "from:someuser\@example.com
- *  rfc822msgid: is:unread".
+ *  rfc822msgid: is:unread". Parameter cannot be used when accessing the api
+ *  using the gmail.metadata scope.
  */
 @property(nonatomic, copy, nullable) NSString *q;
 
@@ -2271,6 +2318,7 @@ GTLR_EXTERN NSString * const kGTLRGmailInternalDateSourceReceivedTime;
  *
  *  Authorization scope(s):
  *    @c kGTLRAuthScopeGmailMailGoogleCom
+ *    @c kGTLRAuthScopeGmailMetadata
  *    @c kGTLRAuthScopeGmailModify
  *    @c kGTLRAuthScopeGmailReadonly
  */
@@ -2354,6 +2402,7 @@ GTLR_EXTERN NSString * const kGTLRGmailInternalDateSourceReceivedTime;
  *
  *  Authorization scope(s):
  *    @c kGTLRAuthScopeGmailMailGoogleCom
+ *    @c kGTLRAuthScopeGmailMetadata
  *    @c kGTLRAuthScopeGmailModify
  *    @c kGTLRAuthScopeGmailReadonly
  */
@@ -2415,6 +2464,7 @@ GTLR_EXTERN NSString * const kGTLRGmailInternalDateSourceReceivedTime;
  *
  *  Authorization scope(s):
  *    @c kGTLRAuthScopeGmailMailGoogleCom
+ *    @c kGTLRAuthScopeGmailMetadata
  *    @c kGTLRAuthScopeGmailModify
  *    @c kGTLRAuthScopeGmailReadonly
  */
@@ -2447,7 +2497,8 @@ GTLR_EXTERN NSString * const kGTLRGmailInternalDateSourceReceivedTime;
 /**
  *  Only return threads matching the specified query. Supports the same query
  *  format as the Gmail search box. For example, "from:someuser\@example.com
- *  rfc822msgid: is:unread".
+ *  rfc822msgid: is:unread". Parameter cannot be used when accessing the api
+ *  using the gmail.metadata scope.
  */
 @property(nonatomic, copy, nullable) NSString *q;
 
@@ -2620,6 +2671,7 @@ GTLR_EXTERN NSString * const kGTLRGmailInternalDateSourceReceivedTime;
  *
  *  Authorization scope(s):
  *    @c kGTLRAuthScopeGmailMailGoogleCom
+ *    @c kGTLRAuthScopeGmailMetadata
  *    @c kGTLRAuthScopeGmailModify
  *    @c kGTLRAuthScopeGmailReadonly
  */

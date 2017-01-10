@@ -56,6 +56,15 @@ NSString * const kGTLRSheets_BasicChartSpec_LegendPosition_NoLegend = @"NO_LEGEN
 NSString * const kGTLRSheets_BasicChartSpec_LegendPosition_RightLegend = @"RIGHT_LEGEND";
 NSString * const kGTLRSheets_BasicChartSpec_LegendPosition_TopLegend = @"TOP_LEGEND";
 
+// GTLRSheets_BatchUpdateValuesRequest.responseDateTimeRenderOption
+NSString * const kGTLRSheets_BatchUpdateValuesRequest_ResponseDateTimeRenderOption_FormattedString = @"FORMATTED_STRING";
+NSString * const kGTLRSheets_BatchUpdateValuesRequest_ResponseDateTimeRenderOption_SerialNumber = @"SERIAL_NUMBER";
+
+// GTLRSheets_BatchUpdateValuesRequest.responseValueRenderOption
+NSString * const kGTLRSheets_BatchUpdateValuesRequest_ResponseValueRenderOption_FormattedValue = @"FORMATTED_VALUE";
+NSString * const kGTLRSheets_BatchUpdateValuesRequest_ResponseValueRenderOption_Formula = @"FORMULA";
+NSString * const kGTLRSheets_BatchUpdateValuesRequest_ResponseValueRenderOption_UnformattedValue = @"UNFORMATTED_VALUE";
+
 // GTLRSheets_BatchUpdateValuesRequest.valueInputOption
 NSString * const kGTLRSheets_BatchUpdateValuesRequest_ValueInputOption_InputValueOptionUnspecified = @"INPUT_VALUE_OPTION_UNSPECIFIED";
 NSString * const kGTLRSheets_BatchUpdateValuesRequest_ValueInputOption_Raw = @"RAW";
@@ -98,6 +107,8 @@ NSString * const kGTLRSheets_Border_Style_Dotted           = @"DOTTED";
 NSString * const kGTLRSheets_Border_Style_Double           = @"DOUBLE";
 NSString * const kGTLRSheets_Border_Style_None             = @"NONE";
 NSString * const kGTLRSheets_Border_Style_Solid            = @"SOLID";
+NSString * const kGTLRSheets_Border_Style_SolidMedium      = @"SOLID_MEDIUM";
+NSString * const kGTLRSheets_Border_Style_SolidThick       = @"SOLID_THICK";
 NSString * const kGTLRSheets_Border_Style_StyleUnspecified = @"STYLE_UNSPECIFIED";
 
 // GTLRSheets_CellFormat.horizontalAlignment
@@ -288,6 +299,26 @@ NSString * const kGTLRSheets_ValueRange_MajorDimension_Rows    = @"ROWS";
 
 // ----------------------------------------------------------------------------
 //
+//   GTLRSheets_AddBandingRequest
+//
+
+@implementation GTLRSheets_AddBandingRequest
+@dynamic bandedRange;
+@end
+
+
+// ----------------------------------------------------------------------------
+//
+//   GTLRSheets_AddBandingResponse
+//
+
+@implementation GTLRSheets_AddBandingResponse
+@dynamic bandedRange;
+@end
+
+
+// ----------------------------------------------------------------------------
+//
 //   GTLRSheets_AddChartRequest
 //
 
@@ -456,6 +487,26 @@ NSString * const kGTLRSheets_ValueRange_MajorDimension_Rows    = @"ROWS";
 
 // ----------------------------------------------------------------------------
 //
+//   GTLRSheets_BandedRange
+//
+
+@implementation GTLRSheets_BandedRange
+@dynamic bandedRangeId, columnProperties, range, rowProperties;
+@end
+
+
+// ----------------------------------------------------------------------------
+//
+//   GTLRSheets_BandingProperties
+//
+
+@implementation GTLRSheets_BandingProperties
+@dynamic firstBandColor, footerColor, headerColor, secondBandColor;
+@end
+
+
+// ----------------------------------------------------------------------------
+//
 //   GTLRSheets_BasicChartAxis
 //
 
@@ -538,6 +589,42 @@ NSString * const kGTLRSheets_ValueRange_MajorDimension_Rows    = @"ROWS";
 
 // ----------------------------------------------------------------------------
 //
+//   GTLRSheets_BatchClearValuesRequest
+//
+
+@implementation GTLRSheets_BatchClearValuesRequest
+@dynamic ranges;
+
++ (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
+  NSDictionary<NSString *, Class> *map = @{
+    @"ranges" : [NSString class]
+  };
+  return map;
+}
+
+@end
+
+
+// ----------------------------------------------------------------------------
+//
+//   GTLRSheets_BatchClearValuesResponse
+//
+
+@implementation GTLRSheets_BatchClearValuesResponse
+@dynamic clearedRanges, spreadsheetId;
+
++ (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
+  NSDictionary<NSString *, Class> *map = @{
+    @"clearedRanges" : [NSString class]
+  };
+  return map;
+}
+
+@end
+
+
+// ----------------------------------------------------------------------------
+//
 //   GTLRSheets_BatchGetValuesResponse
 //
 
@@ -560,11 +647,13 @@ NSString * const kGTLRSheets_ValueRange_MajorDimension_Rows    = @"ROWS";
 //
 
 @implementation GTLRSheets_BatchUpdateSpreadsheetRequest
-@dynamic requests;
+@dynamic includeSpreadsheetInResponse, requests, responseIncludeGridData,
+         responseRanges;
 
 + (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
   NSDictionary<NSString *, Class> *map = @{
-    @"requests" : [GTLRSheets_Request class]
+    @"requests" : [GTLRSheets_Request class],
+    @"responseRanges" : [NSString class]
   };
   return map;
 }
@@ -578,7 +667,7 @@ NSString * const kGTLRSheets_ValueRange_MajorDimension_Rows    = @"ROWS";
 //
 
 @implementation GTLRSheets_BatchUpdateSpreadsheetResponse
-@dynamic replies, spreadsheetId;
+@dynamic replies, spreadsheetId, updatedSpreadsheet;
 
 + (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
   NSDictionary<NSString *, Class> *map = @{
@@ -596,7 +685,8 @@ NSString * const kGTLRSheets_ValueRange_MajorDimension_Rows    = @"ROWS";
 //
 
 @implementation GTLRSheets_BatchUpdateValuesRequest
-@dynamic data, valueInputOption;
+@dynamic data, includeValuesInResponse, responseDateTimeRenderOption,
+         responseValueRenderOption, valueInputOption;
 
 + (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
   NSDictionary<NSString *, Class> *map = @{
@@ -757,6 +847,25 @@ NSString * const kGTLRSheets_ValueRange_MajorDimension_Rows    = @"ROWS";
 
 // ----------------------------------------------------------------------------
 //
+//   GTLRSheets_ClearValuesRequest
+//
+
+@implementation GTLRSheets_ClearValuesRequest
+@end
+
+
+// ----------------------------------------------------------------------------
+//
+//   GTLRSheets_ClearValuesResponse
+//
+
+@implementation GTLRSheets_ClearValuesResponse
+@dynamic clearedRange, spreadsheetId;
+@end
+
+
+// ----------------------------------------------------------------------------
+//
 //   GTLRSheets_Color
 //
 
@@ -830,6 +939,16 @@ NSString * const kGTLRSheets_ValueRange_MajorDimension_Rows    = @"ROWS";
 
 @implementation GTLRSheets_DataValidationRule
 @dynamic condition, inputMessage, showCustomUi, strict;
+@end
+
+
+// ----------------------------------------------------------------------------
+//
+//   GTLRSheets_DeleteBandingRequest
+//
+
+@implementation GTLRSheets_DeleteBandingRequest
+@dynamic bandedRangeId;
 @end
 
 
@@ -1412,15 +1531,16 @@ NSString * const kGTLRSheets_ValueRange_MajorDimension_Rows    = @"ROWS";
 //
 
 @implementation GTLRSheets_Request
-@dynamic addChart, addConditionalFormatRule, addFilterView, addNamedRange,
-         addProtectedRange, addSheet, appendCells, appendDimension, autoFill,
-         autoResizeDimensions, clearBasicFilter, copyPaste, cutPaste,
-         deleteConditionalFormatRule, deleteDimension, deleteEmbeddedObject,
-         deleteFilterView, deleteNamedRange, deleteProtectedRange, deleteSheet,
+@dynamic addBanding, addChart, addConditionalFormatRule, addFilterView,
+         addNamedRange, addProtectedRange, addSheet, appendCells,
+         appendDimension, autoFill, autoResizeDimensions, clearBasicFilter,
+         copyPaste, cutPaste, deleteBanding, deleteConditionalFormatRule,
+         deleteDimension, deleteEmbeddedObject, deleteFilterView,
+         deleteNamedRange, deleteProtectedRange, deleteSheet,
          duplicateFilterView, duplicateSheet, findReplace, insertDimension,
          mergeCells, moveDimension, pasteData, repeatCell, setBasicFilter,
          setDataValidation, sortRange, textToColumns, unmergeCells,
-         updateBorders, updateCells, updateChartSpec,
+         updateBanding, updateBorders, updateCells, updateChartSpec,
          updateConditionalFormatRule, updateDimensionProperties,
          updateEmbeddedObjectPosition, updateFilterView, updateNamedRange,
          updateProtectedRange, updateSheetProperties,
@@ -1434,9 +1554,10 @@ NSString * const kGTLRSheets_ValueRange_MajorDimension_Rows    = @"ROWS";
 //
 
 @implementation GTLRSheets_Response
-@dynamic addChart, addFilterView, addNamedRange, addProtectedRange, addSheet,
-         deleteConditionalFormatRule, duplicateFilterView, duplicateSheet,
-         findReplace, updateConditionalFormatRule, updateEmbeddedObjectPosition;
+@dynamic addBanding, addChart, addFilterView, addNamedRange, addProtectedRange,
+         addSheet, deleteConditionalFormatRule, duplicateFilterView,
+         duplicateSheet, findReplace, updateConditionalFormatRule,
+         updateEmbeddedObjectPosition;
 @end
 
 
@@ -1484,11 +1605,12 @@ NSString * const kGTLRSheets_ValueRange_MajorDimension_Rows    = @"ROWS";
 //
 
 @implementation GTLRSheets_Sheet
-@dynamic basicFilter, charts, conditionalFormats, data, filterViews, merges,
-         properties, protectedRanges;
+@dynamic bandedRanges, basicFilter, charts, conditionalFormats, data,
+         filterViews, merges, properties, protectedRanges;
 
 + (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
   NSDictionary<NSString *, Class> *map = @{
+    @"bandedRanges" : [GTLRSheets_BandedRange class],
     @"charts" : [GTLRSheets_EmbeddedChart class],
     @"conditionalFormats" : [GTLRSheets_ConditionalFormatRule class],
     @"data" : [GTLRSheets_GridData class],
@@ -1618,6 +1740,16 @@ NSString * const kGTLRSheets_ValueRange_MajorDimension_Rows    = @"ROWS";
 
 @implementation GTLRSheets_UnmergeCellsRequest
 @dynamic range;
+@end
+
+
+// ----------------------------------------------------------------------------
+//
+//   GTLRSheets_UpdateBandingRequest
+//
+
+@implementation GTLRSheets_UpdateBandingRequest
+@dynamic bandedRange, fields;
 @end
 
 
@@ -1765,7 +1897,8 @@ NSString * const kGTLRSheets_ValueRange_MajorDimension_Rows    = @"ROWS";
 //
 
 @implementation GTLRSheets_UpdateValuesResponse
-@dynamic spreadsheetId, updatedCells, updatedColumns, updatedRange, updatedRows;
+@dynamic spreadsheetId, updatedCells, updatedColumns, updatedData, updatedRange,
+         updatedRows;
 @end
 
 

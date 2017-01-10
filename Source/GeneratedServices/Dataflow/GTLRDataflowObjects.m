@@ -264,7 +264,7 @@ NSString * const kGTLRDataflow_WorkerPool_TeardownPolicy_TeardownPolicyUnknown =
 //
 
 @implementation GTLRDataflow_CreateJobFromTemplateRequest
-@dynamic gcsPath, parameters;
+@dynamic environment, gcsPath, jobName, parameters;
 @end
 
 
@@ -347,7 +347,8 @@ NSString * const kGTLRDataflow_WorkerPool_TeardownPolicy_TeardownPolicyUnknown =
 
 @implementation GTLRDataflow_Environment
 @dynamic clusterManagerApiService, dataset, experiments, internalExperiments,
-         sdkPipelineOptions, tempStoragePrefix, userAgent, version, workerPools;
+         sdkPipelineOptions, serviceAccountEmail, tempStoragePrefix, userAgent,
+         version, workerPools;
 
 + (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
   NSDictionary<NSString *, Class> *map = @{
@@ -413,6 +414,16 @@ NSString * const kGTLRDataflow_WorkerPool_TeardownPolicy_TeardownPolicyUnknown =
   return [NSObject class];
 }
 
+@end
+
+
+// ----------------------------------------------------------------------------
+//
+//   GTLRDataflow_FailedLocation
+//
+
+@implementation GTLRDataflow_FailedLocation
+@dynamic name;
 @end
 
 
@@ -552,9 +563,9 @@ NSString * const kGTLRDataflow_WorkerPool_TeardownPolicy_TeardownPolicyUnknown =
 
 @implementation GTLRDataflow_Job
 @dynamic clientRequestId, createTime, currentState, currentStateTime,
-         environment, executionInfo, identifier, labels, name, projectId,
-         replacedByJobId, replaceJobId, requestedState, steps, tempFiles,
-         transformNameMapping, type;
+         environment, executionInfo, identifier, labels, location, name,
+         projectId, replacedByJobId, replaceJobId, requestedState, steps,
+         tempFiles, transformNameMapping, type;
 
 + (NSDictionary<NSString *, NSString *> *)propertyToJSONKeyMap {
   return @{ @"identifier" : @"id" };
@@ -700,8 +711,8 @@ NSString * const kGTLRDataflow_WorkerPool_TeardownPolicy_TeardownPolicyUnknown =
 //
 
 @implementation GTLRDataflow_LeaseWorkItemRequest
-@dynamic currentWorkerTime, requestedLeaseDuration, workerCapabilities,
-         workerId, workItemTypes;
+@dynamic currentWorkerTime, location, requestedLeaseDuration,
+         workerCapabilities, workerId, workItemTypes;
 
 + (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
   NSDictionary<NSString *, Class> *map = @{
@@ -760,17 +771,14 @@ NSString * const kGTLRDataflow_WorkerPool_TeardownPolicy_TeardownPolicyUnknown =
 //
 
 @implementation GTLRDataflow_ListJobsResponse
-@dynamic jobs, nextPageToken;
+@dynamic failedLocation, jobs, nextPageToken;
 
 + (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
   NSDictionary<NSString *, Class> *map = @{
+    @"failedLocation" : [GTLRDataflow_FailedLocation class],
     @"jobs" : [GTLRDataflow_Job class]
   };
   return map;
-}
-
-+ (NSString *)collectionItemsKey {
-  return @"jobs";
 }
 
 @end
@@ -1009,7 +1017,7 @@ NSString * const kGTLRDataflow_WorkerPool_TeardownPolicy_TeardownPolicyUnknown =
 
 @implementation GTLRDataflow_PubsubLocation
 @dynamic dropLateData, idLabel, subscription, timestampLabel, topic,
-         trackingSubscription;
+         trackingSubscription, withAttributes;
 @end
 
 
@@ -1039,7 +1047,7 @@ NSString * const kGTLRDataflow_WorkerPool_TeardownPolicy_TeardownPolicyUnknown =
 //
 
 @implementation GTLRDataflow_ReportWorkItemStatusRequest
-@dynamic currentWorkerTime, workerId, workItemStatuses;
+@dynamic currentWorkerTime, location, workerId, workItemStatuses;
 
 + (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
   NSDictionary<NSString *, Class> *map = @{
@@ -1064,6 +1072,21 @@ NSString * const kGTLRDataflow_WorkerPool_TeardownPolicy_TeardownPolicyUnknown =
     @"workItemServiceStates" : [GTLRDataflow_WorkItemServiceState class]
   };
   return map;
+}
+
+@end
+
+
+// ----------------------------------------------------------------------------
+//
+//   GTLRDataflow_RuntimeEnvironment
+//
+
+@implementation GTLRDataflow_RuntimeEnvironment
+@dynamic maxWorkers, serviceAccountEmail, zoneProperty;
+
++ (NSDictionary<NSString *, NSString *> *)propertyToJSONKeyMap {
+  return @{ @"zoneProperty" : @"zone" };
 }
 
 @end

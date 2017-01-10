@@ -153,6 +153,7 @@ typedef enum {
 @interface SGGenerator ()
 @property(strong) NSMutableArray *warnings;
 @property(strong) NSMutableArray *infos;
+@property(readonly) BOOL useLegacyObjectNaming;
 @end
 
 // Helper to get the objects of a dictionary out in a sorted order.
@@ -387,6 +388,11 @@ static void CheckForUnknownJSON(GTLRObject *obj, NSArray *keyPath,
   return result;
 }
 
+- (BOOL)useLegacyObjectNaming {
+  BOOL result = (_options & kSGGeneratorOptionLegacyObjectNaming) != 0;
+  return result;
+}
+
 - (NSString *)formattedAPIName {
   if (_formattedName == nil) {
     NSString *canonicalName = self.api.canonicalName;
@@ -428,6 +434,8 @@ static void CheckForUnknownJSON(GTLRObject *obj, NSArray *keyPath,
         }
         if ([[[parts lastObject] lowercaseString] isEqual:@"api"]) {
           parts = [parts subarrayWithRange:NSMakeRange(0, parts.count - 1)];
+        } else if ([[[parts lastObject] lowercaseString] isEqual:@"apis"]) {
+          parts = [parts subarrayWithRange:NSMakeRange(0, parts.count - 1)];
         }
         // If there was >1 part left, and glueing them all together as lowercase
         // matches the api name, then use them as the guessed name.
@@ -438,7 +446,7 @@ static void CheckForUnknownJSON(GTLRObject *obj, NSArray *keyPath,
                               shouldCapitalize:YES
                             allowLeadingDigits:YES];
             NSString *msg =
-              [NSString stringWithFormat:@"Guessed formatted name \"%@\" from API title \"%@\"",
+              [NSString stringWithFormat:@"Guessed formatted name '%@' from API title '%@'",
                                          _formattedName, title];
             [self addInfo:msg];
           }
@@ -732,6 +740,10 @@ static void CheckForUnknownJSON(GTLRObject *obj, NSArray *keyPath,
         [NSString stringWithFormat:@"Collision over the class name '%@' (schemas '%@' and '%@')",
          objcClassName,
          previousSchema.sg_fullSchemaName, schema.sg_fullSchemaName];
+      if (self.useLegacyObjectNaming) {
+        errStr =
+            [errStr stringByAppendingString:@", not using --useLegacyObjectClassNames will likely avoid this."];
+      }
       messageHandler(kSGGeneratorHandlerMessageError, errStr);
       allGood = NO;
     } else {
@@ -3873,7 +3885,9 @@ static NSString *OverrideName(NSString *name, EQueryOrObject queryOrObject,
   NSString *result = [resolvedSchema sg_propertyForKey:kSchemaObjCClassNameKey];
   if (result == nil) {
     NSArray *parts = [resolvedSchema sg_fullSchemaPath:YES foldArrayItems:YES];
-    NSString *fullName = [parts componentsJoinedByString:@""];
+    SGGenerator *generator = self.sg_generator;
+    NSString *joiner = (generator.useLegacyObjectNaming ? @"" : @"_");
+    NSString *fullName = [parts componentsJoinedByString:joiner];
 
     result = [NSString stringWithFormat:@"%@%@_%@",
               kProjectPrefix, self.sg_generator.formattedAPIName, fullName];
@@ -4184,9 +4198,11 @@ static SGTypeFormatMapping kObjectParameterMappings[] = {
   { @"string", @"google-datetime", { @"GTLRDateTime", YES, @"strong", nil },
                                    { @"GTLRDateTime", YES, @"strong", nil }},
   // Bridging https://github.com/google/protobuf/blob/master/src/google/protobuf/duration.proto
-  // Make it a plain string with a comment about format.
-  { @"string", @"google-duration", { @"NSString", YES, @"copy", @"String format is #.###s (seconds)." },
-                                   { @"NSString", YES, @"copy", @"String format is #.###s (seconds)." } },
+  // Uses a custom wrapper so folks don't have to worry about the "s" on the end
+  // and because it is easy to end up with floating point issues if one isn't
+  // careful.
+  { @"string", @"google-duration", { @"GTLRDuration", YES, @"strong", nil },
+                                   { @"GTLRDuration", YES, @"strong", nil } },
   // Bridging https://github.com/google/protobuf/blob/master/src/google/protobuf/field_mask.proto
   // Make it a plain string with a comment about format.
   { @"string", @"google-fieldmask", { @"NSString", YES, @"copy", @"String format is a comma-separated list of fields." },

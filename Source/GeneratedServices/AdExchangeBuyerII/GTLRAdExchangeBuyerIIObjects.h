@@ -4,8 +4,9 @@
 // API:
 //   Ad Exchange Buyer API II (adexchangebuyer2/v2beta1)
 // Description:
-//   Accesses the latest features for managing Ad Exchange accounts and
-//   Real-Time Bidding configurations and auction metrics.
+//   Accesses the latest features for managing Ad Exchange accounts, Real-Time
+//   Bidding configurations and auction metrics, and Marketplace programmatic
+//   deals.
 // Documentation:
 //   https://developers.google.com/ad-exchange/buyer-rest/guides/client-access/
 
@@ -217,7 +218,7 @@ GTLR_EXTERN NSString * const kGTLRAdExchangeBuyerII_ClientUser_Status_UserStatus
 /**
  *  The role which is assigned to the client buyer. Each role implies a set of
  *  permissions granted to the client. Must be one of `CLIENT_DEAL_VIEWER`,
- *  `CLIENT_DEAL_NEGOTIATOR`, or `CLIENT_DEAL_APPROVER`.
+ *  `CLIENT_DEAL_NEGOTIATOR` or `CLIENT_DEAL_APPROVER`.
  *
  *  Likely values:
  *    @arg @c kGTLRAdExchangeBuyerII_Client_Role_ClientDealApprover Users
@@ -326,8 +327,8 @@ GTLR_EXTERN NSString * const kGTLRAdExchangeBuyerII_ClientUser_Status_UserStatus
 
 
 /**
- *  An invitation for a new client user to get access to the AdExchange Buyer
- *  UI.
+ *  An invitation for a new client user to get access to the Ad Exchange
+ *  Buyer UI.
  *  All fields are required unless otherwise specified.
  */
 @interface GTLRAdExchangeBuyerII_ClientUserInvitation : GTLRObject

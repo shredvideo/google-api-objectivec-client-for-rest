@@ -40,6 +40,7 @@
 @class GTLRDataflow_EnvironmentSdkPipelineOptions;
 @class GTLRDataflow_EnvironmentUserAgent;
 @class GTLRDataflow_EnvironmentVersion;
+@class GTLRDataflow_FailedLocation;
 @class GTLRDataflow_FlattenInstruction;
 @class GTLRDataflow_FloatingPointList;
 @class GTLRDataflow_FloatingPointMean;
@@ -76,6 +77,7 @@
 @class GTLRDataflow_PubsubLocation;
 @class GTLRDataflow_ReadInstruction;
 @class GTLRDataflow_ReportedParallelism;
+@class GTLRDataflow_RuntimeEnvironment;
 @class GTLRDataflow_SeqMapTask;
 @class GTLRDataflow_SeqMapTaskOutputInfo;
 @class GTLRDataflow_SeqMapTaskUserFn;
@@ -744,8 +746,14 @@ GTLR_EXTERN NSString * const kGTLRDataflow_WorkerPool_TeardownPolicy_TeardownPol
  */
 @interface GTLRDataflow_CreateJobFromTemplateRequest : GTLRObject
 
+/** Runtime environment for the job. */
+@property(nonatomic, strong, nullable) GTLRDataflow_RuntimeEnvironment *environment;
+
 /** A path to the serialized JSON representation of the job. */
 @property(nonatomic, copy, nullable) NSString *gcsPath;
+
+/** The job name to use for the created job.. */
+@property(nonatomic, copy, nullable) NSString *jobName;
 
 /** Dynamic parameterization of the job's runtime environment. */
 @property(nonatomic, strong, nullable) GTLRDataflow_CreateJobFromTemplateRequestParameters *parameters;
@@ -921,6 +929,9 @@ GTLR_EXTERN NSString * const kGTLRDataflow_WorkerPool_TeardownPolicy_TeardownPol
  */
 @property(nonatomic, strong, nullable) GTLRDataflow_EnvironmentSdkPipelineOptions *sdkPipelineOptions;
 
+/** Identity to run virtual machines as. Defaults to the default account. */
+@property(nonatomic, copy, nullable) NSString *serviceAccountEmail;
+
 /**
  *  The prefix of the resources the system should use for temporary storage. The
  *  system will append the suffix "/temp-{JOBNAME} to this resource prefix,
@@ -999,6 +1010,18 @@ GTLR_EXTERN NSString * const kGTLRDataflow_WorkerPool_TeardownPolicy_TeardownPol
  *        -additionalProperties to fetch them all at once.
  */
 @interface GTLRDataflow_EnvironmentVersion : GTLRObject
+@end
+
+
+/**
+ *  FailedLocation indicates which location failed to respond to a request for
+ *  data.
+ */
+@interface GTLRDataflow_FailedLocation : GTLRObject
+
+/** The name of the failed location. */
+@property(nonatomic, copy, nullable) NSString *name;
+
 @end
 
 
@@ -1247,6 +1270,9 @@ GTLR_EXTERN NSString * const kGTLRDataflow_WorkerPool_TeardownPolicy_TeardownPol
  *  and values are additionally constrained to be <= 128 bytes in size.
  */
 @property(nonatomic, strong, nullable) GTLRDataflow_JobLabels *labels;
+
+/** The location which contains this job. */
+@property(nonatomic, copy, nullable) NSString *location;
 
 /**
  *  The user-specified Dataflow job name. Only one Job with a given name may
@@ -1529,6 +1555,9 @@ GTLR_EXTERN NSString * const kGTLRDataflow_WorkerPool_TeardownPolicy_TeardownPol
 /** The current timestamp at the worker. */
 @property(nonatomic, copy, nullable) NSString *currentWorkerTime;
 
+/** The location which contains the WorkItem's job. */
+@property(nonatomic, copy, nullable) NSString *location;
+
 /** The initial lease period. */
 @property(nonatomic, copy, nullable) NSString *requestedLeaseDuration;
 
@@ -1588,20 +1617,13 @@ GTLR_EXTERN NSString * const kGTLRDataflow_WorkerPool_TeardownPolicy_TeardownPol
 /**
  *  Response to a request to list Dataflow jobs. This may be a partial response,
  *  depending on the page size in the ListJobsRequest.
- *
- *  @note This class supports NSFastEnumeration and indexed subscripting over
- *        its "jobs" property. If returned as the result of a query, it should
- *        support automatic pagination (when @c shouldFetchNextPages is
- *        enabled).
  */
-@interface GTLRDataflow_ListJobsResponse : GTLRCollectionObject
+@interface GTLRDataflow_ListJobsResponse : GTLRObject
 
-/**
- *  A subset of the requested job information.
- *
- *  @note This property is used to support NSFastEnumeration and indexed
- *        subscripting on this class.
- */
+/** Zero or more messages describing locations that failed to respond. */
+@property(nonatomic, strong, nullable) NSArray<GTLRDataflow_FailedLocation *> *failedLocation;
+
+/** A subset of the requested job information. */
 @property(nonatomic, strong, nullable) NSArray<GTLRDataflow_Job *> *jobs;
 
 /** Set if there may be more results than fit in this response. */
@@ -2078,6 +2100,13 @@ GTLR_EXTERN NSString * const kGTLRDataflow_WorkerPool_TeardownPolicy_TeardownPol
  */
 @property(nonatomic, copy, nullable) NSString *trackingSubscription;
 
+/**
+ *  If true, then the client has requested to get pubsub attributes.
+ *
+ *  Uses NSNumber of boolValue.
+ */
+@property(nonatomic, strong, nullable) NSNumber *withAttributes;
+
 @end
 
 
@@ -2127,6 +2156,9 @@ GTLR_EXTERN NSString * const kGTLRDataflow_WorkerPool_TeardownPolicy_TeardownPol
 /** The current timestamp at the worker. */
 @property(nonatomic, copy, nullable) NSString *currentWorkerTime;
 
+/** The location which contains the WorkItem's job. */
+@property(nonatomic, copy, nullable) NSString *location;
+
 /**
  *  The ID of the worker reporting the WorkItem status. If this does not match
  *  the ID of the worker which the Dataflow service believes currently has the
@@ -2155,6 +2187,31 @@ GTLR_EXTERN NSString * const kGTLRDataflow_WorkerPool_TeardownPolicy_TeardownPol
  *  ReportWorkItemStatusRequest which resulting in this response.
  */
 @property(nonatomic, strong, nullable) NSArray<GTLRDataflow_WorkItemServiceState *> *workItemServiceStates;
+
+@end
+
+
+/**
+ *  Environment values to set at runtime.
+ */
+@interface GTLRDataflow_RuntimeEnvironment : GTLRObject
+
+/**
+ *  The maximum number of workers to start for the job.
+ *
+ *  Uses NSNumber of intValue.
+ */
+@property(nonatomic, strong, nullable) NSNumber *maxWorkers;
+
+/** The service account to run the job as. */
+@property(nonatomic, copy, nullable) NSString *serviceAccountEmail;
+
+/**
+ *  The zone to start the workers in.
+ *
+ *  Remapped to 'zoneProperty' to avoid NSObject's 'zone'.
+ */
+@property(nonatomic, copy, nullable) NSString *zoneProperty;
 
 @end
 

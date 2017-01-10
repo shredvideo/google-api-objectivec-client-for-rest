@@ -42,9 +42,9 @@ NSString * const kGTLRCloudBuild_Hash_Type_Sha256 = @"SHA256";
 //
 
 @implementation GTLRCloudBuild_Build
-@dynamic createTime, finishTime, identifier, images, logsBucket, options,
-         projectId, results, source, sourceProvenance, startTime, status,
-         statusDetail, steps, timeout;
+@dynamic buildTriggerId, createTime, finishTime, identifier, images, logsBucket,
+         logUrl, options, projectId, results, source, sourceProvenance,
+         startTime, status, statusDetail, steps, timeout;
 
 + (NSDictionary<NSString *, NSString *> *)propertyToJSONKeyMap {
   return @{ @"identifier" : @"id" };
@@ -115,6 +115,26 @@ NSString * const kGTLRCloudBuild_Hash_Type_Sha256 = @"SHA256";
 
 // ----------------------------------------------------------------------------
 //
+//   GTLRCloudBuild_BuildTrigger
+//
+
+@implementation GTLRCloudBuild_BuildTrigger
+@dynamic build, createTime, descriptionProperty, disabled, filename, identifier,
+         triggerTemplate;
+
++ (NSDictionary<NSString *, NSString *> *)propertyToJSONKeyMap {
+  NSDictionary<NSString *, NSString *> *map = @{
+    @"descriptionProperty" : @"description",
+    @"identifier" : @"id"
+  };
+  return map;
+}
+
+@end
+
+
+// ----------------------------------------------------------------------------
+//
 //   GTLRCloudBuild_BuiltImage
 //
 
@@ -129,6 +149,24 @@ NSString * const kGTLRCloudBuild_Hash_Type_Sha256 = @"SHA256";
 //
 
 @implementation GTLRCloudBuild_CancelBuildRequest
+@end
+
+
+// ----------------------------------------------------------------------------
+//
+//   GTLRCloudBuild_CancelOperationRequest
+//
+
+@implementation GTLRCloudBuild_CancelOperationRequest
+@end
+
+
+// ----------------------------------------------------------------------------
+//
+//   GTLRCloudBuild_Empty
+//
+
+@implementation GTLRCloudBuild_Empty
 @end
 
 
@@ -177,6 +215,24 @@ NSString * const kGTLRCloudBuild_Hash_Type_Sha256 = @"SHA256";
 
 + (NSString *)collectionItemsKey {
   return @"builds";
+}
+
+@end
+
+
+// ----------------------------------------------------------------------------
+//
+//   GTLRCloudBuild_ListBuildTriggersResponse
+//
+
+@implementation GTLRCloudBuild_ListBuildTriggersResponse
+@dynamic triggers;
+
++ (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
+  NSDictionary<NSString *, Class> *map = @{
+    @"triggers" : [GTLRCloudBuild_BuildTrigger class]
+  };
+  return map;
 }
 
 @end

@@ -1578,6 +1578,20 @@ GTLR_EXTERN NSString * const kGTLRDriveCorpusUser;
 @property(nonatomic, copy, nullable) NSString *fileId;
 
 /**
+ *  The maximum number of revisions to return per page.
+ *
+ *  @note If not set, the documented server-side default will be 200 (from the
+ *        range 1..1000).
+ */
+@property(nonatomic, assign) NSInteger pageSize;
+
+/**
+ *  The token for continuing a previous list request on the next page. This
+ *  should be set to the value of 'nextPageToken' from the previous response.
+ */
+@property(nonatomic, copy, nullable) NSString *pageToken;
+
+/**
  *  Fetches a @c GTLRDrive_RevisionList.
  *
  *  Lists a file's revisions.
@@ -1585,6 +1599,10 @@ GTLR_EXTERN NSString * const kGTLRDriveCorpusUser;
  *  @param fileId The ID of the file.
  *
  *  @returns GTLRDriveQuery_RevisionsList
+ *
+ *  @note Automatic pagination will be done when @c shouldFetchNextPages is
+ *        enabled. See @c shouldFetchNextPages on @c GTLRService for more
+ *        information.
  */
 + (instancetype)queryWithFileId:(NSString *)fileId;
 
