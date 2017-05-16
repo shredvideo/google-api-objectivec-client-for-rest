@@ -110,6 +110,18 @@ GTLR_EXTERN NSString * const kGTLRDeploymentManagerDeletePolicyDelete;
 // Previous library name was
 //   +[GTLQueryDeploymentManager queryForDeploymentsDeleteWithproject:deployment:]
 
+/**
+ *  Sets the policy to use for deleting resources.
+ *
+ *  Likely values:
+ *    @arg @c kGTLRDeploymentManagerDeletePolicyAbandon Value "ABANDON"
+ *    @arg @c kGTLRDeploymentManagerDeletePolicyDelete Value "DELETE"
+ *
+ *  @note If not set, the documented server-side default will be
+ *        kGTLRDeploymentManagerDeletePolicyDelete.
+ */
+@property(nonatomic, copy, nullable) NSString *deletePolicy;
+
 /** The name of the deployment for this request. */
 @property(nonatomic, copy, nullable) NSString *deployment;
 
@@ -291,10 +303,10 @@ GTLR_EXTERN NSString * const kGTLRDeploymentManagerDeletePolicyDelete;
  *  The maximum number of results per page that should be returned. If the
  *  number of available results is larger than maxResults, Compute Engine
  *  returns a nextPageToken that can be used to get the next page of results in
- *  subsequent list requests.
+ *  subsequent list requests. Acceptable values are 0 to 500, inclusive.
+ *  (Default: 500)
  *
- *  @note If not set, the documented server-side default will be 500 (from the
- *        range 0..500).
+ *  @note If not set, the documented server-side default will be 500.
  */
 @property(nonatomic, assign) NSUInteger maxResults;
 
@@ -697,10 +709,10 @@ GTLR_EXTERN NSString * const kGTLRDeploymentManagerDeletePolicyDelete;
  *  The maximum number of results per page that should be returned. If the
  *  number of available results is larger than maxResults, Compute Engine
  *  returns a nextPageToken that can be used to get the next page of results in
- *  subsequent list requests.
+ *  subsequent list requests. Acceptable values are 0 to 500, inclusive.
+ *  (Default: 500)
  *
- *  @note If not set, the documented server-side default will be 500 (from the
- *        range 0..500).
+ *  @note If not set, the documented server-side default will be 500.
  */
 @property(nonatomic, assign) NSUInteger maxResults;
 
@@ -823,10 +835,10 @@ GTLR_EXTERN NSString * const kGTLRDeploymentManagerDeletePolicyDelete;
  *  The maximum number of results per page that should be returned. If the
  *  number of available results is larger than maxResults, Compute Engine
  *  returns a nextPageToken that can be used to get the next page of results in
- *  subsequent list requests.
+ *  subsequent list requests. Acceptable values are 0 to 500, inclusive.
+ *  (Default: 500)
  *
- *  @note If not set, the documented server-side default will be 500 (from the
- *        range 0..500).
+ *  @note If not set, the documented server-side default will be 500.
  */
 @property(nonatomic, assign) NSUInteger maxResults;
 
@@ -955,10 +967,10 @@ GTLR_EXTERN NSString * const kGTLRDeploymentManagerDeletePolicyDelete;
  *  The maximum number of results per page that should be returned. If the
  *  number of available results is larger than maxResults, Compute Engine
  *  returns a nextPageToken that can be used to get the next page of results in
- *  subsequent list requests.
+ *  subsequent list requests. Acceptable values are 0 to 500, inclusive.
+ *  (Default: 500)
  *
- *  @note If not set, the documented server-side default will be 500 (from the
- *        range 0..500).
+ *  @note If not set, the documented server-side default will be 500.
  */
 @property(nonatomic, assign) NSUInteger maxResults;
 
@@ -1045,10 +1057,10 @@ GTLR_EXTERN NSString * const kGTLRDeploymentManagerDeletePolicyDelete;
  *  The maximum number of results per page that should be returned. If the
  *  number of available results is larger than maxResults, Compute Engine
  *  returns a nextPageToken that can be used to get the next page of results in
- *  subsequent list requests.
+ *  subsequent list requests. Acceptable values are 0 to 500, inclusive.
+ *  (Default: 500)
  *
- *  @note If not set, the documented server-side default will be 500 (from the
- *        range 0..500).
+ *  @note If not set, the documented server-side default will be 500.
  */
 @property(nonatomic, assign) NSUInteger maxResults;
 

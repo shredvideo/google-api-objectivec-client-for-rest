@@ -19,26 +19,30 @@
 #endif
 
 @class GTLRStorage_Bucket;
+@class GTLRStorage_Bucket_Cors_Item;
+@class GTLRStorage_Bucket_Labels;
+@class GTLRStorage_Bucket_Lifecycle;
+@class GTLRStorage_Bucket_Lifecycle_Rule_Item;
+@class GTLRStorage_Bucket_Lifecycle_Rule_Item_Action;
+@class GTLRStorage_Bucket_Lifecycle_Rule_Item_Condition;
+@class GTLRStorage_Bucket_Logging;
+@class GTLRStorage_Bucket_Owner;
+@class GTLRStorage_Bucket_Versioning;
+@class GTLRStorage_Bucket_Website;
 @class GTLRStorage_BucketAccessControl;
-@class GTLRStorage_BucketAccessControlProjectTeam;
-@class GTLRStorage_BucketCorsItem;
-@class GTLRStorage_BucketLifecycle;
-@class GTLRStorage_BucketLifecycleRuleItem;
-@class GTLRStorage_BucketLifecycleRuleItemAction;
-@class GTLRStorage_BucketLifecycleRuleItemCondition;
-@class GTLRStorage_BucketLogging;
-@class GTLRStorage_BucketOwner;
-@class GTLRStorage_BucketVersioning;
-@class GTLRStorage_BucketWebsite;
-@class GTLRStorage_ChannelParams;
-@class GTLRStorage_ComposeRequestSourceObjectsItem;
-@class GTLRStorage_ComposeRequestSourceObjectsItemObjectPreconditions;
+@class GTLRStorage_BucketAccessControl_ProjectTeam;
+@class GTLRStorage_Channel_Params;
+@class GTLRStorage_ComposeRequest_SourceObjects_Item;
+@class GTLRStorage_ComposeRequest_SourceObjects_Item_ObjectPreconditions;
+@class GTLRStorage_Notification;
+@class GTLRStorage_Notification_CustomAttributes;
 @class GTLRStorage_Object;
+@class GTLRStorage_Object_CustomerEncryption;
+@class GTLRStorage_Object_Metadata;
+@class GTLRStorage_Object_Owner;
 @class GTLRStorage_ObjectAccessControl;
-@class GTLRStorage_ObjectAccessControlProjectTeam;
-@class GTLRStorage_ObjectCustomerEncryption;
-@class GTLRStorage_ObjectMetadata;
-@class GTLRStorage_ObjectOwner;
+@class GTLRStorage_ObjectAccessControl_ProjectTeam;
+@class GTLRStorage_Policy_Bindings_Item;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -51,7 +55,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong, nullable) NSArray<GTLRStorage_BucketAccessControl *> *acl;
 
 /** The bucket's Cross-Origin Resource Sharing (CORS) configuration. */
-@property(nonatomic, strong, nullable) NSArray<GTLRStorage_BucketCorsItem *> *cors;
+@property(nonatomic, strong, nullable) NSArray<GTLRStorage_Bucket_Cors_Item *> *cors;
 
 /**
  *  Default access controls to apply to new objects when no ACL is provided.
@@ -62,7 +66,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *ETag;
 
 /**
- *  The ID of the bucket.
+ *  The ID of the bucket. For buckets, the id and name properities are the same.
  *
  *  identifier property maps to 'id' in JSON (to avoid Objective C's 'id').
  */
@@ -71,11 +75,14 @@ NS_ASSUME_NONNULL_BEGIN
 /** The kind of item this is. For buckets, this is always storage#bucket. */
 @property(nonatomic, copy, nullable) NSString *kind;
 
+/** User-provided labels, in key/value pairs. */
+@property(nonatomic, strong, nullable) GTLRStorage_Bucket_Labels *labels;
+
 /**
  *  The bucket's lifecycle configuration. See lifecycle management for more
  *  information.
  */
-@property(nonatomic, strong, nullable) GTLRStorage_BucketLifecycle *lifecycle;
+@property(nonatomic, strong, nullable) GTLRStorage_Bucket_Lifecycle *lifecycle;
 
 /**
  *  The location of the bucket. Object data for objects in the bucket resides in
@@ -88,7 +95,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  The bucket's logging configuration, which defines the destination bucket and
  *  optional name prefix for the current bucket's logs.
  */
-@property(nonatomic, strong, nullable) GTLRStorage_BucketLogging *logging;
+@property(nonatomic, strong, nullable) GTLRStorage_Bucket_Logging *logging;
 
 /**
  *  The metadata generation of this bucket.
@@ -101,7 +108,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *name;
 
 /** The owner of the bucket. This is always the project team's owner group. */
-@property(nonatomic, strong, nullable) GTLRStorage_BucketOwner *owner;
+@property(nonatomic, strong, nullable) GTLRStorage_Bucket_Owner *owner;
 
 /**
  *  The project number of the project the bucket belongs to.
@@ -131,22 +138,22 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong, nullable) GTLRDateTime *updated;
 
 /** The bucket's versioning configuration. */
-@property(nonatomic, strong, nullable) GTLRStorage_BucketVersioning *versioning;
+@property(nonatomic, strong, nullable) GTLRStorage_Bucket_Versioning *versioning;
 
 /**
  *  The bucket's website configuration, controlling how the service behaves when
  *  accessing bucket contents as a web site. See the Static Website Examples for
  *  more information.
  */
-@property(nonatomic, strong, nullable) GTLRStorage_BucketWebsite *website;
+@property(nonatomic, strong, nullable) GTLRStorage_Bucket_Website *website;
 
 @end
 
 
 /**
- *  GTLRStorage_BucketCorsItem
+ *  GTLRStorage_Bucket_Cors_Item
  */
-@interface GTLRStorage_BucketCorsItem : GTLRObject
+@interface GTLRStorage_Bucket_Cors_Item : GTLRObject
 
 /**
  *  The value, in seconds, to return in the Access-Control-Max-Age header used
@@ -179,16 +186,28 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
+ *  User-provided labels, in key/value pairs.
+ *
+ *  @note This class is documented as having more properties of NSString. Use @c
+ *        -additionalJSONKeys and @c -additionalPropertyForName: to get the list
+ *        of properties and then fetch them; or @c -additionalProperties to
+ *        fetch them all at once.
+ */
+@interface GTLRStorage_Bucket_Labels : GTLRObject
+@end
+
+
+/**
  *  The bucket's lifecycle configuration. See lifecycle management for more
  *  information.
  */
-@interface GTLRStorage_BucketLifecycle : GTLRObject
+@interface GTLRStorage_Bucket_Lifecycle : GTLRObject
 
 /**
  *  A lifecycle management rule, which is made of an action to take and the
  *  condition(s) under which the action will be taken.
  */
-@property(nonatomic, strong, nullable) NSArray<GTLRStorage_BucketLifecycleRuleItem *> *rule;
+@property(nonatomic, strong, nullable) NSArray<GTLRStorage_Bucket_Lifecycle_Rule_Item *> *rule;
 
 @end
 
@@ -197,7 +216,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  The bucket's logging configuration, which defines the destination bucket and
  *  optional name prefix for the current bucket's logs.
  */
-@interface GTLRStorage_BucketLogging : GTLRObject
+@interface GTLRStorage_Bucket_Logging : GTLRObject
 
 /**
  *  The destination bucket where the current bucket's logs should be placed.
@@ -213,7 +232,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  The owner of the bucket. This is always the project team's owner group.
  */
-@interface GTLRStorage_BucketOwner : GTLRObject
+@interface GTLRStorage_Bucket_Owner : GTLRObject
 
 /** The entity, in the form project-owner-projectId. */
 @property(nonatomic, copy, nullable) NSString *entity;
@@ -227,7 +246,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  The bucket's versioning configuration.
  */
-@interface GTLRStorage_BucketVersioning : GTLRObject
+@interface GTLRStorage_Bucket_Versioning : GTLRObject
 
 /**
  *  While set to true, versioning is fully enabled for this bucket.
@@ -244,7 +263,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  accessing bucket contents as a web site. See the Static Website Examples for
  *  more information.
  */
-@interface GTLRStorage_BucketWebsite : GTLRObject
+@interface GTLRStorage_Bucket_Website : GTLRObject
 
 /**
  *  If the requested object path is missing, the service will ensure the path
@@ -265,15 +284,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- *  GTLRStorage_BucketLifecycleRuleItem
+ *  GTLRStorage_Bucket_Lifecycle_Rule_Item
  */
-@interface GTLRStorage_BucketLifecycleRuleItem : GTLRObject
+@interface GTLRStorage_Bucket_Lifecycle_Rule_Item : GTLRObject
 
 /** The action to take. */
-@property(nonatomic, strong, nullable) GTLRStorage_BucketLifecycleRuleItemAction *action;
+@property(nonatomic, strong, nullable) GTLRStorage_Bucket_Lifecycle_Rule_Item_Action *action;
 
 /** The condition(s) under which the action will be taken. */
-@property(nonatomic, strong, nullable) GTLRStorage_BucketLifecycleRuleItemCondition *condition;
+@property(nonatomic, strong, nullable) GTLRStorage_Bucket_Lifecycle_Rule_Item_Condition *condition;
 
 @end
 
@@ -281,7 +300,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  The action to take.
  */
-@interface GTLRStorage_BucketLifecycleRuleItemAction : GTLRObject
+@interface GTLRStorage_Bucket_Lifecycle_Rule_Item_Action : GTLRObject
 
 /**
  *  Target storage class. Required iff the type of the action is
@@ -301,7 +320,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  The condition(s) under which the action will be taken.
  */
-@interface GTLRStorage_BucketLifecycleRuleItemCondition : GTLRObject
+@interface GTLRStorage_Bucket_Lifecycle_Rule_Item_Condition : GTLRObject
 
 /**
  *  Age of an object (in days). This condition is satisfied when an object
@@ -399,7 +418,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *kind;
 
 /** The project team associated with the entity, if any. */
-@property(nonatomic, strong, nullable) GTLRStorage_BucketAccessControlProjectTeam *projectTeam;
+@property(nonatomic, strong, nullable) GTLRStorage_BucketAccessControl_ProjectTeam *projectTeam;
 
 /** The access permission for the entity. */
 @property(nonatomic, copy, nullable) NSString *role;
@@ -413,7 +432,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  The project team associated with the entity, if any.
  */
-@interface GTLRStorage_BucketAccessControlProjectTeam : GTLRObject
+@interface GTLRStorage_BucketAccessControl_ProjectTeam : GTLRObject
 
 /** The project number. */
 @property(nonatomic, copy, nullable) NSString *projectNumber;
@@ -512,7 +531,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *kind;
 
 /** Additional parameters controlling delivery channel behavior. Optional. */
-@property(nonatomic, strong, nullable) GTLRStorage_ChannelParams *params;
+@property(nonatomic, strong, nullable) GTLRStorage_Channel_Params *params;
 
 /**
  *  A Boolean value to indicate whether payload is wanted. Optional.
@@ -550,7 +569,7 @@ NS_ASSUME_NONNULL_BEGIN
  *        of properties and then fetch them; or @c -additionalProperties to
  *        fetch them all at once.
  */
-@interface GTLRStorage_ChannelParams : GTLRObject
+@interface GTLRStorage_Channel_Params : GTLRObject
 @end
 
 
@@ -568,15 +587,15 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  The list of source objects that will be concatenated into a single object.
  */
-@property(nonatomic, strong, nullable) NSArray<GTLRStorage_ComposeRequestSourceObjectsItem *> *sourceObjects;
+@property(nonatomic, strong, nullable) NSArray<GTLRStorage_ComposeRequest_SourceObjects_Item *> *sourceObjects;
 
 @end
 
 
 /**
- *  GTLRStorage_ComposeRequestSourceObjectsItem
+ *  GTLRStorage_ComposeRequest_SourceObjects_Item
  */
-@interface GTLRStorage_ComposeRequestSourceObjectsItem : GTLRObject
+@interface GTLRStorage_ComposeRequest_SourceObjects_Item : GTLRObject
 
 /**
  *  The generation of this object to use as the source.
@@ -592,7 +611,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *name;
 
 /** Conditions that must be met for this operation to execute. */
-@property(nonatomic, strong, nullable) GTLRStorage_ComposeRequestSourceObjectsItemObjectPreconditions *objectPreconditions;
+@property(nonatomic, strong, nullable) GTLRStorage_ComposeRequest_SourceObjects_Item_ObjectPreconditions *objectPreconditions;
 
 @end
 
@@ -600,7 +619,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  Conditions that must be met for this operation to execute.
  */
-@interface GTLRStorage_ComposeRequestSourceObjectsItemObjectPreconditions : GTLRObject
+@interface GTLRStorage_ComposeRequest_SourceObjects_Item_ObjectPreconditions : GTLRObject
 
 /**
  *  Only perform the composition if the generation of the source object that
@@ -610,6 +629,98 @@ NS_ASSUME_NONNULL_BEGIN
  *  Uses NSNumber of longLongValue.
  */
 @property(nonatomic, strong, nullable) NSNumber *ifGenerationMatch;
+
+@end
+
+
+/**
+ *  A subscription to receive Google PubSub notifications.
+ */
+@interface GTLRStorage_Notification : GTLRObject
+
+/**
+ *  An optional list of additional attributes to attach to each Cloud PubSub
+ *  message published for this notification subscription.
+ */
+@property(nonatomic, strong, nullable) GTLRStorage_Notification_CustomAttributes *customAttributes;
+
+/** HTTP 1.1 Entity tag for this subscription notification. */
+@property(nonatomic, copy, nullable) NSString *ETag;
+
+/**
+ *  If present, only send notifications about listed event types. If empty, sent
+ *  notifications for all event types.
+ */
+@property(nonatomic, strong, nullable) NSArray<NSString *> *eventTypes;
+
+/**
+ *  The ID of the notification.
+ *
+ *  identifier property maps to 'id' in JSON (to avoid Objective C's 'id').
+ */
+@property(nonatomic, copy, nullable) NSString *identifier;
+
+/**
+ *  The kind of item this is. For notifications, this is always
+ *  storage#notification.
+ */
+@property(nonatomic, copy, nullable) NSString *kind;
+
+/**
+ *  If present, only apply this notification configuration to object names that
+ *  begin with this prefix.
+ */
+@property(nonatomic, copy, nullable) NSString *objectNamePrefix;
+
+/** The desired content of the Payload. */
+@property(nonatomic, copy, nullable) NSString *payloadFormat;
+
+/** The canonical URL of this notification. */
+@property(nonatomic, copy, nullable) NSString *selfLink;
+
+/**
+ *  The Cloud PubSub topic to which this subscription publishes. Formatted as:
+ *  '//pubsub.googleapis.com/projects/{project-identifier}/topics/{my-topic}'
+ */
+@property(nonatomic, copy, nullable) NSString *topic;
+
+@end
+
+
+/**
+ *  An optional list of additional attributes to attach to each Cloud PubSub
+ *  message published for this notification subscription.
+ *
+ *  @note This class is documented as having more properties of NSString. Use @c
+ *        -additionalJSONKeys and @c -additionalPropertyForName: to get the list
+ *        of properties and then fetch them; or @c -additionalProperties to
+ *        fetch them all at once.
+ */
+@interface GTLRStorage_Notification_CustomAttributes : GTLRObject
+@end
+
+
+/**
+ *  A list of notification subscriptions.
+ *
+ *  @note This class supports NSFastEnumeration and indexed subscripting over
+ *        its "items" property.
+ */
+@interface GTLRStorage_Notifications : GTLRCollectionObject
+
+/**
+ *  The list of items.
+ *
+ *  @note This property is used to support NSFastEnumeration and indexed
+ *        subscripting on this class.
+ */
+@property(nonatomic, strong, nullable) NSArray<GTLRStorage_Notification *> *items;
+
+/**
+ *  The kind of item this is. For lists of notifications, this is always
+ *  storage#notifications.
+ */
+@property(nonatomic, copy, nullable) NSString *kind;
 
 @end
 
@@ -665,7 +776,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Metadata of customer-supplied encryption key, if the object is encrypted by
  *  such a key.
  */
-@property(nonatomic, strong, nullable) GTLRStorage_ObjectCustomerEncryption *customerEncryption;
+@property(nonatomic, strong, nullable) GTLRStorage_Object_CustomerEncryption *customerEncryption;
 
 /** HTTP 1.1 Entity tag for the object. */
 @property(nonatomic, copy, nullable) NSString *ETag;
@@ -678,7 +789,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong, nullable) NSNumber *generation;
 
 /**
- *  The ID of the object.
+ *  The ID of the object, including the bucket name, object name, and generation
+ *  number.
  *
  *  identifier property maps to 'id' in JSON (to avoid Objective C's 'id').
  */
@@ -697,7 +809,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *mediaLink;
 
 /** User-provided metadata, in key/value pairs. */
-@property(nonatomic, strong, nullable) GTLRStorage_ObjectMetadata *metadata;
+@property(nonatomic, strong, nullable) GTLRStorage_Object_Metadata *metadata;
 
 /**
  *  The version of the metadata for this object at this generation. Used for
@@ -709,13 +821,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, strong, nullable) NSNumber *metageneration;
 
-/** The name of this object. Required if not specified by URL parameter. */
+/** The name of the object. Required if not specified by URL parameter. */
 @property(nonatomic, copy, nullable) NSString *name;
 
 /**
  *  The owner of the object. This will always be the uploader of the object.
  */
-@property(nonatomic, strong, nullable) GTLRStorage_ObjectOwner *owner;
+@property(nonatomic, strong, nullable) GTLRStorage_Object_Owner *owner;
 
 /** The link to this object. */
 @property(nonatomic, copy, nullable) NSString *selfLink;
@@ -755,7 +867,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  Metadata of customer-supplied encryption key, if the object is encrypted by
  *  such a key.
  */
-@interface GTLRStorage_ObjectCustomerEncryption : GTLRObject
+@interface GTLRStorage_Object_CustomerEncryption : GTLRObject
 
 /** The encryption algorithm. */
 @property(nonatomic, copy, nullable) NSString *encryptionAlgorithm;
@@ -774,14 +886,14 @@ NS_ASSUME_NONNULL_BEGIN
  *        of properties and then fetch them; or @c -additionalProperties to
  *        fetch them all at once.
  */
-@interface GTLRStorage_ObjectMetadata : GTLRObject
+@interface GTLRStorage_Object_Metadata : GTLRObject
 @end
 
 
 /**
  *  The owner of the object. This will always be the uploader of the object.
  */
-@interface GTLRStorage_ObjectOwner : GTLRObject
+@interface GTLRStorage_Object_Owner : GTLRObject
 
 /** The entity, in the form user-userId. */
 @property(nonatomic, copy, nullable) NSString *entity;
@@ -854,7 +966,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *object;
 
 /** The project team associated with the entity, if any. */
-@property(nonatomic, strong, nullable) GTLRStorage_ObjectAccessControlProjectTeam *projectTeam;
+@property(nonatomic, strong, nullable) GTLRStorage_ObjectAccessControl_ProjectTeam *projectTeam;
 
 /** The access permission for the entity. */
 @property(nonatomic, copy, nullable) NSString *role;
@@ -868,7 +980,7 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  The project team associated with the entity, if any.
  */
-@interface GTLRStorage_ObjectAccessControlProjectTeam : GTLRObject
+@interface GTLRStorage_ObjectAccessControl_ProjectTeam : GTLRObject
 
 /** The project number. */
 @property(nonatomic, copy, nullable) NSString *projectNumber;
@@ -944,6 +1056,105 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
+ *  A bucket/object IAM policy.
+ */
+@interface GTLRStorage_Policy : GTLRObject
+
+/**
+ *  An association between a role, which comes with a set of permissions, and
+ *  members who may assume that role.
+ */
+@property(nonatomic, strong, nullable) NSArray<GTLRStorage_Policy_Bindings_Item *> *bindings;
+
+/**
+ *  HTTP 1.1 Entity tag for the policy.
+ *
+ *  Contains encoded binary data; GTLRBase64 can encode/decode (probably
+ *  web-safe format).
+ */
+@property(nonatomic, copy, nullable) NSString *ETag;
+
+/**
+ *  The kind of item this is. For policies, this is always storage#policy. This
+ *  field is ignored on input.
+ */
+@property(nonatomic, copy, nullable) NSString *kind;
+
+/**
+ *  The ID of the resource to which this policy belongs. Will be of the form
+ *  buckets/bucket for buckets, and buckets/bucket/objects/object for objects. A
+ *  specific generation may be specified by appending #generationNumber to the
+ *  end of the object name, e.g. buckets/my-bucket/objects/data.txt#17. The
+ *  current generation can be denoted with #0. This field is ignored on input.
+ */
+@property(nonatomic, copy, nullable) NSString *resourceId;
+
+@end
+
+
+/**
+ *  GTLRStorage_Policy_Bindings_Item
+ */
+@interface GTLRStorage_Policy_Bindings_Item : GTLRObject
+
+/**
+ *  A collection of identifiers for members who may assume the provided role.
+ *  Recognized identifiers are as follows:
+ *  - allUsers — A special identifier that represents anyone on the internet;
+ *  with or without a Google account.
+ *  - allAuthenticatedUsers — A special identifier that represents anyone who is
+ *  authenticated with a Google account or a service account.
+ *  - user:emailid — An email address that represents a specific account. For
+ *  example, user:alice\@gmail.com or user:joe\@example.com.
+ *  - serviceAccount:emailid — An email address that represents a service
+ *  account. For example,
+ *  serviceAccount:my-other-app\@appspot.gserviceaccount.com .
+ *  - group:emailid — An email address that represents a Google group. For
+ *  example, group:admins\@example.com.
+ *  - domain:domain — A Google Apps domain name that represents all the users of
+ *  that domain. For example, domain:google.com or domain:example.com.
+ *  - projectOwner:projectid — Owners of the given project. For example,
+ *  projectOwner:my-example-project
+ *  - projectEditor:projectid — Editors of the given project. For example,
+ *  projectEditor:my-example-project
+ *  - projectViewer:projectid — Viewers of the given project. For example,
+ *  projectViewer:my-example-project
+ */
+@property(nonatomic, strong, nullable) NSArray<NSString *> *members;
+
+/**
+ *  The role to which members belong. Two types of roles are supported: new IAM
+ *  roles, which grant permissions that do not map directly to those provided by
+ *  ACLs, and legacy IAM roles, which do map directly to ACL permissions. All
+ *  roles are of the format roles/storage.specificRole.
+ *  The new IAM roles are:
+ *  - roles/storage.admin — Full control of Google Cloud Storage resources.
+ *  - roles/storage.objectViewer — Read-Only access to Google Cloud Storage
+ *  objects.
+ *  - roles/storage.objectCreator — Access to create objects in Google Cloud
+ *  Storage.
+ *  - roles/storage.objectAdmin — Full control of Google Cloud Storage objects.
+ *  The legacy IAM roles are:
+ *  - roles/storage.legacyObjectReader — Read-only access to objects without
+ *  listing. Equivalent to an ACL entry on an object with the READER role.
+ *  - roles/storage.legacyObjectOwner — Read/write access to existing objects
+ *  without listing. Equivalent to an ACL entry on an object with the OWNER
+ *  role.
+ *  - roles/storage.legacyBucketReader — Read access to buckets with object
+ *  listing. Equivalent to an ACL entry on a bucket with the READER role.
+ *  - roles/storage.legacyBucketWriter — Read access to buckets with object
+ *  listing/creation/deletion. Equivalent to an ACL entry on a bucket with the
+ *  WRITER role.
+ *  - roles/storage.legacyBucketOwner — Read and write access to existing
+ *  buckets with object listing/creation/deletion. Equivalent to an ACL entry on
+ *  a bucket with the OWNER role.
+ */
+@property(nonatomic, copy, nullable) NSString *role;
+
+@end
+
+
+/**
  *  A rewrite response.
  */
 @interface GTLRStorage_RewriteResponse : GTLRObject
@@ -986,6 +1197,55 @@ NS_ASSUME_NONNULL_BEGIN
  *  Uses NSNumber of unsignedLongLongValue.
  */
 @property(nonatomic, strong, nullable) NSNumber *totalBytesRewritten;
+
+@end
+
+
+/**
+ *  A subscription to receive Google PubSub notifications.
+ */
+@interface GTLRStorage_ServiceAccount : GTLRObject
+
+/** The ID of the notification. */
+@property(nonatomic, copy, nullable) NSString *emailAddress;
+
+/**
+ *  The kind of item this is. For notifications, this is always
+ *  storage#notification.
+ */
+@property(nonatomic, copy, nullable) NSString *kind;
+
+@end
+
+
+/**
+ *  A storage.(buckets|objects).testIamPermissions response.
+ */
+@interface GTLRStorage_TestIamPermissionsResponse : GTLRObject
+
+/** The kind of item this is. */
+@property(nonatomic, copy, nullable) NSString *kind;
+
+/**
+ *  The permissions held by the caller. Permissions are always of the format
+ *  storage.resource.capability, where resource is one of buckets or objects.
+ *  The supported permissions are as follows:
+ *  - storage.buckets.delete — Delete bucket.
+ *  - storage.buckets.get — Read bucket metadata.
+ *  - storage.buckets.getIamPolicy — Read bucket IAM policy.
+ *  - storage.buckets.create — Create bucket.
+ *  - storage.buckets.list — List buckets.
+ *  - storage.buckets.setIamPolicy — Update bucket IAM policy.
+ *  - storage.buckets.update — Update bucket metadata.
+ *  - storage.objects.delete — Delete object.
+ *  - storage.objects.get — Read object data and metadata.
+ *  - storage.objects.getIamPolicy — Read object IAM policy.
+ *  - storage.objects.create — Create object.
+ *  - storage.objects.list — List objects.
+ *  - storage.objects.setIamPolicy — Update object IAM policy.
+ *  - storage.objects.update — Update object metadata.
+ */
+@property(nonatomic, strong, nullable) NSArray<NSString *> *permissions;
 
 @end
 

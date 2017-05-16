@@ -4,8 +4,8 @@
 // API:
 //   Google Container Engine API (container/v1)
 // Description:
-//   Builds and manages clusters that run container-based applications, powered
-//   by open source Kubernetes technology.
+//   The Google Container Engine API is used for building and managing container
+//   based applications, powered by the open source Kubernetes technology.
 // Documentation:
 //   https://cloud.google.com/container-engine/
 
@@ -105,6 +105,41 @@
   query.clusterId = clusterId;
   query.expectedObjectClass = [GTLRContainer_Cluster class];
   query.loggingName = @"container.projects.zones.clusters.get";
+  return query;
+}
+
+@end
+
+@implementation GTLRContainerQuery_ProjectsZonesClustersLegacyAbac
+
+@dynamic clusterId, projectId, zoneProperty;
+
++ (NSDictionary<NSString *, NSString *> *)parameterNameMap {
+  return @{ @"zoneProperty" : @"zone" };
+}
+
++ (instancetype)queryWithObject:(GTLRContainer_SetLegacyAbacRequest *)object
+                      projectId:(NSString *)projectId
+                   zoneProperty:(NSString *)zoneProperty
+                      clusterId:(NSString *)clusterId {
+  if (object == nil) {
+    GTLR_DEBUG_ASSERT(object != nil, @"Got a nil object");
+    return nil;
+  }
+  NSArray *pathParams = @[
+    @"clusterId", @"projectId", @"zone"
+  ];
+  NSString *pathURITemplate = @"v1/projects/{projectId}/zones/{zone}/clusters/{clusterId}/legacyAbac";
+  GTLRContainerQuery_ProjectsZonesClustersLegacyAbac *query =
+    [[self alloc] initWithPathURITemplate:pathURITemplate
+                               HTTPMethod:@"POST"
+                       pathParameterNames:pathParams];
+  query.bodyObject = object;
+  query.projectId = projectId;
+  query.zoneProperty = zoneProperty;
+  query.clusterId = clusterId;
+  query.expectedObjectClass = [GTLRContainer_Operation class];
+  query.loggingName = @"container.projects.zones.clusters.legacyAbac";
   return query;
 }
 
@@ -263,6 +298,150 @@
 
 @end
 
+@implementation GTLRContainerQuery_ProjectsZonesClustersNodePoolsRollback
+
+@dynamic clusterId, nodePoolId, projectId, zoneProperty;
+
++ (NSDictionary<NSString *, NSString *> *)parameterNameMap {
+  return @{ @"zoneProperty" : @"zone" };
+}
+
++ (instancetype)queryWithObject:(GTLRContainer_RollbackNodePoolUpgradeRequest *)object
+                      projectId:(NSString *)projectId
+                   zoneProperty:(NSString *)zoneProperty
+                      clusterId:(NSString *)clusterId
+                     nodePoolId:(NSString *)nodePoolId {
+  if (object == nil) {
+    GTLR_DEBUG_ASSERT(object != nil, @"Got a nil object");
+    return nil;
+  }
+  NSArray *pathParams = @[
+    @"clusterId", @"nodePoolId", @"projectId", @"zone"
+  ];
+  NSString *pathURITemplate = @"v1/projects/{projectId}/zones/{zone}/clusters/{clusterId}/nodePools/{nodePoolId}:rollback";
+  GTLRContainerQuery_ProjectsZonesClustersNodePoolsRollback *query =
+    [[self alloc] initWithPathURITemplate:pathURITemplate
+                               HTTPMethod:@"POST"
+                       pathParameterNames:pathParams];
+  query.bodyObject = object;
+  query.projectId = projectId;
+  query.zoneProperty = zoneProperty;
+  query.clusterId = clusterId;
+  query.nodePoolId = nodePoolId;
+  query.expectedObjectClass = [GTLRContainer_Operation class];
+  query.loggingName = @"container.projects.zones.clusters.nodePools.rollback";
+  return query;
+}
+
+@end
+
+@implementation GTLRContainerQuery_ProjectsZonesClustersNodePoolsSetManagement
+
+@dynamic clusterId, nodePoolId, projectId, zoneProperty;
+
++ (NSDictionary<NSString *, NSString *> *)parameterNameMap {
+  return @{ @"zoneProperty" : @"zone" };
+}
+
++ (instancetype)queryWithObject:(GTLRContainer_SetNodePoolManagementRequest *)object
+                      projectId:(NSString *)projectId
+                   zoneProperty:(NSString *)zoneProperty
+                      clusterId:(NSString *)clusterId
+                     nodePoolId:(NSString *)nodePoolId {
+  if (object == nil) {
+    GTLR_DEBUG_ASSERT(object != nil, @"Got a nil object");
+    return nil;
+  }
+  NSArray *pathParams = @[
+    @"clusterId", @"nodePoolId", @"projectId", @"zone"
+  ];
+  NSString *pathURITemplate = @"v1/projects/{projectId}/zones/{zone}/clusters/{clusterId}/nodePools/{nodePoolId}/setManagement";
+  GTLRContainerQuery_ProjectsZonesClustersNodePoolsSetManagement *query =
+    [[self alloc] initWithPathURITemplate:pathURITemplate
+                               HTTPMethod:@"POST"
+                       pathParameterNames:pathParams];
+  query.bodyObject = object;
+  query.projectId = projectId;
+  query.zoneProperty = zoneProperty;
+  query.clusterId = clusterId;
+  query.nodePoolId = nodePoolId;
+  query.expectedObjectClass = [GTLRContainer_Operation class];
+  query.loggingName = @"container.projects.zones.clusters.nodePools.setManagement";
+  return query;
+}
+
+@end
+
+@implementation GTLRContainerQuery_ProjectsZonesClustersResourceLabels
+
+@dynamic clusterId, projectId, zoneProperty;
+
++ (NSDictionary<NSString *, NSString *> *)parameterNameMap {
+  return @{ @"zoneProperty" : @"zone" };
+}
+
++ (instancetype)queryWithObject:(GTLRContainer_SetLabelsRequest *)object
+                      projectId:(NSString *)projectId
+                   zoneProperty:(NSString *)zoneProperty
+                      clusterId:(NSString *)clusterId {
+  if (object == nil) {
+    GTLR_DEBUG_ASSERT(object != nil, @"Got a nil object");
+    return nil;
+  }
+  NSArray *pathParams = @[
+    @"clusterId", @"projectId", @"zone"
+  ];
+  NSString *pathURITemplate = @"v1/projects/{projectId}/zones/{zone}/clusters/{clusterId}/resourceLabels";
+  GTLRContainerQuery_ProjectsZonesClustersResourceLabels *query =
+    [[self alloc] initWithPathURITemplate:pathURITemplate
+                               HTTPMethod:@"POST"
+                       pathParameterNames:pathParams];
+  query.bodyObject = object;
+  query.projectId = projectId;
+  query.zoneProperty = zoneProperty;
+  query.clusterId = clusterId;
+  query.expectedObjectClass = [GTLRContainer_Operation class];
+  query.loggingName = @"container.projects.zones.clusters.resourceLabels";
+  return query;
+}
+
+@end
+
+@implementation GTLRContainerQuery_ProjectsZonesClustersSetMasterAuth
+
+@dynamic clusterId, projectId, zoneProperty;
+
++ (NSDictionary<NSString *, NSString *> *)parameterNameMap {
+  return @{ @"zoneProperty" : @"zone" };
+}
+
++ (instancetype)queryWithObject:(GTLRContainer_SetMasterAuthRequest *)object
+                      projectId:(NSString *)projectId
+                   zoneProperty:(NSString *)zoneProperty
+                      clusterId:(NSString *)clusterId {
+  if (object == nil) {
+    GTLR_DEBUG_ASSERT(object != nil, @"Got a nil object");
+    return nil;
+  }
+  NSArray *pathParams = @[
+    @"clusterId", @"projectId", @"zone"
+  ];
+  NSString *pathURITemplate = @"v1/projects/{projectId}/zones/{zone}/clusters/{clusterId}:setMasterAuth";
+  GTLRContainerQuery_ProjectsZonesClustersSetMasterAuth *query =
+    [[self alloc] initWithPathURITemplate:pathURITemplate
+                               HTTPMethod:@"POST"
+                       pathParameterNames:pathParams];
+  query.bodyObject = object;
+  query.projectId = projectId;
+  query.zoneProperty = zoneProperty;
+  query.clusterId = clusterId;
+  query.expectedObjectClass = [GTLRContainer_Operation class];
+  query.loggingName = @"container.projects.zones.clusters.setMasterAuth";
+  return query;
+}
+
+@end
+
 @implementation GTLRContainerQuery_ProjectsZonesClustersUpdate
 
 @dynamic clusterId, projectId, zoneProperty;
@@ -320,6 +499,41 @@
   query.zoneProperty = zoneProperty;
   query.expectedObjectClass = [GTLRContainer_ServerConfig class];
   query.loggingName = @"container.projects.zones.getServerconfig";
+  return query;
+}
+
+@end
+
+@implementation GTLRContainerQuery_ProjectsZonesOperationsCancel
+
+@dynamic operationId, projectId, zoneProperty;
+
++ (NSDictionary<NSString *, NSString *> *)parameterNameMap {
+  return @{ @"zoneProperty" : @"zone" };
+}
+
++ (instancetype)queryWithObject:(GTLRContainer_CancelOperationRequest *)object
+                      projectId:(NSString *)projectId
+                   zoneProperty:(NSString *)zoneProperty
+                    operationId:(NSString *)operationId {
+  if (object == nil) {
+    GTLR_DEBUG_ASSERT(object != nil, @"Got a nil object");
+    return nil;
+  }
+  NSArray *pathParams = @[
+    @"operationId", @"projectId", @"zone"
+  ];
+  NSString *pathURITemplate = @"v1/projects/{projectId}/zones/{zone}/operations/{operationId}:cancel";
+  GTLRContainerQuery_ProjectsZonesOperationsCancel *query =
+    [[self alloc] initWithPathURITemplate:pathURITemplate
+                               HTTPMethod:@"POST"
+                       pathParameterNames:pathParams];
+  query.bodyObject = object;
+  query.projectId = projectId;
+  query.zoneProperty = zoneProperty;
+  query.operationId = operationId;
+  query.expectedObjectClass = [GTLRContainer_Empty class];
+  query.loggingName = @"container.projects.zones.operations.cancel";
   return query;
 }
 

@@ -295,6 +295,8 @@
 
 @implementation GTLRSQLAdminQuery_FlagsList
 
+@dynamic databaseVersion;
+
 + (instancetype)query {
   NSString *pathURITemplate = @"flags";
   GTLRSQLAdminQuery_FlagsList *query =
@@ -497,7 +499,7 @@
 
 @implementation GTLRSQLAdminQuery_InstancesList
 
-@dynamic maxResults, pageToken, project;
+@dynamic filter, maxResults, pageToken, project;
 
 + (instancetype)queryWithProject:(NSString *)project {
   NSArray *pathParams = @[ @"project" ];
@@ -682,6 +684,35 @@
   query.instance = instance;
   query.expectedObjectClass = [GTLRSQLAdmin_Operation class];
   query.loggingName = @"sql.instances.stopReplica";
+  return query;
+}
+
+@end
+
+@implementation GTLRSQLAdminQuery_InstancesTruncateLog
+
+@dynamic instance, project;
+
++ (instancetype)queryWithObject:(GTLRSQLAdmin_InstancesTruncateLogRequest *)object
+                        project:(NSString *)project
+                       instance:(NSString *)instance {
+  if (object == nil) {
+    GTLR_DEBUG_ASSERT(object != nil, @"Got a nil object");
+    return nil;
+  }
+  NSArray *pathParams = @[
+    @"instance", @"project"
+  ];
+  NSString *pathURITemplate = @"projects/{project}/instances/{instance}/truncateLog";
+  GTLRSQLAdminQuery_InstancesTruncateLog *query =
+    [[self alloc] initWithPathURITemplate:pathURITemplate
+                               HTTPMethod:@"POST"
+                       pathParameterNames:pathParams];
+  query.bodyObject = object;
+  query.project = project;
+  query.instance = instance;
+  query.expectedObjectClass = [GTLRSQLAdmin_Operation class];
+  query.loggingName = @"sql.instances.truncateLog";
   return query;
 }
 

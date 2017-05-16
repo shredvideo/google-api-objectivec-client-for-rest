@@ -134,7 +134,9 @@
 //
 
 @implementation GTLRIdentityToolkit_Relyingparty
-@dynamic captchaResp, challenge, email, idToken, kind, newEmail, requestType,
+@dynamic androidInstallApp, androidMinimumVersion, androidPackageName,
+         canHandleCodeInApp, captchaResp, challenge, continueUrl, email,
+         idToken, iOSAppStoreId, iOSBundleId, kind, newEmail, requestType,
          userIp;
 @end
 
@@ -158,10 +160,10 @@
 
 // ----------------------------------------------------------------------------
 //
-//   GTLRIdentityToolkit_RelyingpartyCreateAuthUriRequestCustomParameter
+//   GTLRIdentityToolkit_RelyingpartyCreateAuthUriRequest_CustomParameter
 //
 
-@implementation GTLRIdentityToolkit_RelyingpartyCreateAuthUriRequestCustomParameter
+@implementation GTLRIdentityToolkit_RelyingpartyCreateAuthUriRequest_CustomParameter
 
 + (Class)classForAdditionalProperties {
   return [NSString class];
@@ -186,7 +188,7 @@
 //
 
 @implementation GTLRIdentityToolkit_RelyingpartyDownloadAccountRequest
-@dynamic delegatedProjectNumber, maxResults, nextPageToken;
+@dynamic delegatedProjectNumber, maxResults, nextPageToken, targetProjectId;
 @end
 
 
@@ -338,7 +340,7 @@
 
 @implementation GTLRIdentityToolkit_RelyingpartySignupNewUserRequest
 @dynamic captchaChallenge, captchaResponse, disabled, displayName, email,
-         emailVerified, idToken, instanceId, password, photoUrl;
+         emailVerified, idToken, instanceId, localId, password, photoUrl;
 @end
 
 
@@ -367,9 +369,9 @@
 //
 
 @implementation GTLRIdentityToolkit_RelyingpartyVerifyAssertionRequest
-@dynamic delegatedProjectNumber, idToken, instanceId, pendingIdToken, postBody,
-         requestUri, returnIdpCredential, returnRefreshToken, returnSecureToken,
-         sessionId;
+@dynamic autoCreate, delegatedProjectNumber, idToken, instanceId,
+         pendingIdToken, postBody, requestUri, returnIdpCredential,
+         returnRefreshToken, returnSecureToken, sessionId;
 @end
 
 
@@ -410,12 +412,12 @@
 //
 
 @implementation GTLRIdentityToolkit_SetAccountInfoResponse
-@dynamic displayName, email, expiresIn, idToken, kind, localId, newEmail,
-         passwordHash, photoUrl, providerUserInfo, refreshToken;
+@dynamic displayName, email, emailVerified, expiresIn, idToken, kind, localId,
+         newEmail, passwordHash, photoUrl, providerUserInfo, refreshToken;
 
 + (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
   NSDictionary<NSString *, Class> *map = @{
-    @"providerUserInfo" : [GTLRIdentityToolkit_SetAccountInfoResponseProviderUserInfoItem class]
+    @"providerUserInfo" : [GTLRIdentityToolkit_SetAccountInfoResponse_ProviderUserInfo_Item class]
   };
   return map;
 }
@@ -425,10 +427,10 @@
 
 // ----------------------------------------------------------------------------
 //
-//   GTLRIdentityToolkit_SetAccountInfoResponseProviderUserInfoItem
+//   GTLRIdentityToolkit_SetAccountInfoResponse_ProviderUserInfo_Item
 //
 
-@implementation GTLRIdentityToolkit_SetAccountInfoResponseProviderUserInfoItem
+@implementation GTLRIdentityToolkit_SetAccountInfoResponse_ProviderUserInfo_Item
 @dynamic displayName, federatedId, photoUrl, providerId;
 @end
 
@@ -453,7 +455,7 @@
 
 + (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
   NSDictionary<NSString *, Class> *map = @{
-    @"error" : [GTLRIdentityToolkit_UploadAccountResponseErrorItem class]
+    @"error" : [GTLRIdentityToolkit_UploadAccountResponse_Error_Item class]
   };
   return map;
 }
@@ -463,10 +465,10 @@
 
 // ----------------------------------------------------------------------------
 //
-//   GTLRIdentityToolkit_UploadAccountResponseErrorItem
+//   GTLRIdentityToolkit_UploadAccountResponse_Error_Item
 //
 
-@implementation GTLRIdentityToolkit_UploadAccountResponseErrorItem
+@implementation GTLRIdentityToolkit_UploadAccountResponse_Error_Item
 @dynamic index, message;
 @end
 
@@ -478,12 +480,13 @@
 
 @implementation GTLRIdentityToolkit_UserInfo
 @dynamic createdAt, customAuth, disabled, displayName, email, emailVerified,
-         lastLoginAt, localId, passwordHash, passwordUpdatedAt, photoUrl,
-         providerUserInfo, rawPassword, salt, screenName, validSince, version;
+         lastLoginAt, localId, passwordHash, passwordUpdatedAt, phoneNumber,
+         photoUrl, providerUserInfo, rawPassword, salt, screenName, validSince,
+         version;
 
 + (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
   NSDictionary<NSString *, Class> *map = @{
-    @"providerUserInfo" : [GTLRIdentityToolkit_UserInfoProviderUserInfoItem class]
+    @"providerUserInfo" : [GTLRIdentityToolkit_UserInfo_ProviderUserInfo_Item class]
   };
   return map;
 }
@@ -493,12 +496,12 @@
 
 // ----------------------------------------------------------------------------
 //
-//   GTLRIdentityToolkit_UserInfoProviderUserInfoItem
+//   GTLRIdentityToolkit_UserInfo_ProviderUserInfo_Item
 //
 
-@implementation GTLRIdentityToolkit_UserInfoProviderUserInfoItem
-@dynamic displayName, email, federatedId, photoUrl, providerId, rawId,
-         screenName;
+@implementation GTLRIdentityToolkit_UserInfo_ProviderUserInfo_Item
+@dynamic displayName, email, federatedId, phoneNumber, photoUrl, providerId,
+         rawId, screenName;
 @end
 
 
@@ -510,12 +513,12 @@
 @implementation GTLRIdentityToolkit_VerifyAssertionResponse
 @dynamic action, appInstallationUrl, appScheme, context, dateOfBirth,
          displayName, email, emailRecycled, emailVerified, errorMessage,
-         expiresIn, federatedId, firstName, fullName, idToken, inputEmail, kind,
-         language, lastName, localId, needConfirmation, needEmail, nickName,
-         oauthAccessToken, oauthAuthorizationCode, oauthExpireIn, oauthIdToken,
-         oauthRequestToken, oauthScope, oauthTokenSecret, originalEmail,
-         photoUrl, providerId, rawUserInfo, refreshToken, screenName, timeZone,
-         verifiedProvider;
+         expiresIn, federatedId, firstName, fullName, idToken, inputEmail,
+         isNewUser, kind, language, lastName, localId, needConfirmation,
+         needEmail, nickName, oauthAccessToken, oauthAuthorizationCode,
+         oauthExpireIn, oauthIdToken, oauthRequestToken, oauthScope,
+         oauthTokenSecret, originalEmail, photoUrl, providerId, rawUserInfo,
+         refreshToken, screenName, timeZone, verifiedProvider;
 
 + (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
   NSDictionary<NSString *, Class> *map = @{

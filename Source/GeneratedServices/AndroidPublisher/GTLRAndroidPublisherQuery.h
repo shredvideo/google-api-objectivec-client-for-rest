@@ -2801,6 +2801,60 @@ GTLR_EXTERN NSString * const kGTLRAndroidPublisherTrackRollout;
 @end
 
 /**
+ *  Lists the purchases that were cancelled, refunded or charged-back.
+ *
+ *  Method: androidpublisher.purchases.voidedpurchases.list
+ *
+ *  Authorization scope(s):
+ *    @c kGTLRAuthScopeAndroidPublisher
+ */
+@interface GTLRAndroidPublisherQuery_PurchasesVoidedpurchasesList : GTLRAndroidPublisherQuery
+// Previous library name was
+//   +[GTLQueryAndroidPublisher queryForPurchasesVoidedpurchasesListWithpackageName:]
+
+/**
+ *  The time, in milliseconds since the Epoch, of the newest voided in-app
+ *  product purchase that you want to see in the response. The value of this
+ *  parameter cannot be greater than the current time and is ignored if a
+ *  pagination token is set. Default value is current time.
+ */
+@property(nonatomic, assign) long long endTime;
+
+@property(nonatomic, assign) NSUInteger maxResults;
+
+/**
+ *  The package name of the application for which voided purchases need to be
+ *  returned (for example, 'com.some.thing').
+ */
+@property(nonatomic, copy, nullable) NSString *packageName;
+
+@property(nonatomic, assign) NSUInteger startIndex;
+
+/**
+ *  The time, in milliseconds since the Epoch, of the oldest voided in-app
+ *  product purchase that you want to see in the response. The value of this
+ *  parameter cannot be older than 30 days and is ignored if a pagination token
+ *  is set. Default value is current time minus 30 days.
+ */
+@property(nonatomic, assign) long long startTime;
+
+@property(nonatomic, copy, nullable) NSString *token;
+
+/**
+ *  Fetches a @c GTLRAndroidPublisher_VoidedPurchasesListResponse.
+ *
+ *  Lists the purchases that were cancelled, refunded or charged-back.
+ *
+ *  @param packageName The package name of the application for which voided
+ *    purchases need to be returned (for example, 'com.some.thing').
+ *
+ *  @returns GTLRAndroidPublisherQuery_PurchasesVoidedpurchasesList
+ */
++ (instancetype)queryWithPackageName:(NSString *)packageName;
+
+@end
+
+/**
  *  Returns a single review.
  *
  *  Method: androidpublisher.reviews.get
@@ -2820,6 +2874,8 @@ GTLR_EXTERN NSString * const kGTLRAndroidPublisherTrackRollout;
 
 @property(nonatomic, copy, nullable) NSString *reviewId;
 
+@property(nonatomic, copy, nullable) NSString *translationLanguage;
+
 /**
  *  Fetches a @c GTLRAndroidPublisher_Review.
  *
@@ -2837,7 +2893,7 @@ GTLR_EXTERN NSString * const kGTLRAndroidPublisherTrackRollout;
 @end
 
 /**
- *  Returns a list of reviews.
+ *  Returns a list of reviews. Only reviews from last week will be returned.
  *
  *  Method: androidpublisher.reviews.list
  *
@@ -2860,10 +2916,12 @@ GTLR_EXTERN NSString * const kGTLRAndroidPublisherTrackRollout;
 
 @property(nonatomic, copy, nullable) NSString *token;
 
+@property(nonatomic, copy, nullable) NSString *translationLanguage;
+
 /**
  *  Fetches a @c GTLRAndroidPublisher_ReviewsListResponse.
  *
- *  Returns a list of reviews.
+ *  Returns a list of reviews. Only reviews from last week will be returned.
  *
  *  @param packageName Unique identifier for the Android app for which we want
  *    reviews; for example, "com.spiffygame".

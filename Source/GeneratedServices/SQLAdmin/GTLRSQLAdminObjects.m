@@ -145,10 +145,10 @@
 
 // ----------------------------------------------------------------------------
 //
-//   GTLRSQLAdmin_DatabaseInstanceFailoverReplica
+//   GTLRSQLAdmin_DatabaseInstance_FailoverReplica
 //
 
-@implementation GTLRSQLAdmin_DatabaseInstanceFailoverReplica
+@implementation GTLRSQLAdmin_DatabaseInstance_FailoverReplica
 @dynamic available, name;
 @end
 
@@ -191,20 +191,20 @@
 
 // ----------------------------------------------------------------------------
 //
-//   GTLRSQLAdmin_ExportContextCsvExportOptions
+//   GTLRSQLAdmin_ExportContext_CsvExportOptions
 //
 
-@implementation GTLRSQLAdmin_ExportContextCsvExportOptions
+@implementation GTLRSQLAdmin_ExportContext_CsvExportOptions
 @dynamic selectQuery;
 @end
 
 
 // ----------------------------------------------------------------------------
 //
-//   GTLRSQLAdmin_ExportContextSqlExportOptions
+//   GTLRSQLAdmin_ExportContext_SqlExportOptions
 //
 
-@implementation GTLRSQLAdmin_ExportContextSqlExportOptions
+@implementation GTLRSQLAdmin_ExportContext_SqlExportOptions
 @dynamic schemaOnly, tables;
 
 + (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
@@ -277,10 +277,10 @@
 
 // ----------------------------------------------------------------------------
 //
-//   GTLRSQLAdmin_ImportContextCsvImportOptions
+//   GTLRSQLAdmin_ImportContext_CsvImportOptions
 //
 
-@implementation GTLRSQLAdmin_ImportContextCsvImportOptions
+@implementation GTLRSQLAdmin_ImportContext_CsvImportOptions
 @dynamic columns, table;
 
 + (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
@@ -363,6 +363,16 @@
 
 // ----------------------------------------------------------------------------
 //
+//   GTLRSQLAdmin_InstancesTruncateLogRequest
+//
+
+@implementation GTLRSQLAdmin_InstancesTruncateLogRequest
+@dynamic truncateLogContext;
+@end
+
+
+// ----------------------------------------------------------------------------
+//
 //   GTLRSQLAdmin_IpConfiguration
 //
 
@@ -386,6 +396,16 @@
 
 @implementation GTLRSQLAdmin_IpMapping
 @dynamic ipAddress, timeToRetire, type;
+@end
+
+
+// ----------------------------------------------------------------------------
+//
+//   GTLRSQLAdmin_Labels
+//
+
+@implementation GTLRSQLAdmin_Labels
+@dynamic key, value;
 @end
 
 
@@ -520,16 +540,18 @@
 //
 
 @implementation GTLRSQLAdmin_Settings
-@dynamic activationPolicy, authorizedGaeApplications, backupConfiguration,
-         crashSafeReplicationEnabled, databaseFlags, databaseReplicationEnabled,
-         dataDiskSizeGb, dataDiskType, ipConfiguration, kind,
-         locationPreference, maintenanceWindow, pricingPlan, replicationType,
-         settingsVersion, storageAutoResize, tier;
+@dynamic activationPolicy, authorizedGaeApplications, availabilityType,
+         backupConfiguration, crashSafeReplicationEnabled, databaseFlags,
+         databaseReplicationEnabled, dataDiskSizeGb, dataDiskType,
+         ipConfiguration, kind, labels, locationPreference, maintenanceWindow,
+         pricingPlan, replicationType, settingsVersion, storageAutoResize,
+         storageAutoResizeLimit, tier;
 
 + (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
   NSDictionary<NSString *, Class> *map = @{
     @"authorizedGaeApplications" : [NSString class],
-    @"databaseFlags" : [GTLRSQLAdmin_DatabaseFlags class]
+    @"databaseFlags" : [GTLRSQLAdmin_DatabaseFlags class],
+    @"labels" : [GTLRSQLAdmin_Labels class]
   };
   return map;
 }
@@ -644,6 +666,16 @@
   return map;
 }
 
+@end
+
+
+// ----------------------------------------------------------------------------
+//
+//   GTLRSQLAdmin_TruncateLogContext
+//
+
+@implementation GTLRSQLAdmin_TruncateLogContext
+@dynamic kind, logType;
 @end
 
 

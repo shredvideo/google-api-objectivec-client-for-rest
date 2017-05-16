@@ -20,11 +20,11 @@
 
 @class GTLRIdentityToolkit_EmailTemplate;
 @class GTLRIdentityToolkit_IdpConfig;
-@class GTLRIdentityToolkit_RelyingpartyCreateAuthUriRequestCustomParameter;
-@class GTLRIdentityToolkit_SetAccountInfoResponseProviderUserInfoItem;
-@class GTLRIdentityToolkit_UploadAccountResponseErrorItem;
+@class GTLRIdentityToolkit_RelyingpartyCreateAuthUriRequest_CustomParameter;
+@class GTLRIdentityToolkit_SetAccountInfoResponse_ProviderUserInfo_Item;
+@class GTLRIdentityToolkit_UploadAccountResponse_Error_Item;
 @class GTLRIdentityToolkit_UserInfo;
-@class GTLRIdentityToolkit_UserInfoProviderUserInfoItem;
+@class GTLRIdentityToolkit_UserInfo_ProviderUserInfo_Item;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -86,7 +86,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- *  Respone of downloading accounts in batch.
+ *  Response of downloading accounts in batch.
  *
  *  @note This class supports NSFastEnumeration and indexed subscripting over
  *        its "users" property. If returned as the result of a query, it should
@@ -234,17 +234,50 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @interface GTLRIdentityToolkit_Relyingparty : GTLRObject
 
+/**
+ *  whether or not to install the android app on the device where the link is
+ *  opened
+ *
+ *  Uses NSNumber of boolValue.
+ */
+@property(nonatomic, strong, nullable) NSNumber *androidInstallApp;
+
+/**
+ *  minimum version of the app. if the version on the device is lower than this
+ *  version then the user is taken to the play store to upgrade the app
+ */
+@property(nonatomic, copy, nullable) NSString *androidMinimumVersion;
+
+/** android package name of the android app to handle the action code */
+@property(nonatomic, copy, nullable) NSString *androidPackageName;
+
+/**
+ *  whether or not the app can handle the oob code without first going to web
+ *
+ *  Uses NSNumber of boolValue.
+ */
+@property(nonatomic, strong, nullable) NSNumber *canHandleCodeInApp;
+
 /** The recaptcha response from the user. */
 @property(nonatomic, copy, nullable) NSString *captchaResp;
 
 /** The recaptcha challenge presented to the user. */
 @property(nonatomic, copy, nullable) NSString *challenge;
 
+/** The url to continue to the Gitkit app */
+@property(nonatomic, copy, nullable) NSString *continueUrl;
+
 /** The email of the user. */
 @property(nonatomic, copy, nullable) NSString *email;
 
 /** The user's Gitkit login token for email change. */
 @property(nonatomic, copy, nullable) NSString *idToken;
+
+/** iOS app store id to download the app if it's not already installed */
+@property(nonatomic, copy, nullable) NSString *iOSAppStoreId;
+
+/** the iOS bundle id of iOS app to handle the action code */
+@property(nonatomic, copy, nullable) NSString *iOSBundleId;
 
 /** The fixed string "identitytoolkit#relyingparty". */
 @property(nonatomic, copy, nullable) NSString *kind;
@@ -298,7 +331,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  customized by clients: client_id, response_type, scope, redirect_uri, state,
  *  oauth_token.
  */
-@property(nonatomic, strong, nullable) GTLRIdentityToolkit_RelyingpartyCreateAuthUriRequestCustomParameter *customParameter;
+@property(nonatomic, strong, nullable) GTLRIdentityToolkit_RelyingpartyCreateAuthUriRequest_CustomParameter *customParameter;
 
 /**
  *  The hosted domain to restrict sign-in to accounts at that domain for Google
@@ -356,7 +389,7 @@ NS_ASSUME_NONNULL_BEGIN
  *        of properties and then fetch them; or @c -additionalProperties to
  *        fetch them all at once.
  */
-@interface GTLRIdentityToolkit_RelyingpartyCreateAuthUriRequestCustomParameter : GTLRObject
+@interface GTLRIdentityToolkit_RelyingpartyCreateAuthUriRequest_CustomParameter : GTLRObject
 @end
 
 
@@ -407,6 +440,12 @@ NS_ASSUME_NONNULL_BEGIN
  *  response.
  */
 @property(nonatomic, copy, nullable) NSString *nextPageToken;
+
+/**
+ *  Specify which project (field value is actually project id) to operate. Only
+ *  used when provided credential.
+ */
+@property(nonatomic, copy, nullable) NSString *targetProjectId;
 
 @end
 
@@ -758,6 +797,9 @@ NS_ASSUME_NONNULL_BEGIN
 /** Instance id token of the app. */
 @property(nonatomic, copy, nullable) NSString *instanceId;
 
+/** Privileged caller can create user with specified user id. */
+@property(nonatomic, copy, nullable) NSString *localId;
+
 /** The new password of the user. */
 @property(nonatomic, copy, nullable) NSString *password;
 
@@ -844,6 +886,15 @@ NS_ASSUME_NONNULL_BEGIN
  *  Request to verify the IDP assertion.
  */
 @interface GTLRIdentityToolkit_RelyingpartyVerifyAssertionRequest : GTLRObject
+
+/**
+ *  When it's true, automatically creates a new account if the user doesn't
+ *  exist. When it's false, allows existing user to sign in normally and throws
+ *  exception if the user doesn't exist.
+ *
+ *  Uses NSNumber of boolValue.
+ */
+@property(nonatomic, strong, nullable) NSNumber *autoCreate;
 
 /**
  *  GCP project number of the requesting delegated app. Currently only intended
@@ -1015,6 +1066,13 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *email;
 
 /**
+ *  If email has been verified.
+ *
+ *  Uses NSNumber of boolValue.
+ */
+@property(nonatomic, strong, nullable) NSNumber *emailVerified;
+
+/**
  *  If idToken is STS id token, then this field will be expiration time of STS
  *  id token in seconds.
  *
@@ -1046,7 +1104,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *photoUrl;
 
 /** The user's profiles at the associated IdPs. */
-@property(nonatomic, strong, nullable) NSArray<GTLRIdentityToolkit_SetAccountInfoResponseProviderUserInfoItem *> *providerUserInfo;
+@property(nonatomic, strong, nullable) NSArray<GTLRIdentityToolkit_SetAccountInfoResponse_ProviderUserInfo_Item *> *providerUserInfo;
 
 /** If idToken is STS id token, then this field will be refresh token. */
 @property(nonatomic, copy, nullable) NSString *refreshToken;
@@ -1055,9 +1113,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- *  GTLRIdentityToolkit_SetAccountInfoResponseProviderUserInfoItem
+ *  GTLRIdentityToolkit_SetAccountInfoResponse_ProviderUserInfo_Item
  */
-@interface GTLRIdentityToolkit_SetAccountInfoResponseProviderUserInfoItem : GTLRObject
+@interface GTLRIdentityToolkit_SetAccountInfoResponse_ProviderUserInfo_Item : GTLRObject
 
 /** The user's display name at the IDP. */
 @property(nonatomic, copy, nullable) NSString *displayName;
@@ -1119,7 +1177,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GTLRIdentityToolkit_UploadAccountResponse : GTLRObject
 
 /** The error encountered while processing the account info. */
-@property(nonatomic, strong, nullable) NSArray<GTLRIdentityToolkit_UploadAccountResponseErrorItem *> *error;
+@property(nonatomic, strong, nullable) NSArray<GTLRIdentityToolkit_UploadAccountResponse_Error_Item *> *error;
 
 /** The fixed string "identitytoolkit#UploadAccountResponse". */
 @property(nonatomic, copy, nullable) NSString *kind;
@@ -1128,9 +1186,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- *  GTLRIdentityToolkit_UploadAccountResponseErrorItem
+ *  GTLRIdentityToolkit_UploadAccountResponse_Error_Item
  */
-@interface GTLRIdentityToolkit_UploadAccountResponseErrorItem : GTLRObject
+@interface GTLRIdentityToolkit_UploadAccountResponse_Error_Item : GTLRObject
 
 /**
  *  The index of the malformed account, starting from 0.
@@ -1209,11 +1267,14 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, strong, nullable) NSNumber *passwordUpdatedAt;
 
+/** User's phone number. */
+@property(nonatomic, copy, nullable) NSString *phoneNumber;
+
 /** The URL of the user profile photo. */
 @property(nonatomic, copy, nullable) NSString *photoUrl;
 
 /** The IDP of the user. */
-@property(nonatomic, strong, nullable) NSArray<GTLRIdentityToolkit_UserInfoProviderUserInfoItem *> *providerUserInfo;
+@property(nonatomic, strong, nullable) NSArray<GTLRIdentityToolkit_UserInfo_ProviderUserInfo_Item *> *providerUserInfo;
 
 /** The user's plain text password. */
 @property(nonatomic, copy, nullable) NSString *rawPassword;
@@ -1247,9 +1308,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- *  GTLRIdentityToolkit_UserInfoProviderUserInfoItem
+ *  GTLRIdentityToolkit_UserInfo_ProviderUserInfo_Item
  */
-@interface GTLRIdentityToolkit_UserInfoProviderUserInfoItem : GTLRObject
+@interface GTLRIdentityToolkit_UserInfo_ProviderUserInfo_Item : GTLRObject
 
 /** The user's display name at the IDP. */
 @property(nonatomic, copy, nullable) NSString *displayName;
@@ -1259,6 +1320,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** User's identifier at IDP. */
 @property(nonatomic, copy, nullable) NSString *federatedId;
+
+/** User's phone number. */
+@property(nonatomic, copy, nullable) NSString *phoneNumber;
 
 /** The user's photo url at the IDP. */
 @property(nonatomic, copy, nullable) NSString *photoUrl;
@@ -1355,6 +1419,13 @@ NS_ASSUME_NONNULL_BEGIN
  *  from the asserted email.
  */
 @property(nonatomic, copy, nullable) NSString *inputEmail;
+
+/**
+ *  True if it's a new user sign-in, false if it's a returning user.
+ *
+ *  Uses NSNumber of boolValue.
+ */
+@property(nonatomic, strong, nullable) NSNumber *isNewUser;
 
 /** The fixed string "identitytoolkit#VerifyAssertionResponse". */
 @property(nonatomic, copy, nullable) NSString *kind;

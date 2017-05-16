@@ -4,7 +4,7 @@
 // API:
 //   Admin Reports API (admin/reports_v1)
 // Description:
-//   Fetches reports for the administrators of Google Apps customers about the
+//   Fetches reports for the administrators of G Suite customers about the
 //   usage, collaboration, security, and risk for their users.
 // Documentation:
 //   https://developers.google.com/admin-sdk/reports/
@@ -25,13 +25,13 @@ NS_ASSUME_NONNULL_BEGIN
 // Authorization scopes
 
 /**
- *  Authorization scope: View audit reports of Google Apps for your domain
+ *  Authorization scope: View audit reports for your G Suite domain
  *
  *  Value "https://www.googleapis.com/auth/admin.reports.audit.readonly"
  */
 GTLR_EXTERN NSString * const kGTLRAuthScopeReportsReportsAuditReadonly;
 /**
- *  Authorization scope: View usage reports of Google Apps for your domain
+ *  Authorization scope: View usage reports for your G Suite domain
  *
  *  Value "https://www.googleapis.com/auth/admin.reports.usage.readonly"
  */
@@ -44,8 +44,8 @@ GTLR_EXTERN NSString * const kGTLRAuthScopeReportsReportsUsageReadonly;
 /**
  *  Service for executing Admin Reports API queries.
  *
- *  Fetches reports for the administrators of Google Apps customers about the
- *  usage, collaboration, security, and risk for their users.
+ *  Fetches reports for the administrators of G Suite customers about the usage,
+ *  collaboration, security, and risk for their users.
  */
 @interface GTLRReportsService : GTLRService
 

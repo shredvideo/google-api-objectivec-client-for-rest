@@ -22,7 +22,7 @@
 
 @class GTLRMonitoring_BucketOptions;
 @class GTLRMonitoring_CollectdPayload;
-@class GTLRMonitoring_CollectdPayloadMetadata;
+@class GTLRMonitoring_CollectdPayload_Metadata;
 @class GTLRMonitoring_CollectdValue;
 @class GTLRMonitoring_Distribution;
 @class GTLRMonitoring_Explicit;
@@ -32,13 +32,13 @@
 @class GTLRMonitoring_LabelDescriptor;
 @class GTLRMonitoring_Linear;
 @class GTLRMonitoring_Metric;
+@class GTLRMonitoring_Metric_Labels;
 @class GTLRMonitoring_MetricDescriptor;
-@class GTLRMonitoring_MetricLabels;
 @class GTLRMonitoring_MonitoredResource;
+@class GTLRMonitoring_MonitoredResource_Labels;
 @class GTLRMonitoring_MonitoredResourceDescriptor;
-@class GTLRMonitoring_MonitoredResourceLabels;
 @class GTLRMonitoring_Option;
-@class GTLRMonitoring_OptionValue;
+@class GTLRMonitoring_Option_Value;
 @class GTLRMonitoring_Point;
 @class GTLRMonitoring_Range;
 @class GTLRMonitoring_SourceContext;
@@ -432,23 +432,19 @@ GTLR_EXTERN NSString * const kGTLRMonitoring_Type_Syntax_SyntaxProto2;
 GTLR_EXTERN NSString * const kGTLRMonitoring_Type_Syntax_SyntaxProto3;
 
 /**
- *  A Distribution may optionally contain a histogram of the values in the
- *  population. The histogram is given in bucket_counts as counts of values that
- *  fall into one of a sequence of non-overlapping buckets. The sequence of
- *  buckets is described by bucket_options.A bucket specifies an inclusive lower
+ *  BucketOptions describes the bucket boundaries used to create a histogram for
+ *  the distribution. The buckets can be in a linear sequence, an exponential
+ *  sequence, or each bucket can be specified explicitly. BucketOptions does not
+ *  include the number of values in each bucket.A bucket has an inclusive lower
  *  bound and exclusive upper bound for the values that are counted for that
- *  bucket. The upper bound of a bucket is strictly greater than the lower
- *  bound.The sequence of N buckets for a Distribution consists of an underflow
+ *  bucket. The upper bound of a bucket must be strictly greater than the lower
+ *  bound. The sequence of N buckets for a distribution consists of an underflow
  *  bucket (number 0), zero or more finite buckets (number 1 through N - 2) and
  *  an overflow bucket (number N - 1). The buckets are contiguous: the lower
  *  bound of bucket i (i > 0) is the same as the upper bound of bucket i - 1.
  *  The buckets span the whole range of finite values: lower bound of the
  *  underflow bucket is -infinity and the upper bound of the overflow bucket is
- *  +infinity. The finite buckets are so-called because both bounds are
- *  finite.BucketOptions describes bucket boundaries in one of three ways. Two
- *  describe the boundaries by giving parameters for a formula to generate
- *  boundaries and one gives the bucket boundaries explicitly.If bucket_options
- *  is not given, then no bucket_counts may be given.
+ *  +infinity. The finite buckets are so-called because both bounds are finite.
  */
 @interface GTLRMonitoring_BucketOptions : GTLRObject
 
@@ -474,7 +470,7 @@ GTLR_EXTERN NSString * const kGTLRMonitoring_Type_Syntax_SyntaxProto3;
 @property(nonatomic, strong, nullable) GTLRDateTime *endTime;
 
 /** The measurement metadata. Example: "process_id" -> 12345 */
-@property(nonatomic, strong, nullable) GTLRMonitoring_CollectdPayloadMetadata *metadata;
+@property(nonatomic, strong, nullable) GTLRMonitoring_CollectdPayload_Metadata *metadata;
 
 /** The name of the plugin. Example: "disk". */
 @property(nonatomic, copy, nullable) NSString *plugin;
@@ -508,7 +504,7 @@ GTLR_EXTERN NSString * const kGTLRMonitoring_Type_Syntax_SyntaxProto3;
  *        -additionalPropertyForName: to get the list of properties and then
  *        fetch them; or @c -additionalProperties to fetch them all at once.
  */
-@interface GTLRMonitoring_CollectdPayloadMetadata : GTLRObject
+@interface GTLRMonitoring_CollectdPayload_Metadata : GTLRObject
 @end
 
 
@@ -593,40 +589,44 @@ GTLR_EXTERN NSString * const kGTLRMonitoring_Type_Syntax_SyntaxProto3;
 
 
 /**
- *  Distribution contains summary statistics for a population of values and,
- *  optionally, a histogram representing the distribution of those values across
- *  a specified set of histogram buckets.The summary statistics are the count,
- *  mean, sum of the squared deviation from the mean, the minimum, and the
- *  maximum of the set of population of values.The histogram is based on a
- *  sequence of buckets and gives a count of values that fall into each bucket.
- *  The boundaries of the buckets are given either explicitly or by specifying
- *  parameters for a method of computing them (buckets of fixed width or buckets
- *  of exponentially increasing width).Although it is not forbidden, it is
- *  generally a bad idea to include non-finite values (infinities or NaNs) in
- *  the population of values, as this will render the mean and
- *  sum_of_squared_deviation fields meaningless.
+ *  Distribution contains summary statistics for a population of values. It
+ *  optionally contains a histogram representing the distribution of those
+ *  values across a set of buckets.The summary statistics are the count, mean,
+ *  sum of the squared deviation from the mean, the minimum, and the maximum of
+ *  the set of population of values. The histogram is based on a sequence of
+ *  buckets and gives a count of values that fall into each bucket. The
+ *  boundaries of the buckets are given either explicitly or by formulas for
+ *  buckets of fixed or exponentially increasing widths.Although it is not
+ *  forbidden, it is generally a bad idea to include non-finite values
+ *  (infinities or NaNs) in the population of values, as this will render the
+ *  mean and sum_of_squared_deviation fields meaningless.
  */
 @interface GTLRMonitoring_Distribution : GTLRObject
 
 /**
- *  If bucket_options is given, then the sum of the values in bucket_counts must
- *  equal the value in count. If bucket_options is not given, no bucket_counts
- *  fields may be given.Bucket counts are given in order under the numbering
- *  scheme described above (the underflow bucket has number 0; the finite
- *  buckets, if any, have numbers 1 through N-2; the overflow bucket has number
- *  N-1).The size of bucket_counts must be no greater than N as defined in
- *  bucket_options.Any suffix of trailing zero bucket_count fields may be
- *  omitted.
+ *  Required in the Stackdriver Monitoring API v3. The values for each bucket
+ *  specified in bucket_options. The sum of the values in bucketCounts must
+ *  equal the value in the count field of the Distribution object. The order of
+ *  the bucket counts follows the numbering schemes described for the three
+ *  bucket types. The underflow bucket has number 0; the finite buckets, if any,
+ *  have numbers 1 through N-2; and the overflow bucket has number N-1. The size
+ *  of bucket_counts must not be greater than N. If the size is less than N,
+ *  then the remaining buckets are assigned values of zero.
  *
  *  Uses NSNumber of longLongValue.
  */
 @property(nonatomic, strong, nullable) NSArray<NSNumber *> *bucketCounts;
 
-/** Defines the histogram bucket boundaries. */
+/**
+ *  Required in the Stackdriver Monitoring API v3. Defines the histogram bucket
+ *  boundaries.
+ */
 @property(nonatomic, strong, nullable) GTLRMonitoring_BucketOptions *bucketOptions;
 
 /**
- *  The number of values in the population. Must be non-negative.
+ *  The number of values in the population. Must be non-negative. This value
+ *  must equal the sum of the values in bucket_counts if a histogram is
+ *  provided.
  *
  *  Uses NSNumber of longLongValue.
  */
@@ -676,12 +676,12 @@ GTLR_EXTERN NSString * const kGTLRMonitoring_Type_Syntax_SyntaxProto3;
 
 
 /**
- *  A set of buckets with arbitrary widths.Defines size(bounds) + 1 (= N)
- *  buckets with these boundaries for bucket i:Upper bound (0 <= i < N-1):
- *  boundsi Lower bound (1 <= i < N); boundsi - 1There must be at least one
- *  element in bounds. If bounds has only one element, there are no finite
- *  buckets, and that single element is the common boundary of the overflow and
- *  underflow buckets.
+ *  Specifies a set of buckets with arbitrary widths.There are size(bounds) + 1
+ *  (= N) buckets. Bucket i has the following boundaries:Upper bound (0 <= i <
+ *  N-1): boundsi Lower bound (1 <= i < N); boundsi - 1The bounds field must
+ *  contain at least one element. If bounds has only one element, then there are
+ *  no finite buckets, and that single element is the common boundary of the
+ *  overflow and underflow buckets.
  */
 @interface GTLRMonitoring_Explicit : GTLRObject
 
@@ -696,12 +696,12 @@ GTLR_EXTERN NSString * const kGTLRMonitoring_Type_Syntax_SyntaxProto3;
 
 
 /**
- *  Specify a sequence of buckets that have a width that is proportional to the
- *  value of the lower bound. Each bucket represents a constant relative
- *  uncertainty on a specific value in the bucket.Defines num_finite_buckets + 2
- *  (= N) buckets with these boundaries for bucket i:Upper bound (0 <= i < N-1):
- *  scale * (growth_factor ^ i). Lower bound (1 <= i < N): scale *
- *  (growth_factor ^ (i - 1)).
+ *  Specifies an exponential sequence of buckets that have a width that is
+ *  proportional to the value of the lower bound. Each bucket represents a
+ *  constant relative uncertainty on a specific value in the bucket.There are
+ *  num_finite_buckets + 2 (= N) buckets. Bucket i has the following
+ *  boundaries:Upper bound (0 <= i < N-1): scale * (growth_factor ^ i). Lower
+ *  bound (1 <= i < N): scale * (growth_factor ^ (i - 1)).
  */
 @interface GTLRMonitoring_Exponential : GTLRObject
 
@@ -931,11 +931,12 @@ GTLR_EXTERN NSString * const kGTLRMonitoring_Type_Syntax_SyntaxProto3;
 
 
 /**
- *  Specify a sequence of buckets that all have the same width (except overflow
- *  and underflow). Each bucket represents a constant absolute uncertainty on
- *  the specific value in the bucket.Defines num_finite_buckets + 2 (= N)
- *  buckets with these boundaries for bucket i:Upper bound (0 <= i < N-1):
- *  offset + (width * i). Lower bound (1 <= i < N): offset + (width * (i - 1)).
+ *  Specifies a linear sequence of buckets that all have the same width (except
+ *  overflow and underflow). Each bucket represents a constant absolute
+ *  uncertainty on the specific value in the bucket.There are num_finite_buckets
+ *  + 2 (= N) buckets. Bucket i has the following boundaries:Upper bound (0 <= i
+ *  < N-1): offset + (width * i). Lower bound (1 <= i < N): offset + (width * (i
+ *  - 1)).
  */
 @interface GTLRMonitoring_Linear : GTLRObject
 
@@ -1056,7 +1057,7 @@ GTLR_EXTERN NSString * const kGTLRMonitoring_Type_Syntax_SyntaxProto3;
 
 
 /**
- *  The ListMonitoredResourcDescriptors response.
+ *  The ListMonitoredResourceDescriptors response.
  *
  *  @note This class supports NSFastEnumeration and indexed subscripting over
  *        its "resourceDescriptors" property. If returned as the result of a
@@ -1122,7 +1123,7 @@ GTLR_EXTERN NSString * const kGTLRMonitoring_Type_Syntax_SyntaxProto3;
  *  The set of label values that uniquely identify this metric. All labels
  *  listed in the MetricDescriptor must be assigned values.
  */
-@property(nonatomic, strong, nullable) GTLRMonitoring_MetricLabels *labels;
+@property(nonatomic, strong, nullable) GTLRMonitoring_Metric_Labels *labels;
 
 /**
  *  An existing metric type, see google.api.MetricDescriptor. For example,
@@ -1142,7 +1143,7 @@ GTLR_EXTERN NSString * const kGTLRMonitoring_Type_Syntax_SyntaxProto3;
  *        of properties and then fetch them; or @c -additionalProperties to
  *        fetch them all at once.
  */
-@interface GTLRMonitoring_MetricLabels : GTLRObject
+@interface GTLRMonitoring_Metric_Labels : GTLRObject
 @end
 
 
@@ -1200,15 +1201,16 @@ GTLR_EXTERN NSString * const kGTLRMonitoring_Type_Syntax_SyntaxProto3;
  *  scope of the metric type or of its data; and (2) the metric's URL-encoded
  *  type, which also appears in the type field of this descriptor. For example,
  *  following is the resource name of a custom metric within the GCP project
- *  123456789:
- *  "projects/123456789/metricDescriptors/custom.googleapis.com%2Finvoice%2Fpaid%2Famount"
+ *  my-project-id:
+ *  "projects/my-project-id/metricDescriptors/custom.googleapis.com%2Finvoice%2Fpaid%2Famount"
  */
 @property(nonatomic, copy, nullable) NSString *name;
 
 /**
  *  The metric type, including its DNS name prefix. The type is not URL-encoded.
- *  All user-defined metric types have the DNS name custom.googleapis.com.
- *  Metric types should use a natural hierarchical grouping. For example:
+ *  All user-defined custom metric types have the DNS name
+ *  custom.googleapis.com. Metric types should use a natural hierarchical
+ *  grouping. For example:
  *  "custom.googleapis.com/invoice/paid/amount"
  *  "appengine.googleapis.com/http/server/response_latencies"
  */
@@ -1312,7 +1314,7 @@ GTLR_EXTERN NSString * const kGTLRMonitoring_Type_Syntax_SyntaxProto3;
  *  resource descriptor. For example, Cloud SQL databases use the labels
  *  "database_id" and "zone".
  */
-@property(nonatomic, strong, nullable) GTLRMonitoring_MonitoredResourceLabels *labels;
+@property(nonatomic, strong, nullable) GTLRMonitoring_MonitoredResource_Labels *labels;
 
 /**
  *  Required. The monitored resource type. This field must match the type field
@@ -1334,7 +1336,7 @@ GTLR_EXTERN NSString * const kGTLRMonitoring_Type_Syntax_SyntaxProto3;
  *        of properties and then fetch them; or @c -additionalProperties to
  *        fetch them all at once.
  */
-@interface GTLRMonitoring_MonitoredResourceLabels : GTLRObject
+@interface GTLRMonitoring_MonitoredResource_Labels : GTLRObject
 @end
 
 
@@ -1398,24 +1400,37 @@ GTLR_EXTERN NSString * const kGTLRMonitoring_Type_Syntax_SyntaxProto3;
  */
 @interface GTLRMonitoring_Option : GTLRObject
 
-/** The option's name. For example, "java_package". */
+/**
+ *  The option's name. For protobuf built-in options (options defined in
+ *  descriptor.proto), this is the short name. For example, "map_entry". For
+ *  custom options, it should be the fully-qualified name. For example,
+ *  "google.api.http".
+ */
 @property(nonatomic, copy, nullable) NSString *name;
 
-/** The option's value. For example, "com.google.protobuf". */
-@property(nonatomic, strong, nullable) GTLRMonitoring_OptionValue *value;
+/**
+ *  The option's value packed in an Any message. If the value is a primitive,
+ *  the corresponding wrapper type defined in google/protobuf/wrappers.proto
+ *  should be used. If the value is an enum, it should be stored as an int32
+ *  value using the google.protobuf.Int32Value type.
+ */
+@property(nonatomic, strong, nullable) GTLRMonitoring_Option_Value *value;
 
 @end
 
 
 /**
- *  The option's value. For example, "com.google.protobuf".
+ *  The option's value packed in an Any message. If the value is a primitive,
+ *  the corresponding wrapper type defined in google/protobuf/wrappers.proto
+ *  should be used. If the value is an enum, it should be stored as an int32
+ *  value using the google.protobuf.Int32Value type.
  *
  *  @note This class is documented as having more properties of any valid JSON
  *        type. Use @c -additionalJSONKeys and @c -additionalPropertyForName: to
  *        get the list of properties and then fetch them; or @c
  *        -additionalProperties to fetch them all at once.
  */
-@interface GTLRMonitoring_OptionValue : GTLRObject
+@interface GTLRMonitoring_Option_Value : GTLRObject
 @end
 
 

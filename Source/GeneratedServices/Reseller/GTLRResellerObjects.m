@@ -44,6 +44,34 @@
 
 // ----------------------------------------------------------------------------
 //
+//   GTLRReseller_NotifyGetwatchdetailsResponse
+//
+
+@implementation GTLRReseller_NotifyGetwatchdetailsResponse
+@dynamic serviceAccountEmailAddresses, topicName;
+
++ (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
+  NSDictionary<NSString *, Class> *map = @{
+    @"serviceAccountEmailAddresses" : [NSString class]
+  };
+  return map;
+}
+
+@end
+
+
+// ----------------------------------------------------------------------------
+//
+//   GTLRReseller_NotifyResource
+//
+
+@implementation GTLRReseller_NotifyResource
+@dynamic topicName;
+@end
+
+
+// ----------------------------------------------------------------------------
+//
 //   GTLRReseller_RenewalSettings
 //
 
@@ -70,8 +98,8 @@
 @implementation GTLRReseller_Subscription
 @dynamic billingMethod, creationTime, customerDomain, customerId, dealCode,
          kind, plan, purchaseOrderId, renewalSettings, resourceUiUrl, seats,
-         skuId, status, subscriptionId, suspensionReasons, transferInfo,
-         trialSettings;
+         skuId, skuName, status, subscriptionId, suspensionReasons,
+         transferInfo, trialSettings;
 
 + (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
   NSDictionary<NSString *, Class> *map = @{
@@ -85,40 +113,40 @@
 
 // ----------------------------------------------------------------------------
 //
-//   GTLRReseller_SubscriptionPlan
+//   GTLRReseller_Subscription_Plan
 //
 
-@implementation GTLRReseller_SubscriptionPlan
+@implementation GTLRReseller_Subscription_Plan
 @dynamic commitmentInterval, isCommitmentPlan, planName;
 @end
 
 
 // ----------------------------------------------------------------------------
 //
-//   GTLRReseller_SubscriptionTransferInfo
+//   GTLRReseller_Subscription_TransferInfo
 //
 
-@implementation GTLRReseller_SubscriptionTransferInfo
+@implementation GTLRReseller_Subscription_TransferInfo
 @dynamic minimumTransferableSeats, transferabilityExpirationTime;
 @end
 
 
 // ----------------------------------------------------------------------------
 //
-//   GTLRReseller_SubscriptionTrialSettings
+//   GTLRReseller_Subscription_TrialSettings
 //
 
-@implementation GTLRReseller_SubscriptionTrialSettings
+@implementation GTLRReseller_Subscription_TrialSettings
 @dynamic isInTrial, trialEndTime;
 @end
 
 
 // ----------------------------------------------------------------------------
 //
-//   GTLRReseller_SubscriptionPlanCommitmentInterval
+//   GTLRReseller_Subscription_Plan_CommitmentInterval
 //
 
-@implementation GTLRReseller_SubscriptionPlanCommitmentInterval
+@implementation GTLRReseller_Subscription_Plan_CommitmentInterval
 @dynamic endTime, startTime;
 @end
 

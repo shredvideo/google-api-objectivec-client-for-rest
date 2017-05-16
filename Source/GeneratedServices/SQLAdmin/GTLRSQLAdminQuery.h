@@ -27,6 +27,7 @@
 @class GTLRSQLAdmin_InstancesFailoverRequest;
 @class GTLRSQLAdmin_InstancesImportRequest;
 @class GTLRSQLAdmin_InstancesRestoreBackupRequest;
+@class GTLRSQLAdmin_InstancesTruncateLogRequest;
 @class GTLRSQLAdmin_SslCertsCreateEphemeralRequest;
 @class GTLRSQLAdmin_SslCertsInsertRequest;
 @class GTLRSQLAdmin_User;
@@ -471,6 +472,12 @@ NS_ASSUME_NONNULL_BEGIN
 //   +[GTLQuerySQLAdmin queryForFlagsList]
 
 /**
+ *  Database version for flag retrieval. Flags are specific to the database
+ *  version.
+ */
+@property(nonatomic, copy, nullable) NSString *databaseVersion;
+
+/**
  *  Fetches a @c GTLRSQLAdmin_FlagsListResponse.
  *
  *  List all available database flags for Google Cloud SQL instances.
@@ -757,6 +764,9 @@ NS_ASSUME_NONNULL_BEGIN
 // Previous library name was
 //   +[GTLQuerySQLAdmin queryForInstancesListWithproject:]
 
+/** A filter expression for filtering listed instances. */
+@property(nonatomic, copy, nullable) NSString *filter;
+
 /** The maximum number of results to return per response. */
 @property(nonatomic, assign) NSUInteger maxResults;
 
@@ -1041,6 +1051,43 @@ NS_ASSUME_NONNULL_BEGIN
  */
 + (instancetype)queryWithProject:(NSString *)project
                         instance:(NSString *)instance;
+
+@end
+
+/**
+ *  Truncate MySQL general and slow query log tables
+ *
+ *  Method: sql.instances.truncateLog
+ *
+ *  Authorization scope(s):
+ *    @c kGTLRAuthScopeSQLAdminCloudPlatform
+ *    @c kGTLRAuthScopeSQLAdminSqlserviceAdmin
+ */
+@interface GTLRSQLAdminQuery_InstancesTruncateLog : GTLRSQLAdminQuery
+// Previous library name was
+//   +[GTLQuerySQLAdmin queryForInstancesTruncateLogWithObject:project:instance:]
+
+/** Cloud SQL instance ID. This does not include the project ID. */
+@property(nonatomic, copy, nullable) NSString *instance;
+
+/** Project ID of the Cloud SQL project. */
+@property(nonatomic, copy, nullable) NSString *project;
+
+/**
+ *  Fetches a @c GTLRSQLAdmin_Operation.
+ *
+ *  Truncate MySQL general and slow query log tables
+ *
+ *  @param object The @c GTLRSQLAdmin_InstancesTruncateLogRequest to include in
+ *    the query.
+ *  @param project Project ID of the Cloud SQL project.
+ *  @param instance Cloud SQL instance ID. This does not include the project ID.
+ *
+ *  @returns GTLRSQLAdminQuery_InstancesTruncateLog
+ */
++ (instancetype)queryWithObject:(GTLRSQLAdmin_InstancesTruncateLogRequest *)object
+                        project:(NSString *)project
+                       instance:(NSString *)instance;
 
 @end
 

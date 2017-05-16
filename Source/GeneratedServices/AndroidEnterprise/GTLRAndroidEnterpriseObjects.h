@@ -25,7 +25,6 @@
 @class GTLRAndroidEnterprise_ApprovalUrlInfo;
 @class GTLRAndroidEnterprise_AppUpdateEvent;
 @class GTLRAndroidEnterprise_AppVersion;
-@class GTLRAndroidEnterprise_Collection;
 @class GTLRAndroidEnterprise_Device;
 @class GTLRAndroidEnterprise_Enterprise;
 @class GTLRAndroidEnterprise_Entitlement;
@@ -36,6 +35,7 @@
 @class GTLRAndroidEnterprise_ManagedConfiguration;
 @class GTLRAndroidEnterprise_ManagedProperty;
 @class GTLRAndroidEnterprise_ManagedPropertyBundle;
+@class GTLRAndroidEnterprise_NewDeviceEvent;
 @class GTLRAndroidEnterprise_NewPermissionsEvent;
 @class GTLRAndroidEnterprise_Notification;
 @class GTLRAndroidEnterprise_PageInfo;
@@ -52,19 +52,19 @@
 NS_ASSUME_NONNULL_BEGIN
 
 /**
- *  This represents an enterprise administrator who can manage the enterprise in
- *  the Google Play for Work Store.
+ *  This represents an enterprise admin who can manage the enterprise in the
+ *  managed Google Play store.
  */
 @interface GTLRAndroidEnterprise_Administrator : GTLRObject
 
-/** The administrator's email address. */
+/** The admin's email address. */
 @property(nonatomic, copy, nullable) NSString *email;
 
 @end
 
 
 /**
- *  A token authorizing an administrator to access an iframe.
+ *  A token authorizing an admin to access an iframe.
  */
 @interface GTLRAndroidEnterprise_AdministratorWebToken : GTLRObject
 
@@ -288,7 +288,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong, nullable) NSNumber *versionCode;
 
 /**
- *  The string used in the Play Store by the app developer to identify the
+ *  The string used in the Play store by the app developer to identify the
  *  version. The string is not necessarily unique or localized (for example, the
  *  string could be "1.4").
  */
@@ -320,102 +320,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- *  A collection resource defines a named set of apps that is visible to a set
- *  of users in the Google Play Store app running on those users' managed
- *  devices. Those users can then install any of those apps if they wish (which
- *  will trigger creation of install and entitlement resources). A user cannot
- *  install an app on a managed device unless the app is listed in at least one
- *  collection that is visible to that user.
- *  Note that the API can be used to directly install an app regardless of
- *  whether it is in any collection - so an enterprise has a choice of either
- *  directly pushing apps to users, or allowing users to install apps if they
- *  want. Which is appropriate will depend on the enterprise's policies and the
- *  purpose of the apps concerned.
- */
-@interface GTLRAndroidEnterprise_Collection : GTLRObject
-
-/** Arbitrary unique ID, allocated by the API on creation. */
-@property(nonatomic, copy, nullable) NSString *collectionId;
-
-/**
- *  Identifies what kind of resource this is. Value: the fixed string
- *  "androidenterprise#collection".
- */
-@property(nonatomic, copy, nullable) NSString *kind;
-
-/**
- *  A user-friendly name for the collection (should be unique), e.g. "Accounting
- *  apps".
- */
-@property(nonatomic, copy, nullable) NSString *name;
-
-/**
- *  The IDs of the products in the collection, in the order in which they should
- *  be displayed.
- */
-@property(nonatomic, strong, nullable) NSArray<NSString *> *productId;
-
-/**
- *  Whether this collection is visible to all users, or only to the users that
- *  have been granted access through the "Collectionviewers" API. With the
- *  launch of the "setAvailableProductSet" API, this property should always be
- *  set to "viewersOnly", as the "allUsers" option will bypass the
- *  "availableProductSet" for all users within a domain.
- *  The "allUsers" setting is deprecated, and will be removed.
- */
-@property(nonatomic, copy, nullable) NSString *visibility;
-
-@end
-
-
-/**
- *  The collection resources for the enterprise.
- */
-@interface GTLRAndroidEnterprise_CollectionsListResponse : GTLRObject
-
-/**
- *  An ordered collection of products which can be made visible on the Google
- *  Play Store to a selected group of users.
- */
-@property(nonatomic, strong, nullable) NSArray<GTLRAndroidEnterprise_Collection *> *collection;
-
-/**
- *  Identifies what kind of resource this is. Value: the fixed string
- *  "androidenterprise#collectionsListResponse".
- */
-@property(nonatomic, copy, nullable) NSString *kind;
-
-@end
-
-
-/**
- *  The user resources for the collection.
- */
-@interface GTLRAndroidEnterprise_CollectionViewersListResponse : GTLRObject
-
-/**
- *  Identifies what kind of resource this is. Value: the fixed string
- *  "androidenterprise#collectionViewersListResponse".
- */
-@property(nonatomic, copy, nullable) NSString *kind;
-
-/** A user of an enterprise. */
-@property(nonatomic, strong, nullable) NSArray<GTLRAndroidEnterprise_User *> *user;
-
-@end
-
-
-/**
- *  A device resource represents a mobile device managed by the EMM and
+ *  A Devices resource represents a mobile device managed by the EMM and
  *  belonging to a specific enterprise user.
- *  This collection cannot be modified via the API; it is automatically
+ *  This collection cannot be modified via the API. It is automatically
  *  populated as devices are set up to be managed.
  */
 @interface GTLRAndroidEnterprise_Device : GTLRObject
 
 /**
  *  The Google Play Services Android ID for the device encoded as a lowercase
- *  hex string, e.g. "123456789abcdef0".
+ *  hex string. For example, "123456789abcdef0".
  */
 @property(nonatomic, copy, nullable) NSString *androidId;
 
@@ -426,19 +340,19 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *kind;
 
 /**
- *  Identifies the extent to which the device is controlled by an Android for
- *  Work EMM in various deployment configurations.
+ *  Identifies the extent to which the device is controlled by a managed Google
+ *  Play EMM in various deployment configurations.
  *  Possible values include:
  *  - "managedDevice", a device that has the EMM's device policy controller
  *  (DPC) as the device owner,
- *  - "managedProfile", a device that has a work profile managed by the DPC (DPC
- *  is profile owner) in addition to a separate, personal profile that is
+ *  - "managedProfile", a device that has a profile managed by the DPC (DPC is
+ *  profile owner) in addition to a separate, personal profile that is
  *  unavailable to the DPC,
- *  - "containerApp", a device running the Android for Work App. The Android for
- *  Work App is managed by the DPC,
+ *  - "containerApp", a device running the container App. The container App is
+ *  managed by the DPC,
  *  - "unmanagedProfile", a device that has been allowed (by the domain's admin,
- *  using the Admin Console to enable the privilege) to use Android for Work
- *  apps or Google Apps for Work, but the profile is itself not owned by a DPC.
+ *  using the Admin Console to enable the privilege) to use managed Google Play,
+ *  but the profile is itself not owned by a DPC.
  */
 @property(nonatomic, copy, nullable) NSString *managementType;
 
@@ -493,17 +407,18 @@ NS_ASSUME_NONNULL_BEGIN
  *  Enterprises.enroll and Enterprises.setAccount (in conjunction with artifacts
  *  obtained from the Admin console and the Google API Console) and submitted to
  *  the EMM through a more-or-less manual process.
- *  - For Android for Work Accounts customers, the process involves using
+ *  - For managed Google Play Accounts customers, the process involves using
  *  Enterprises.generateSignupUrl and Enterprises.completeSignup in conjunction
- *  with the Android for Work Sign-up UI (Google-provided mechanism) to create
- *  the binding without manual steps. As an EMM, you can support either or both
- *  approaches in your EMM console. See Create an Enterprise for details.
+ *  with the managed Google Play sign-up UI (Google-provided mechanism) to
+ *  create the binding without manual steps. As an EMM, you can support either
+ *  or both approaches in your EMM console. See Create an Enterprise for
+ *  details.
  */
 @interface GTLRAndroidEnterprise_Enterprise : GTLRObject
 
 /**
- *  Administrators of the enterprise. This is only supported for enterprises
- *  created via the EMM-initiated flow.
+ *  Admins of the enterprise. This is only supported for enterprises created via
+ *  the EMM-initiated flow.
  */
 @property(nonatomic, strong, nullable) NSArray<GTLRAndroidEnterprise_Administrator *> *administrator;
 
@@ -582,31 +497,26 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- *  The existence of an entitlement resource means that a user has the right to
- *  use a particular app on any of their devices. This might be because the app
- *  is free or because they have been allocated a license to the app from a
- *  group license purchased by the enterprise.
- *  It should always be true that a user has an app installed on one of their
- *  devices only if they have an entitlement to it. So if an entitlement is
- *  deleted, the app will be uninstalled from all devices. Similarly if the user
- *  installs an app (and is permitted to do so), or the EMM triggers an install
- *  of the app, an entitlement to that app is automatically created. If this is
- *  impossible - e.g. the enterprise has not purchased sufficient licenses -
- *  then installation fails.
- *  Note that entitlements are always user specific, not device specific; a user
- *  may have an entitlement even though they have not installed the app
- *  anywhere. Once they have an entitlement they can install the app on multiple
- *  devices.
- *  The API can be used to create an entitlement. If the app is a free app, a
- *  group license for that app is created. If it's a paid app, creating the
- *  entitlement consumes one license; it remains consumed until the entitlement
- *  is removed. Optionally an installation of the app on all the user's managed
- *  devices can be triggered at the time the entitlement is created. An
- *  entitlement cannot be created for an app if the app requires permissions
- *  that the enterprise has not yet accepted.
- *  Entitlements for paid apps that are due to purchases by the user on a
- *  non-managed profile will have "userPurchase" as entitlement reason; those
- *  entitlements cannot be removed via the API.
+ *  The presence of an Entitlements resource indicates that a user has the right
+ *  to use a particular app. Entitlements are user specific, not device
+ *  specific. This allows a user with an entitlement to an app to install the
+ *  app on all their devices. It's also possible for a user to hold an
+ *  entitlement to an app without installing the app on any device.
+ *  The API can be used to create an entitlement. As an option, you can also use
+ *  the API to trigger the installation of an app on all a user's managed
+ *  devices at the same time the entitlement is created.
+ *  If the app is free, creating the entitlement also creates a group license
+ *  for that app. For paid apps, creating the entitlement consumes one license,
+ *  and that license remains consumed until the entitlement is removed. If the
+ *  enterprise hasn't purchased enough licenses, then no entitlement is created
+ *  and the installation fails. An entitlement is also not created for an app if
+ *  the app requires permissions that the enterprise hasn't accepted.
+ *  If an entitlement is deleted, the app may be uninstalled from a user's
+ *  device. As a best practice, uninstall the app by calling Installs.delete()
+ *  before deleting the entitlement.
+ *  Entitlements for apps that a user pays for on an unmanaged profile have
+ *  "userPurchase" as the entitlement reason. These entitlements cannot be
+ *  removed via the API.
  */
 @interface GTLRAndroidEnterprise_Entitlement : GTLRObject
 
@@ -617,15 +527,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *kind;
 
 /**
- *  The ID of the product that the entitlement is for, e.g.
+ *  The ID of the product that the entitlement is for. For example,
  *  "app:com.google.android.gm".
  */
 @property(nonatomic, copy, nullable) NSString *productId;
 
 /**
- *  The reason for the entitlement, e.g. "free" for free apps. This is
- *  temporary, it will be replaced by the acquisition kind field of group
- *  licenses.
+ *  The reason for the entitlement. For example, "free" for free apps. This
+ *  property is temporary: it will be replaced by the acquisition kind field of
+ *  group licenses.
  */
 @property(nonatomic, copy, nullable) NSString *reason;
 
@@ -675,19 +585,18 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GTLRAndroidEnterprise_GroupLicense : GTLRObject
 
 /**
- *  How this group license was acquired. "bulkPurchase" means that this group
- *  license object was created because the enterprise purchased licenses for
- *  this product; this is "free" otherwise (for free products).
+ *  How this group license was acquired. "bulkPurchase" means that this
+ *  Grouplicenses resource was created because the enterprise purchased licenses
+ *  for this product; otherwise, the value is "free" (for free products).
  */
 @property(nonatomic, copy, nullable) NSString *acquisitionKind;
 
 /**
  *  Whether the product to which this group license relates is currently
- *  approved by the enterprise, as either "approved" or "unapproved". Products
- *  are approved when a group license is first created, but this approval may be
- *  revoked by an enterprise admin via Google Play. Unapproved products will not
- *  be visible to end users in collections and new entitlements to them should
- *  not normally be created.
+ *  approved by the enterprise. Products are approved when a group license is
+ *  first created, but this approval may be revoked by an enterprise admin via
+ *  Google Play. Unapproved products will not be visible to end users in
+ *  collections, and new entitlements to them should not normally be created.
  */
 @property(nonatomic, copy, nullable) NSString *approval;
 
@@ -707,15 +616,15 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  The number of purchased licenses (possibly in multiple purchases). If this
- *  field is omitted then there is no limit on the number of licenses that can
- *  be provisioned (e.g. if the acquisition kind is "free").
+ *  field is omitted, then there is no limit on the number of licenses that can
+ *  be provisioned (for example, if the acquisition kind is "free").
  *
  *  Uses NSNumber of intValue.
  */
 @property(nonatomic, strong, nullable) NSNumber *numPurchased;
 
 /**
- *  The ID of the product that the license is for, e.g.
+ *  The ID of the product that the license is for. For example,
  *  "app:com.google.android.gm".
  */
 @property(nonatomic, copy, nullable) NSString *productId;
@@ -758,18 +667,18 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- *  The existence of an install resource indicates that an app is installed on a
- *  particular device (or that an install is pending).
+ *  The existence of an Installs resource indicates that an app is installed on
+ *  a particular device (or that an install is pending).
  *  The API can be used to create an install resource using the update method.
  *  This triggers the actual install of the app on the device. If the user does
- *  not already have an entitlement for the app then an attempt is made to
- *  create one. If this fails (e.g. because the app is not free and there is no
- *  available license) then the creation of the install fails.
+ *  not already have an entitlement for the app, then an attempt is made to
+ *  create one. If this fails (for example, because the app is not free and
+ *  there is no available license), then the creation of the install fails.
  *  The API can also be used to update an installed app. If the update method is
- *  used on an existing install then the app will be updated to the latest
+ *  used on an existing install, then the app will be updated to the latest
  *  available version.
  *  Note that it is not possible to force the installation of a specific version
- *  of an app; the version code is read-only.
+ *  of an app: the version code is read-only.
  *  If a user installs an app themselves (as permitted by the enterprise), then
  *  again an install resource and possibly an entitlement resource are
  *  automatically created.
@@ -795,7 +704,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *kind;
 
 /**
- *  The ID of the product that the install is for, e.g.
+ *  The ID of the product that the install is for. For example,
  *  "app:com.google.android.gm".
  */
 @property(nonatomic, copy, nullable) NSString *productId;
@@ -998,6 +907,29 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
+ *  An event generated when a new device is ready to be managed.
+ */
+@interface GTLRAndroidEnterprise_NewDeviceEvent : GTLRObject
+
+/** The Android ID of the device. This field will always be present. */
+@property(nonatomic, copy, nullable) NSString *deviceId;
+
+/**
+ *  Identifies the extent to which the device is controlled by an Android EMM in
+ *  various deployment configurations.
+ *  Possible values include:
+ *  - "managedDevice", a device where the DPC is set as device owner,
+ *  - "managedProfile", a device where the DPC is set as profile owner.
+ */
+@property(nonatomic, copy, nullable) NSString *managementType;
+
+/** The ID of the user. This field will always be present. */
+@property(nonatomic, copy, nullable) NSString *userId;
+
+@end
+
+
+/**
  *  An event generated when new permissions are added to an app.
  */
 @interface GTLRAndroidEnterprise_NewPermissionsEvent : GTLRObject
@@ -1043,6 +975,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /** Notifications about an app installation failure. */
 @property(nonatomic, strong, nullable) GTLRAndroidEnterprise_InstallFailureEvent *installFailureEvent;
+
+/** Notifications about new devices. */
+@property(nonatomic, strong, nullable) GTLRAndroidEnterprise_NewDeviceEvent *newDeviceEvent NS_RETURNS_NOT_RETAINED;
 
 /** Notifications about new app permissions. */
 @property(nonatomic, strong, nullable) GTLRAndroidEnterprise_NewPermissionsEvent *newPermissionsEvent NS_RETURNS_NOT_RETAINED;
@@ -1120,19 +1055,19 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- *  A permission represents some extra capability, to be granted to an Android
- *  app, which requires explicit consent. An enterprise admin must consent to
- *  these permissions on behalf of their users before an entitlement for the app
- *  can be created.
+ *  A Permissions resource represents some extra capability, to be granted to an
+ *  Android app, which requires explicit consent. An enterprise admin must
+ *  consent to these permissions on behalf of their users before an entitlement
+ *  for the app can be created.
  *  The permissions collection is read-only. The information provided for each
  *  permission (localized name and description) is intended to be used in the
- *  EMM user interface when obtaining consent from the enterprise.
+ *  MDM user interface when obtaining consent from the enterprise.
  */
 @interface GTLRAndroidEnterprise_Permission : GTLRObject
 
 /**
- *  A longer description of the permissions giving more details of what it
- *  affects.
+ *  A longer description of the Permissions resource, giving more details of
+ *  what it affects.
  *
  *  Remapped to 'descriptionProperty' to avoid NSObject's 'description'.
  */
@@ -1154,7 +1089,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- *  A Products resource represents an app in the Google Play Store that is
+ *  A Products resource represents an app in the Google Play store that is
  *  available to at least some users in the enterprise. (Some apps are
  *  restricted to a single enterprise, and no information about them is made
  *  available outside that enterprise.)
@@ -1170,7 +1105,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, strong, nullable) NSArray<GTLRAndroidEnterprise_AppVersion *> *appVersion;
 
-/** The name of the author of the product (e.g. the app developer). */
+/** The name of the author of the product (for example, the app developer). */
 @property(nonatomic, copy, nullable) NSString *authorName;
 
 /** A link to the (consumer) Google Play details page for the product. */
@@ -1178,7 +1113,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  How and to whom the package is made available. The value publicGoogleHosted
- *  means that the package is available through the Play Store and not
+ *  means that the package is available through the Play store and not
  *  restricted to a specific enterprise. The value privateGoogleHosted means
  *  that the package is a private app (restricted to an enterprise) but hosted
  *  by Google. The value privateSelfHosted means that the package is a private
@@ -1212,7 +1147,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *productPricing;
 
 /**
- *  Whether this app can only be installed on devices using the Android for Work
+ *  Whether this app can only be installed on devices using the Android
  *  container app.
  *
  *  Uses NSNumber of boolValue.
@@ -1229,8 +1164,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *title;
 
 /**
- *  A link to the Google Play for Work details page for the product, for use by
- *  an Enterprise administrator.
+ *  A link to the managed Google Play details page for the product, for use by
+ *  an Enterprise admin.
  */
 @property(nonatomic, copy, nullable) NSString *workDetailsUrl;
 
@@ -1349,12 +1284,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  The interpretation of this product set. "unknown" should never be sent and
- *  ignored if received. "whitelist" means that this product set constitutes a
- *  whitelist. "includeAll" means that all products are accessible, including
- *  products that are approved, not approved, and even products where approval
- *  has been revoked. If the value is "includeAll", the value of the productId
- *  field is therefore ignored. If a value is not supplied, it is interpreted to
- *  be "whitelist" for backwards compatibility.
+ *  is ignored if received. "whitelist" means that this product set constitutes
+ *  a whitelist. "includeAll" means that all products are accessible, including
+ *  products that are approved, products with revoked approval, and products
+ *  that have never been approved. If the value is "includeAll", the value of
+ *  the productId field is therefore ignored. If a value is not supplied, it is
+ *  interpreted to be "whitelist" for backwards compatibility.
  */
 @property(nonatomic, copy, nullable) NSString *productSetBehavior;
 
@@ -1396,7 +1331,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong, nullable) GTLRAndroidEnterprise_PageInfo *pageInfo;
 
 /**
- *  Information about a product (e.g. an app) in the Google Play Store, for
+ *  Information about a product (e.g. an app) in the Google Play store, for
  *  display to an enterprise admin.
  */
 @property(nonatomic, strong, nullable) NSArray<GTLRAndroidEnterprise_Product *> *product;
@@ -1457,6 +1392,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, copy, nullable) NSString *kind;
 
+/**
+ *  Public key data for the credentials file. This is an X.509 cert. If you are
+ *  using the googleCredentials key type, this is identical to the cert that can
+ *  be retrieved by using the X.509 cert url inside of the credentials file.
+ */
+@property(nonatomic, copy, nullable) NSString *publicData;
+
 /** The file format of the generated key data. */
 @property(nonatomic, copy, nullable) NSString *type;
 
@@ -1502,7 +1444,7 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- *  Definition of a Google Play for Work store cluster, a list of products
+ *  Definition of a managed Google Play store cluster, a list of products
  *  displayed as part of a store page.
  */
 @interface GTLRAndroidEnterprise_StoreCluster : GTLRObject
@@ -1547,19 +1489,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- *  General setting for the Google Play for Work store layout, currently only
+ *  General setting for the managed Google Play store layout, currently only
  *  specifying the page to display the first time the store is opened.
  */
 @interface GTLRAndroidEnterprise_StoreLayout : GTLRObject
 
 /**
- *  The ID of the store page to be used as the homepage. The homepage will be
- *  used as the first page shown in the Google Play for Work store.
- *  If a homepage has not been set, the Play store shown on devices will be
- *  empty. Not specifying a homepage on a store layout effectively empties the
- *  store.
- *  If there exists at least one page, this field must be set to the ID of a
- *  valid page.
+ *  The ID of the store page to be used as the homepage. The homepage is the
+ *  first page shown in the managed Google Play Store.
+ *  Not specifying a homepage is equivalent to setting the store layout type to
+ *  "basic".
  */
 @property(nonatomic, copy, nullable) NSString *homepageId;
 
@@ -1570,13 +1509,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *kind;
 
 /**
- *  The store layout type. By default, this value is set to "basic". If set to
- *  "custom", "homepageId" must be specified. If set to "basic", the layout will
- *  consist of all approved apps accessible by the user, split in pages of 100
- *  each; in this case, "homepageId" must not be specified. The "basic" setting
- *  takes precedence over any existing collections setup for this enterprise (if
- *  any). Should the enterprise use collectionViewers for controlling access
- *  rights, these will still be respected.
+ *  The store layout type. By default, this value is set to "basic" if the
+ *  homepageId field is not set, and to "custom" otherwise. If set to "basic",
+ *  the layout will consist of all approved apps that have been whitelisted for
+ *  the user.
  */
 @property(nonatomic, copy, nullable) NSString *storeLayoutType;
 
@@ -1618,8 +1554,8 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- *  Definition of a Google Play for Work store page, made of a localized name
- *  and links to other pages. A page also contains clusters defined as a
+ *  Definition of a managed Google Play store page, made of a localized name and
+ *  links to other pages. A page also contains clusters defined as a
  *  subcollection.
  */
 @interface GTLRAndroidEnterprise_StorePage : GTLRObject
@@ -1672,13 +1608,13 @@ NS_ASSUME_NONNULL_BEGIN
  *  A Users resource represents an account associated with an enterprise. The
  *  account may be specific to a device or to an individual user (who can then
  *  use the account across multiple devices). The account may provide access to
- *  Google Play for Work only, or to other Google services, depending on the
+ *  managed Google Play only, or to other Google services, depending on the
  *  identity model:
- *  - Google managed domain identity model requires synchronization to Google
- *  account sources (via primaryEmail).
- *  - Android for Work Accounts identity model provides a dynamic means for
- *  enterprises to create user or device accounts as needed. These accounts
- *  provide access to Google Play for Work only.
+ *  - The Google managed domain identity model requires synchronization to
+ *  Google account sources (via primaryEmail).
+ *  - The managed Google Play Accounts identity model provides a dynamic means
+ *  for enterprises to create user or device accounts as needed. These accounts
+ *  provide access to managed Google Play.
  */
 @interface GTLRAndroidEnterprise_User : GTLRObject
 
@@ -1755,9 +1691,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  A UserToken is used by a user when setting up a managed device or profile
- *  with their work account on a device. When the user enters their email
- *  address and token (activation code) the appropriate EMM app can be
- *  automatically downloaded.
+ *  with their managed Google Play account on a device. When the user enters
+ *  their email address and token (activation code) the appropriate EMM app can
+ *  be automatically downloaded.
  */
 @interface GTLRAndroidEnterprise_UserToken : GTLRObject
 

@@ -4,8 +4,7 @@
 // API:
 //   Google Dataflow API (dataflow/v1b3)
 // Description:
-//   Develops and executes data processing patterns like ETL, batch computation,
-//   and continuous computation.
+//   Manages Google Cloud Dataflow projects on Google Cloud Platform.
 // Documentation:
 //   https://cloud.google.com/dataflow
 
@@ -15,6 +14,7 @@
 // Authorization scopes
 
 NSString * const kGTLRAuthScopeDataflowCloudPlatform = @"https://www.googleapis.com/auth/cloud-platform";
+NSString * const kGTLRAuthScopeDataflowCompute       = @"https://www.googleapis.com/auth/compute";
 NSString * const kGTLRAuthScopeDataflowUserinfoEmail = @"https://www.googleapis.com/auth/userinfo.email";
 
 // ----------------------------------------------------------------------------

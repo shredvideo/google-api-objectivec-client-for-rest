@@ -142,11 +142,11 @@ typedef enum {
 @property(readonly) NSString *sg_simpleUploadPathOverride;
 @end
 
-@interface GTLRDiscovery_RestMethodRequest (SGGeneratorAdditions)
+@interface GTLRDiscovery_RestMethod_Request (SGGeneratorAdditions)
 @property(readonly) GTLRDiscovery_JsonSchema *sg_resolvedSchema;
 @end
 
-@interface GTLRDiscovery_RestMethodResponse (SGGeneratorAdditions)
+@interface GTLRDiscovery_RestMethod_Response (SGGeneratorAdditions)
 @property(readonly) GTLRDiscovery_JsonSchema *sg_resolvedSchema;
 @end
 
@@ -248,7 +248,7 @@ static void CheckForUnknownJSON(GTLRObject *obj, NSArray *keyPath,
 @synthesize api = _api,
             options = _options,
             verboseLevel = _verboseLevel,
-            frameworkName = _frameworkName;
+            importPrefix = _importPrefix;
 
 @synthesize warnings = _warnings,
             infos = _infos;
@@ -257,26 +257,26 @@ static void CheckForUnknownJSON(GTLRObject *obj, NSArray *keyPath,
                         options:(SGGeneratorOptions)options
                    verboseLevel:(NSUInteger)verboseLevel
           formattedNameOverride:(NSString *)formattedNameOverride
-               useFrameworkName:(NSString *)frameworkName {
+                   importPrefix:(NSString *)importPrefix {
   return [[self alloc] initWithApi:api
                            options:options
                       verboseLevel:verboseLevel
              formattedNameOverride:formattedNameOverride
-                  useFrameworkName:frameworkName];
+                      importPrefix:importPrefix];
 }
 
 - (instancetype)initWithApi:(GTLRDiscovery_RestDescription *)api
                     options:(SGGeneratorOptions)options
                verboseLevel:(NSUInteger)verboseLevel
       formattedNameOverride:(NSString *)formattedNameOverride
-           useFrameworkName:(NSString *)frameworkName {
+               importPrefix:(NSString *)importPrefix {
   self = [super init];
   if (self != nil) {
     _api = api;
     _options = options;
     _verboseLevel = verboseLevel;
     _formattedName = [formattedNameOverride copy];
-    _frameworkName = [frameworkName copy];
+    _importPrefix = [importPrefix copy];
     if (api) {
       NSValue *generatorAsValue = [NSValue valueWithNonretainedObject:self];
       [self.api sg_setProperty:generatorAsValue forKey:kWrappedGeneratorKey];
@@ -605,7 +605,7 @@ static void CheckForUnknownJSON(GTLRObject *obj, NSArray *keyPath,
   // Check each method...
   for (GTLRDiscovery_RestMethod *method in self.api.sg_allMethods) {
     // ...for media properties that don't line up or aren't what we expect.
-    GTLRDiscovery_RestMethodMediaUpload *mediaUpload = method.mediaUpload;
+    GTLRDiscovery_RestMethod_MediaUpload *mediaUpload = method.mediaUpload;
     BOOL supportsMediaUpload = method.supportsMediaUpload.boolValue;
     BOOL supportsMediaDownload = method.supportsMediaDownload.boolValue;
     BOOL useMediaDownloadService = method.useMediaDownloadService.boolValue;
@@ -634,7 +634,7 @@ static void CheckForUnknownJSON(GTLRObject *obj, NSArray *keyPath,
          method.identifier];
       messageHandler(kSGGeneratorHandlerMessageWarning, str);
     }
-    GTLRDiscovery_RestMethodMediaUploadProtocolsSimple *mediaProtocolSimple =
+    GTLRDiscovery_RestMethod_MediaUpload_Protocols_Simple *mediaProtocolSimple =
         mediaUpload.protocols.simple;
     if (supportsMediaUpload &&
         (mediaProtocolSimple.path.length == 0)) {
@@ -1990,7 +1990,7 @@ static NSString *MappedParamName(NSString *name) {
 
       NSMutableString *paramDesc = [NSMutableString string];
       [paramDesc appendString:@"The media to include in this query."];
-      GTLRDiscovery_RestMethodMediaUpload *mediaUpload = method.mediaUpload;
+      GTLRDiscovery_RestMethod_MediaUpload *mediaUpload = method.mediaUpload;
       if (mediaUpload.maxSize) {
         [paramDesc appendFormat:@" Maximum size %@.", mediaUpload.maxSize];
       }
@@ -2656,7 +2656,7 @@ static NSString *MappedParamName(NSString *name) {
 }
 
 - (NSArray *)oauth2ScopesConstantsBlocksForMode:(GeneratorMode)mode {
-  GTLRDiscovery_RestDescriptionAuthOauth2Scopes *oauth2scopes = self.api.auth.oauth2.scopes;
+  GTLRDiscovery_RestDescription_Auth_Oauth2_Scopes *oauth2scopes = self.api.auth.oauth2.scopes;
   if (!oauth2scopes) {
     return nil;
   }
@@ -2689,7 +2689,7 @@ static NSString *MappedParamName(NSString *name) {
     if (mode == kGenerateInterface) {
       SGHeaderDoc *hd = [[SGHeaderDoc alloc] initWithAutoOneLine:YES];
 
-      GTLRDiscovery_RestDescriptionAuthOauth2ScopesScope *scopeInfo =
+      GTLRDiscovery_RestDescription_Auth_Oauth2_Scopes_Scope *scopeInfo =
         [oauth2scopes additionalPropertyForName:scope];
       if (scopeInfo.descriptionProperty.length > 0) {
         [hd appendFormat:@"Authorization scope: %@",
@@ -2830,18 +2830,21 @@ static NSString *MappedParamName(NSString *name) {
 }
 
 - (NSString *)frameworkedImport:(NSString *)headerName {
-  NSMutableString *result = [NSMutableString string];
 
-  if (self.frameworkName) {
-    [result appendFormat:@"#import <%@/%@.h>\n", self.frameworkName, headerName];
-  } else {
-    [result appendFormat:@"#if %@\n", kFrameworkIncludeGate];
-    [result appendFormat:@"  #import \"%@/%@.h\"\n", kProjectPrefix, headerName];
-    [result appendString:@"#else\n"];
-    [result appendFormat:@"  #import \"%@.h\"\n", headerName];
-    [result appendString:@"#endif\n"];
+  if (self.importPrefix) {
+    if ((_options & kSGGeneratorOptionImportPrefixIsFramework) != 0) {
+      return [NSString stringWithFormat:@"#import <%@/%@.h>\n", self.importPrefix, headerName];
+    } else {
+      return [NSString stringWithFormat:@"#import \"%@/%@.h\"\n", self.importPrefix, headerName];
+    }
   }
 
+  NSMutableString *result = [NSMutableString string];
+  [result appendFormat:@"#if %@\n", kFrameworkIncludeGate];
+  [result appendFormat:@"  #import \"%@/%@.h\"\n", kProjectPrefix, headerName];
+  [result appendString:@"#else\n"];
+  [result appendFormat:@"  #import \"%@.h\"\n", headerName];
+  [result appendString:@"#endif\n"];
   return result;
 }
 
@@ -4486,7 +4489,7 @@ static SGTypeInfo *LookupTypeInfo(NSString *typeString,
 
 @end
 
-@implementation GTLRDiscovery_RestMethodRequest (SGGeneratorAdditions)
+@implementation GTLRDiscovery_RestMethod_Request (SGGeneratorAdditions)
 
 // Since this isn't a real scheme (GTLRDiscovery_JsonSchema), provide -type to
 // return nil like a schema would when it is use a $ref.
@@ -4515,7 +4518,7 @@ static SGTypeInfo *LookupTypeInfo(NSString *typeString,
 
 @end
 
-@implementation GTLRDiscovery_RestMethodResponse (SGGeneratorAdditions)
+@implementation GTLRDiscovery_RestMethod_Response (SGGeneratorAdditions)
 
 - (GTLRDiscovery_JsonSchema *)sg_resolvedSchema {
   // These aren't real schema, so look up their references (and resolve them).

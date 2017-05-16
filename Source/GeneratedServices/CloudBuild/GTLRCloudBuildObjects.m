@@ -18,7 +18,6 @@ NSString * const kGTLRCloudBuild_Build_Status_Cancelled     = @"CANCELLED";
 NSString * const kGTLRCloudBuild_Build_Status_Failure       = @"FAILURE";
 NSString * const kGTLRCloudBuild_Build_Status_InternalError = @"INTERNAL_ERROR";
 NSString * const kGTLRCloudBuild_Build_Status_Queued        = @"QUEUED";
-NSString * const kGTLRCloudBuild_Build_Status_Queuing       = @"QUEUING";
 NSString * const kGTLRCloudBuild_Build_Status_StatusUnknown = @"STATUS_UNKNOWN";
 NSString * const kGTLRCloudBuild_Build_Status_Success       = @"SUCCESS";
 NSString * const kGTLRCloudBuild_Build_Status_Timeout       = @"TIMEOUT";
@@ -44,7 +43,7 @@ NSString * const kGTLRCloudBuild_Hash_Type_Sha256 = @"SHA256";
 @implementation GTLRCloudBuild_Build
 @dynamic buildTriggerId, createTime, finishTime, identifier, images, logsBucket,
          logUrl, options, projectId, results, source, sourceProvenance,
-         startTime, status, statusDetail, steps, timeout;
+         startTime, status, statusDetail, steps, substitutions, timeout;
 
 + (NSDictionary<NSString *, NSString *> *)propertyToJSONKeyMap {
   return @{ @"identifier" : @"id" };
@@ -56,6 +55,20 @@ NSString * const kGTLRCloudBuild_Hash_Type_Sha256 = @"SHA256";
     @"steps" : [GTLRCloudBuild_BuildStep class]
   };
   return map;
+}
+
+@end
+
+
+// ----------------------------------------------------------------------------
+//
+//   GTLRCloudBuild_Build_Substitutions
+//
+
+@implementation GTLRCloudBuild_Build_Substitutions
+
++ (Class)classForAdditionalProperties {
+  return [NSString class];
 }
 
 @end
@@ -95,7 +108,7 @@ NSString * const kGTLRCloudBuild_Hash_Type_Sha256 = @"SHA256";
 //
 
 @implementation GTLRCloudBuild_BuildStep
-@dynamic args, dir, env, identifier, name, waitFor;
+@dynamic args, dir, entrypoint, env, identifier, name, waitFor;
 
 + (NSDictionary<NSString *, NSString *> *)propertyToJSONKeyMap {
   return @{ @"identifier" : @"id" };
@@ -120,7 +133,7 @@ NSString * const kGTLRCloudBuild_Hash_Type_Sha256 = @"SHA256";
 
 @implementation GTLRCloudBuild_BuildTrigger
 @dynamic build, createTime, descriptionProperty, disabled, filename, identifier,
-         triggerTemplate;
+         substitutions, triggerTemplate;
 
 + (NSDictionary<NSString *, NSString *> *)propertyToJSONKeyMap {
   NSDictionary<NSString *, NSString *> *map = @{
@@ -128,6 +141,20 @@ NSString * const kGTLRCloudBuild_Hash_Type_Sha256 = @"SHA256";
     @"identifier" : @"id"
   };
   return map;
+}
+
+@end
+
+
+// ----------------------------------------------------------------------------
+//
+//   GTLRCloudBuild_BuildTrigger_Substitutions
+//
+
+@implementation GTLRCloudBuild_BuildTrigger_Substitutions
+
++ (Class)classForAdditionalProperties {
+  return [NSString class];
 }
 
 @end
@@ -272,10 +299,10 @@ NSString * const kGTLRCloudBuild_Hash_Type_Sha256 = @"SHA256";
 
 // ----------------------------------------------------------------------------
 //
-//   GTLRCloudBuild_OperationMetadata
+//   GTLRCloudBuild_Operation_Metadata
 //
 
-@implementation GTLRCloudBuild_OperationMetadata
+@implementation GTLRCloudBuild_Operation_Metadata
 
 + (Class)classForAdditionalProperties {
   return [NSObject class];
@@ -286,10 +313,10 @@ NSString * const kGTLRCloudBuild_Hash_Type_Sha256 = @"SHA256";
 
 // ----------------------------------------------------------------------------
 //
-//   GTLRCloudBuild_OperationResponse
+//   GTLRCloudBuild_Operation_Response
 //
 
-@implementation GTLRCloudBuild_OperationResponse
+@implementation GTLRCloudBuild_Operation_Response
 
 + (Class)classForAdditionalProperties {
   return [NSObject class];
@@ -349,10 +376,10 @@ NSString * const kGTLRCloudBuild_Hash_Type_Sha256 = @"SHA256";
 
 // ----------------------------------------------------------------------------
 //
-//   GTLRCloudBuild_SourceProvenanceFileHashes
+//   GTLRCloudBuild_SourceProvenance_FileHashes
 //
 
-@implementation GTLRCloudBuild_SourceProvenanceFileHashes
+@implementation GTLRCloudBuild_SourceProvenance_FileHashes
 
 + (Class)classForAdditionalProperties {
   return [GTLRCloudBuild_FileHashes class];
@@ -371,7 +398,7 @@ NSString * const kGTLRCloudBuild_Hash_Type_Sha256 = @"SHA256";
 
 + (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
   NSDictionary<NSString *, Class> *map = @{
-    @"details" : [GTLRCloudBuild_StatusDetailsItem class]
+    @"details" : [GTLRCloudBuild_Status_Details_Item class]
   };
   return map;
 }
@@ -381,10 +408,10 @@ NSString * const kGTLRCloudBuild_Hash_Type_Sha256 = @"SHA256";
 
 // ----------------------------------------------------------------------------
 //
-//   GTLRCloudBuild_StatusDetailsItem
+//   GTLRCloudBuild_Status_Details_Item
 //
 
-@implementation GTLRCloudBuild_StatusDetailsItem
+@implementation GTLRCloudBuild_Status_Details_Item
 
 + (Class)classForAdditionalProperties {
   return [NSObject class];

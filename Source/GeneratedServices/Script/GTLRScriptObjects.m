@@ -11,13 +11,6 @@
 #import "GTLRScriptObjects.h"
 
 // ----------------------------------------------------------------------------
-// Constants
-
-// GTLRScript_ExecutionResponse.status
-NSString * const kGTLRScript_ExecutionResponse_Status_Canceled = @"CANCELED";
-NSString * const kGTLRScript_ExecutionResponse_Status_Success  = @"SUCCESS";
-
-// ----------------------------------------------------------------------------
 //
 //   GTLRScript_ExecutionError
 //
@@ -59,7 +52,7 @@ NSString * const kGTLRScript_ExecutionResponse_Status_Success  = @"SUCCESS";
 //
 
 @implementation GTLRScript_ExecutionResponse
-@dynamic result, status;
+@dynamic result;
 @end
 
 
@@ -75,10 +68,10 @@ NSString * const kGTLRScript_ExecutionResponse_Status_Success  = @"SUCCESS";
 
 // ----------------------------------------------------------------------------
 //
-//   GTLRScript_OperationMetadata
+//   GTLRScript_Operation_Metadata
 //
 
-@implementation GTLRScript_OperationMetadata
+@implementation GTLRScript_Operation_Metadata
 
 + (Class)classForAdditionalProperties {
   return [NSObject class];
@@ -89,10 +82,10 @@ NSString * const kGTLRScript_ExecutionResponse_Status_Success  = @"SUCCESS";
 
 // ----------------------------------------------------------------------------
 //
-//   GTLRScript_OperationResponse
+//   GTLRScript_Operation_Response
 //
 
-@implementation GTLRScript_OperationResponse
+@implementation GTLRScript_Operation_Response
 
 + (Class)classForAdditionalProperties {
   return [NSObject class];
@@ -121,7 +114,7 @@ NSString * const kGTLRScript_ExecutionResponse_Status_Success  = @"SUCCESS";
 
 + (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
   NSDictionary<NSString *, Class> *map = @{
-    @"details" : [GTLRScript_StatusDetailsItem class]
+    @"details" : [GTLRScript_Status_Details_Item class]
   };
   return map;
 }
@@ -131,10 +124,10 @@ NSString * const kGTLRScript_ExecutionResponse_Status_Success  = @"SUCCESS";
 
 // ----------------------------------------------------------------------------
 //
-//   GTLRScript_StatusDetailsItem
+//   GTLRScript_Status_Details_Item
 //
 
-@implementation GTLRScript_StatusDetailsItem
+@implementation GTLRScript_Status_Details_Item
 
 + (Class)classForAdditionalProperties {
   return [NSObject class];

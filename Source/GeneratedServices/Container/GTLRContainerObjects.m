@@ -4,8 +4,8 @@
 // API:
 //   Google Container Engine API (container/v1)
 // Description:
-//   Builds and manages clusters that run container-based applications, powered
-//   by open source Kubernetes technology.
+//   The Google Container Engine API is used for building and managing container
+//   based applications, powered by the open source Kubernetes technology.
 // Documentation:
 //   https://cloud.google.com/container-engine/
 
@@ -32,21 +32,32 @@ NSString * const kGTLRContainer_NodePool_Status_StatusUnspecified = @"STATUS_UNS
 NSString * const kGTLRContainer_NodePool_Status_Stopping       = @"STOPPING";
 
 // GTLRContainer_Operation.operationType
+NSString * const kGTLRContainer_Operation_OperationType_AutoRepairNodes = @"AUTO_REPAIR_NODES";
+NSString * const kGTLRContainer_Operation_OperationType_AutoUpgradeNodes = @"AUTO_UPGRADE_NODES";
 NSString * const kGTLRContainer_Operation_OperationType_CreateCluster = @"CREATE_CLUSTER";
 NSString * const kGTLRContainer_Operation_OperationType_CreateNodePool = @"CREATE_NODE_POOL";
 NSString * const kGTLRContainer_Operation_OperationType_DeleteCluster = @"DELETE_CLUSTER";
 NSString * const kGTLRContainer_Operation_OperationType_DeleteNodePool = @"DELETE_NODE_POOL";
 NSString * const kGTLRContainer_Operation_OperationType_RepairCluster = @"REPAIR_CLUSTER";
+NSString * const kGTLRContainer_Operation_OperationType_SetLabels = @"SET_LABELS";
+NSString * const kGTLRContainer_Operation_OperationType_SetMasterAuth = @"SET_MASTER_AUTH";
+NSString * const kGTLRContainer_Operation_OperationType_SetNodePoolManagement = @"SET_NODE_POOL_MANAGEMENT";
 NSString * const kGTLRContainer_Operation_OperationType_TypeUnspecified = @"TYPE_UNSPECIFIED";
 NSString * const kGTLRContainer_Operation_OperationType_UpdateCluster = @"UPDATE_CLUSTER";
 NSString * const kGTLRContainer_Operation_OperationType_UpgradeMaster = @"UPGRADE_MASTER";
 NSString * const kGTLRContainer_Operation_OperationType_UpgradeNodes = @"UPGRADE_NODES";
 
 // GTLRContainer_Operation.status
+NSString * const kGTLRContainer_Operation_Status_Aborting      = @"ABORTING";
 NSString * const kGTLRContainer_Operation_Status_Done          = @"DONE";
 NSString * const kGTLRContainer_Operation_Status_Pending       = @"PENDING";
 NSString * const kGTLRContainer_Operation_Status_Running       = @"RUNNING";
 NSString * const kGTLRContainer_Operation_Status_StatusUnspecified = @"STATUS_UNSPECIFIED";
+
+// GTLRContainer_SetMasterAuthRequest.action
+NSString * const kGTLRContainer_SetMasterAuthRequest_Action_GeneratePassword = @"GENERATE_PASSWORD";
+NSString * const kGTLRContainer_SetMasterAuthRequest_Action_SetPassword = @"SET_PASSWORD";
+NSString * const kGTLRContainer_SetMasterAuthRequest_Action_Unknown = @"UNKNOWN";
 
 // ----------------------------------------------------------------------------
 //
@@ -60,16 +71,42 @@ NSString * const kGTLRContainer_Operation_Status_StatusUnspecified = @"STATUS_UN
 
 // ----------------------------------------------------------------------------
 //
+//   GTLRContainer_AutoUpgradeOptions
+//
+
+@implementation GTLRContainer_AutoUpgradeOptions
+@dynamic autoUpgradeStartTime, descriptionProperty;
+
++ (NSDictionary<NSString *, NSString *> *)propertyToJSONKeyMap {
+  return @{ @"descriptionProperty" : @"description" };
+}
+
+@end
+
+
+// ----------------------------------------------------------------------------
+//
+//   GTLRContainer_CancelOperationRequest
+//
+
+@implementation GTLRContainer_CancelOperationRequest
+@end
+
+
+// ----------------------------------------------------------------------------
+//
 //   GTLRContainer_Cluster
 //
 
 @implementation GTLRContainer_Cluster
 @dynamic addonsConfig, clusterIpv4Cidr, createTime, currentMasterVersion,
-         currentNodeCount, currentNodeVersion, descriptionProperty, endpoint,
-         initialClusterVersion, initialNodeCount, instanceGroupUrls, locations,
-         loggingService, masterAuth, monitoringService, name, network,
-         nodeConfig, nodeIpv4CidrSize, nodePools, selfLink, servicesIpv4Cidr,
-         status, statusMessage, subnetwork, zoneProperty;
+         currentNodeCount, currentNodeVersion, descriptionProperty,
+         enableKubernetesAlpha, endpoint, expireTime, initialClusterVersion,
+         initialNodeCount, instanceGroupUrls, labelFingerprint, legacyAbac,
+         locations, loggingService, masterAuth, monitoringService, name,
+         network, nodeConfig, nodeIpv4CidrSize, nodePools, resourceLabels,
+         selfLink, servicesIpv4Cidr, status, statusMessage, subnetwork,
+         zoneProperty;
 
 + (NSDictionary<NSString *, NSString *> *)propertyToJSONKeyMap {
   NSDictionary<NSString *, NSString *> *map = @{
@@ -97,8 +134,17 @@ NSString * const kGTLRContainer_Operation_Status_StatusUnspecified = @"STATUS_UN
 //
 
 @implementation GTLRContainer_ClusterUpdate
-@dynamic desiredAddonsConfig, desiredMasterVersion, desiredMonitoringService,
-         desiredNodePoolId, desiredNodeVersion;
+@dynamic desiredAddonsConfig, desiredImageType, desiredLocations,
+         desiredMasterVersion, desiredMonitoringService,
+         desiredNodePoolAutoscaling, desiredNodePoolId, desiredNodeVersion;
+
++ (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
+  NSDictionary<NSString *, Class> *map = @{
+    @"desiredLocations" : [NSString class]
+  };
+  return map;
+}
+
 @end
 
 
@@ -124,6 +170,15 @@ NSString * const kGTLRContainer_Operation_Status_StatusUnspecified = @"STATUS_UN
 
 // ----------------------------------------------------------------------------
 //
+//   GTLRContainer_Empty
+//
+
+@implementation GTLRContainer_Empty
+@end
+
+
+// ----------------------------------------------------------------------------
+//
 //   GTLRContainer_HorizontalPodAutoscaling
 //
 
@@ -139,6 +194,26 @@ NSString * const kGTLRContainer_Operation_Status_StatusUnspecified = @"STATUS_UN
 
 @implementation GTLRContainer_HttpLoadBalancing
 @dynamic disabled;
+@end
+
+
+// ----------------------------------------------------------------------------
+//
+//   GTLRContainer_Item
+//
+
+@implementation GTLRContainer_Item
+@dynamic key, value;
+@end
+
+
+// ----------------------------------------------------------------------------
+//
+//   GTLRContainer_LegacyAbac
+//
+
+@implementation GTLRContainer_LegacyAbac
+@dynamic enabled;
 @end
 
 
@@ -214,11 +289,13 @@ NSString * const kGTLRContainer_Operation_Status_StatusUnspecified = @"STATUS_UN
 //
 
 @implementation GTLRContainer_NodeConfig
-@dynamic diskSizeGb, machineType, metadata, oauthScopes;
+@dynamic diskSizeGb, imageType, labels, localSsdCount, machineType, metadata,
+         oauthScopes, preemptible, serviceAccount, tags;
 
 + (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
   NSDictionary<NSString *, Class> *map = @{
-    @"oauthScopes" : [NSString class]
+    @"oauthScopes" : [NSString class],
+    @"tags" : [NSString class]
   };
   return map;
 }
@@ -228,10 +305,10 @@ NSString * const kGTLRContainer_Operation_Status_StatusUnspecified = @"STATUS_UN
 
 // ----------------------------------------------------------------------------
 //
-//   GTLRContainer_NodeConfigMetadata
+//   GTLRContainer_NodeConfig_Labels
 //
 
-@implementation GTLRContainer_NodeConfigMetadata
+@implementation GTLRContainer_NodeConfig_Labels
 
 + (Class)classForAdditionalProperties {
   return [NSString class];
@@ -242,12 +319,36 @@ NSString * const kGTLRContainer_Operation_Status_StatusUnspecified = @"STATUS_UN
 
 // ----------------------------------------------------------------------------
 //
+//   GTLRContainer_NodeConfig_Metadata
+//
+
+@implementation GTLRContainer_NodeConfig_Metadata
+
++ (Class)classForAdditionalProperties {
+  return [NSString class];
+}
+
+@end
+
+
+// ----------------------------------------------------------------------------
+//
+//   GTLRContainer_NodeManagement
+//
+
+@implementation GTLRContainer_NodeManagement
+@dynamic autoRepair, autoUpgrade, upgradeOptions;
+@end
+
+
+// ----------------------------------------------------------------------------
+//
 //   GTLRContainer_NodePool
 //
 
 @implementation GTLRContainer_NodePool
-@dynamic config, initialNodeCount, instanceGroupUrls, name, selfLink, status,
-         statusMessage, version;
+@dynamic autoscaling, config, initialNodeCount, instanceGroupUrls, management,
+         name, selfLink, status, statusMessage, version;
 
 + (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
   NSDictionary<NSString *, Class> *map = @{
@@ -256,6 +357,16 @@ NSString * const kGTLRContainer_Operation_Status_StatusUnspecified = @"STATUS_UN
   return map;
 }
 
+@end
+
+
+// ----------------------------------------------------------------------------
+//
+//   GTLRContainer_NodePoolAutoscaling
+//
+
+@implementation GTLRContainer_NodePoolAutoscaling
+@dynamic enabled, maxNodeCount, minNodeCount;
 @end
 
 
@@ -277,21 +388,89 @@ NSString * const kGTLRContainer_Operation_Status_StatusUnspecified = @"STATUS_UN
 
 // ----------------------------------------------------------------------------
 //
+//   GTLRContainer_ResourceLabels
+//
+
+@implementation GTLRContainer_ResourceLabels
+@dynamic items;
+
++ (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
+  NSDictionary<NSString *, Class> *map = @{
+    @"items" : [GTLRContainer_Item class]
+  };
+  return map;
+}
+
+@end
+
+
+// ----------------------------------------------------------------------------
+//
+//   GTLRContainer_RollbackNodePoolUpgradeRequest
+//
+
+@implementation GTLRContainer_RollbackNodePoolUpgradeRequest
+@end
+
+
+// ----------------------------------------------------------------------------
+//
 //   GTLRContainer_ServerConfig
 //
 
 @implementation GTLRContainer_ServerConfig
-@dynamic defaultClusterVersion, defaultImageFamily, validImageFamilies,
-         validNodeVersions;
+@dynamic defaultClusterVersion, defaultImageType, validImageTypes,
+         validMasterVersions, validNodeVersions;
 
 + (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
   NSDictionary<NSString *, Class> *map = @{
-    @"validImageFamilies" : [NSString class],
+    @"validImageTypes" : [NSString class],
+    @"validMasterVersions" : [NSString class],
     @"validNodeVersions" : [NSString class]
   };
   return map;
 }
 
+@end
+
+
+// ----------------------------------------------------------------------------
+//
+//   GTLRContainer_SetLabelsRequest
+//
+
+@implementation GTLRContainer_SetLabelsRequest
+@dynamic labelFingerprint, resourceLabels;
+@end
+
+
+// ----------------------------------------------------------------------------
+//
+//   GTLRContainer_SetLegacyAbacRequest
+//
+
+@implementation GTLRContainer_SetLegacyAbacRequest
+@dynamic enabled;
+@end
+
+
+// ----------------------------------------------------------------------------
+//
+//   GTLRContainer_SetMasterAuthRequest
+//
+
+@implementation GTLRContainer_SetMasterAuthRequest
+@dynamic action, update;
+@end
+
+
+// ----------------------------------------------------------------------------
+//
+//   GTLRContainer_SetNodePoolManagementRequest
+//
+
+@implementation GTLRContainer_SetNodePoolManagementRequest
+@dynamic management;
 @end
 
 

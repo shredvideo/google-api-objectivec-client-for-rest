@@ -141,10 +141,10 @@
 
 // ----------------------------------------------------------------------------
 //
-//   GTLRDirectory_ChannelParams
+//   GTLRDirectory_Channel_Params
 //
 
-@implementation GTLRDirectory_ChannelParams
+@implementation GTLRDirectory_Channel_Params
 
 + (Class)classForAdditionalProperties {
   return [NSString class];
@@ -171,8 +171,8 @@
 
 + (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
   NSDictionary<NSString *, Class> *map = @{
-    @"activeTimeRanges" : [GTLRDirectory_ChromeOsDeviceActiveTimeRangesItem class],
-    @"recentUsers" : [GTLRDirectory_ChromeOsDeviceRecentUsersItem class]
+    @"activeTimeRanges" : [GTLRDirectory_ChromeOsDevice_ActiveTimeRanges_Item class],
+    @"recentUsers" : [GTLRDirectory_ChromeOsDevice_RecentUsers_Item class]
   };
   return map;
 }
@@ -182,20 +182,20 @@
 
 // ----------------------------------------------------------------------------
 //
-//   GTLRDirectory_ChromeOsDeviceActiveTimeRangesItem
+//   GTLRDirectory_ChromeOsDevice_ActiveTimeRanges_Item
 //
 
-@implementation GTLRDirectory_ChromeOsDeviceActiveTimeRangesItem
+@implementation GTLRDirectory_ChromeOsDevice_ActiveTimeRanges_Item
 @dynamic activeTime, date;
 @end
 
 
 // ----------------------------------------------------------------------------
 //
-//   GTLRDirectory_ChromeOsDeviceRecentUsersItem
+//   GTLRDirectory_ChromeOsDevice_RecentUsers_Item
 //
 
-@implementation GTLRDirectory_ChromeOsDeviceRecentUsersItem
+@implementation GTLRDirectory_ChromeOsDevice_RecentUsers_Item
 @dynamic email, type;
 @end
 
@@ -471,7 +471,7 @@
 
 + (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
   NSDictionary<NSString *, Class> *map = @{
-    @"applications" : [GTLRDirectory_MobileDeviceApplicationsItem class],
+    @"applications" : [GTLRDirectory_MobileDevice_Applications_Item class],
     @"email" : [NSString class],
     @"name" : [NSString class],
     @"otherAccountsInfo" : [NSString class]
@@ -484,10 +484,10 @@
 
 // ----------------------------------------------------------------------------
 //
-//   GTLRDirectory_MobileDeviceApplicationsItem
+//   GTLRDirectory_MobileDevice_Applications_Item
 //
 
-@implementation GTLRDirectory_MobileDeviceApplicationsItem
+@implementation GTLRDirectory_MobileDevice_Applications_Item
 @dynamic displayName, packageName, permission, versionCode, versionName;
 
 + (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
@@ -676,7 +676,7 @@
 
 + (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
   NSDictionary<NSString *, Class> *map = @{
-    @"rolePrivileges" : [GTLRDirectory_RoleRolePrivilegesItem class]
+    @"rolePrivileges" : [GTLRDirectory_Role_RolePrivileges_Item class]
   };
   return map;
 }
@@ -686,10 +686,10 @@
 
 // ----------------------------------------------------------------------------
 //
-//   GTLRDirectory_RoleRolePrivilegesItem
+//   GTLRDirectory_Role_RolePrivileges_Item
 //
 
-@implementation GTLRDirectory_RoleRolePrivilegesItem
+@implementation GTLRDirectory_Role_RolePrivileges_Item
 @dynamic privilegeName, serviceId;
 @end
 
@@ -793,10 +793,10 @@
 
 // ----------------------------------------------------------------------------
 //
-//   GTLRDirectory_SchemaFieldSpecNumericIndexingSpec
+//   GTLRDirectory_SchemaFieldSpec_NumericIndexingSpec
 //
 
-@implementation GTLRDirectory_SchemaFieldSpecNumericIndexingSpec
+@implementation GTLRDirectory_SchemaFieldSpec_NumericIndexingSpec
 @dynamic maxValue, minValue;
 @end
 
@@ -877,10 +877,12 @@
 @dynamic addresses, agreedToTerms, aliases, changePasswordAtNextLogin,
          creationTime, customerId, customSchemas, deletionTime, emails, ETag,
          externalIds, hashFunction, identifier, ims, includeInGlobalAddressList,
-         ipWhitelisted, isAdmin, isDelegatedAdmin, isMailboxSetup, kind,
-         lastLoginTime, name, nonEditableAliases, notes, organizations,
-         orgUnitPath, password, phones, primaryEmail, relations, suspended,
-         suspensionReason, thumbnailPhotoEtag, thumbnailPhotoUrl, websites;
+         ipWhitelisted, isAdmin, isDelegatedAdmin, isEnforcedIn2Sv,
+         isEnrolledIn2Sv, isMailboxSetup, kind, lastLoginTime, name,
+         nonEditableAliases, notes, organizations, orgUnitPath, password,
+         phones, posixAccounts, primaryEmail, relations, sshPublicKeys,
+         suspended, suspensionReason, thumbnailPhotoEtag, thumbnailPhotoUrl,
+         websites;
 
 + (NSDictionary<NSString *, NSString *> *)propertyToJSONKeyMap {
   NSDictionary<NSString *, NSString *> *map = @{
@@ -903,10 +905,10 @@
 
 // ----------------------------------------------------------------------------
 //
-//   GTLRDirectory_UserCustomSchemas
+//   GTLRDirectory_User_CustomSchemas
 //
 
-@implementation GTLRDirectory_UserCustomSchemas
+@implementation GTLRDirectory_User_CustomSchemas
 
 + (Class)classForAdditionalProperties {
   return [GTLRDirectory_UserCustomProperties class];
@@ -1049,6 +1051,16 @@
 
 // ----------------------------------------------------------------------------
 //
+//   GTLRDirectory_UserPosixAccount
+//
+
+@implementation GTLRDirectory_UserPosixAccount
+@dynamic gecos, gid, homeDirectory, primary, shell, systemId, uid, username;
+@end
+
+
+// ----------------------------------------------------------------------------
+//
 //   GTLRDirectory_UserRelation
 //
 
@@ -1084,6 +1096,16 @@
   return @"users";
 }
 
+@end
+
+
+// ----------------------------------------------------------------------------
+//
+//   GTLRDirectory_UserSshPublicKey
+//
+
+@implementation GTLRDirectory_UserSshPublicKey
+@dynamic expirationTimeUsec, fingerprint, key;
 @end
 
 

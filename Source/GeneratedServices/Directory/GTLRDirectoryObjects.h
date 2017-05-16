@@ -22,30 +22,30 @@
 
 @class GTLRDirectory_Asp;
 @class GTLRDirectory_CalendarResource;
-@class GTLRDirectory_ChannelParams;
+@class GTLRDirectory_Channel_Params;
 @class GTLRDirectory_ChromeOsDevice;
-@class GTLRDirectory_ChromeOsDeviceActiveTimeRangesItem;
-@class GTLRDirectory_ChromeOsDeviceRecentUsersItem;
+@class GTLRDirectory_ChromeOsDevice_ActiveTimeRanges_Item;
+@class GTLRDirectory_ChromeOsDevice_RecentUsers_Item;
 @class GTLRDirectory_CustomerPostalAddress;
 @class GTLRDirectory_DomainAlias;
 @class GTLRDirectory_Domains;
 @class GTLRDirectory_Group;
 @class GTLRDirectory_Member;
 @class GTLRDirectory_MobileDevice;
-@class GTLRDirectory_MobileDeviceApplicationsItem;
+@class GTLRDirectory_MobileDevice_Applications_Item;
 @class GTLRDirectory_Notification;
 @class GTLRDirectory_OrgUnit;
 @class GTLRDirectory_Privilege;
 @class GTLRDirectory_Role;
+@class GTLRDirectory_Role_RolePrivileges_Item;
 @class GTLRDirectory_RoleAssignment;
-@class GTLRDirectory_RoleRolePrivilegesItem;
 @class GTLRDirectory_Schema;
 @class GTLRDirectory_SchemaFieldSpec;
-@class GTLRDirectory_SchemaFieldSpecNumericIndexingSpec;
+@class GTLRDirectory_SchemaFieldSpec_NumericIndexingSpec;
 @class GTLRDirectory_Token;
 @class GTLRDirectory_User;
+@class GTLRDirectory_User_CustomSchemas;
 @class GTLRDirectory_UserCustomProperties;
-@class GTLRDirectory_UserCustomSchemas;
 @class GTLRDirectory_UserName;
 @class GTLRDirectory_VerificationCode;
 
@@ -272,7 +272,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *kind;
 
 /** Additional parameters controlling delivery channel behavior. Optional. */
-@property(nonatomic, strong, nullable) GTLRDirectory_ChannelParams *params;
+@property(nonatomic, strong, nullable) GTLRDirectory_Channel_Params *params;
 
 /**
  *  A Boolean value to indicate whether payload is wanted. Optional.
@@ -310,7 +310,7 @@ NS_ASSUME_NONNULL_BEGIN
  *        of properties and then fetch them; or @c -additionalProperties to
  *        fetch them all at once.
  */
-@interface GTLRDirectory_ChannelParams : GTLRObject
+@interface GTLRDirectory_Channel_Params : GTLRObject
 @end
 
 
@@ -320,7 +320,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GTLRDirectory_ChromeOsDevice : GTLRObject
 
 /** List of active time ranges (Read-only) */
-@property(nonatomic, strong, nullable) NSArray<GTLRDirectory_ChromeOsDeviceActiveTimeRangesItem *> *activeTimeRanges;
+@property(nonatomic, strong, nullable) NSArray<GTLRDirectory_ChromeOsDevice_ActiveTimeRanges_Item *> *activeTimeRanges;
 
 /** AssetId specified during enrollment or through later annotation */
 @property(nonatomic, copy, nullable) NSString *annotatedAssetId;
@@ -389,7 +389,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  List of recent device users, in descending order by last login time
  *  (Read-only)
  */
-@property(nonatomic, strong, nullable) NSArray<GTLRDirectory_ChromeOsDeviceRecentUsersItem *> *recentUsers;
+@property(nonatomic, strong, nullable) NSArray<GTLRDirectory_ChromeOsDevice_RecentUsers_Item *> *recentUsers;
 
 /** Chromebook serial number (Read-only) */
 @property(nonatomic, copy, nullable) NSString *serialNumber;
@@ -411,9 +411,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- *  GTLRDirectory_ChromeOsDeviceActiveTimeRangesItem
+ *  GTLRDirectory_ChromeOsDevice_ActiveTimeRanges_Item
  */
-@interface GTLRDirectory_ChromeOsDeviceActiveTimeRangesItem : GTLRObject
+@interface GTLRDirectory_ChromeOsDevice_ActiveTimeRanges_Item : GTLRObject
 
 /**
  *  Duration in milliseconds
@@ -433,9 +433,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- *  GTLRDirectory_ChromeOsDeviceRecentUsersItem
+ *  GTLRDirectory_ChromeOsDevice_RecentUsers_Item
  */
-@interface GTLRDirectory_ChromeOsDeviceRecentUsersItem : GTLRObject
+@interface GTLRDirectory_ChromeOsDevice_RecentUsers_Item : GTLRObject
 
 /** Email address of the user. Present only if the user type is managed */
 @property(nonatomic, copy, nullable) NSString *email;
@@ -860,7 +860,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong, nullable) NSNumber *adbStatus;
 
 /** List of applications installed on Mobile Device */
-@property(nonatomic, strong, nullable) NSArray<GTLRDirectory_MobileDeviceApplicationsItem *> *applications;
+@property(nonatomic, strong, nullable) NSArray<GTLRDirectory_MobileDevice_Applications_Item *> *applications;
 
 /** Mobile Device Baseband version (Read-only) */
 @property(nonatomic, copy, nullable) NSString *basebandVersion;
@@ -1007,9 +1007,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- *  GTLRDirectory_MobileDeviceApplicationsItem
+ *  GTLRDirectory_MobileDevice_Applications_Item
  */
-@interface GTLRDirectory_MobileDeviceApplicationsItem : GTLRObject
+@interface GTLRDirectory_MobileDevice_Applications_Item : GTLRObject
 
 /** Display name of application */
 @property(nonatomic, copy, nullable) NSString *displayName;
@@ -1311,15 +1311,15 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *roleName;
 
 /** The set of privileges that are granted to this role. */
-@property(nonatomic, strong, nullable) NSArray<GTLRDirectory_RoleRolePrivilegesItem *> *rolePrivileges;
+@property(nonatomic, strong, nullable) NSArray<GTLRDirectory_Role_RolePrivileges_Item *> *rolePrivileges;
 
 @end
 
 
 /**
- *  GTLRDirectory_RoleRolePrivilegesItem
+ *  GTLRDirectory_Role_RolePrivileges_Item
  */
-@interface GTLRDirectory_RoleRolePrivilegesItem : GTLRObject
+@interface GTLRDirectory_Role_RolePrivileges_Item : GTLRObject
 
 /** The name of the privilege. */
 @property(nonatomic, copy, nullable) NSString *privilegeName;
@@ -1499,7 +1499,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  be supported for numeric fields. Setting the numericIndexingSpec allows
  *  range queries to be supported.
  */
-@property(nonatomic, strong, nullable) GTLRDirectory_SchemaFieldSpecNumericIndexingSpec *numericIndexingSpec;
+@property(nonatomic, strong, nullable) GTLRDirectory_SchemaFieldSpec_NumericIndexingSpec *numericIndexingSpec;
 
 /**
  *  Read ACLs on the field specifying who can view values of this field. Valid
@@ -1515,7 +1515,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  be supported for numeric fields. Setting the numericIndexingSpec allows
  *  range queries to be supported.
  */
-@interface GTLRDirectory_SchemaFieldSpecNumericIndexingSpec : GTLRObject
+@interface GTLRDirectory_SchemaFieldSpec_NumericIndexingSpec : GTLRObject
 
 /**
  *  Maximum value of this field. This is meant to be indicative rather than
@@ -1658,7 +1658,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *customerId;
 
 /** Custom fields of the user. */
-@property(nonatomic, strong, nullable) GTLRDirectory_UserCustomSchemas *customSchemas;
+@property(nonatomic, strong, nullable) GTLRDirectory_User_CustomSchemas *customSchemas;
 
 @property(nonatomic, strong, nullable) GTLRDateTime *deletionTime;
 
@@ -1725,6 +1725,20 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong, nullable) NSNumber *isDelegatedAdmin;
 
 /**
+ *  Is 2-step verification enforced (Read-only)
+ *
+ *  Uses NSNumber of boolValue.
+ */
+@property(nonatomic, strong, nullable) NSNumber *isEnforcedIn2Sv;
+
+/**
+ *  Is enrolled in 2-step verification (Read-only)
+ *
+ *  Uses NSNumber of boolValue.
+ */
+@property(nonatomic, strong, nullable) NSNumber *isEnrolledIn2Sv;
+
+/**
  *  Is mailbox setup (Read-only)
  *
  *  Uses NSNumber of boolValue.
@@ -1770,6 +1784,13 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, strong, nullable) id phones;
 
+/**
+ *  posixAccounts
+ *
+ *  Can be any valid JSON type.
+ */
+@property(nonatomic, strong, nullable) id posixAccounts;
+
 /** username of User */
 @property(nonatomic, copy, nullable) NSString *primaryEmail;
 
@@ -1779,6 +1800,13 @@ NS_ASSUME_NONNULL_BEGIN
  *  Can be any valid JSON type.
  */
 @property(nonatomic, strong, nullable) id relations;
+
+/**
+ *  sshPublicKeys
+ *
+ *  Can be any valid JSON type.
+ */
+@property(nonatomic, strong, nullable) id sshPublicKeys;
 
 /**
  *  Indicates if user is suspended
@@ -1814,7 +1842,7 @@ NS_ASSUME_NONNULL_BEGIN
  *        -additionalPropertyForName: to get the list of properties and then
  *        fetch them; or @c -additionalProperties to fetch them all at once.
  */
-@interface GTLRDirectory_UserCustomSchemas : GTLRObject
+@interface GTLRDirectory_User_CustomSchemas : GTLRObject
 @end
 
 
@@ -2165,6 +2193,51 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
+ *  JSON template for a POSIX account entry. Description of the field family:
+ *  go/fbs-posix.
+ */
+@interface GTLRDirectory_UserPosixAccount : GTLRObject
+
+/** The GECOS (user information) entry for this account. */
+@property(nonatomic, copy, nullable) NSString *gecos;
+
+/**
+ *  The default group ID.
+ *
+ *  Uses NSNumber of intValue.
+ */
+@property(nonatomic, strong, nullable) NSNumber *gid;
+
+/** The path to the home directory for this account. */
+@property(nonatomic, copy, nullable) NSString *homeDirectory;
+
+/**
+ *  If this is user's primary account within the SystemId.
+ *
+ *  Uses NSNumber of boolValue.
+ */
+@property(nonatomic, strong, nullable) NSNumber *primary;
+
+/** The path to the login shell for this account. */
+@property(nonatomic, copy, nullable) NSString *shell;
+
+/** System identifier for which account Username or Uid apply to. */
+@property(nonatomic, copy, nullable) NSString *systemId;
+
+/**
+ *  The user ID.
+ *
+ *  Uses NSNumber of intValue.
+ */
+@property(nonatomic, strong, nullable) NSNumber *uid;
+
+/** The username of the account. */
+@property(nonatomic, copy, nullable) NSString *username;
+
+@end
+
+
+/**
  *  JSON template for a relation entry.
  */
 @interface GTLRDirectory_UserRelation : GTLRObject
@@ -2213,6 +2286,27 @@ NS_ASSUME_NONNULL_BEGIN
  *        subscripting on this class.
  */
 @property(nonatomic, strong, nullable) NSArray<GTLRDirectory_User *> *users;
+
+@end
+
+
+/**
+ *  JSON template for a POSIX account entry.
+ */
+@interface GTLRDirectory_UserSshPublicKey : GTLRObject
+
+/**
+ *  An expiration time in microseconds since epoch.
+ *
+ *  Uses NSNumber of longLongValue.
+ */
+@property(nonatomic, strong, nullable) NSNumber *expirationTimeUsec;
+
+/** A SHA-256 fingerprint of the SSH public key. (Read-only) */
+@property(nonatomic, copy, nullable) NSString *fingerprint;
+
+/** An SSH public key. */
+@property(nonatomic, copy, nullable) NSString *key;
 
 @end
 

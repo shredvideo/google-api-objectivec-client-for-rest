@@ -34,6 +34,7 @@
 #include <unistd.h>
 
 #import "GTLRDiscovery.h"
+#import "GTMSessionFetcherService.h"
 #import "GTMSessionFetcherLogging.h"
 
 #import "SGGenerator.h"
@@ -62,6 +63,10 @@ static ArgInfo optionalFlags[] = {
     " framework with the given name.  If you are using GTLR via CocoaPods,"
     " you'll likely want to pass \"GoogleApiClientForRest\" as the value for"
     " this."
+  },
+  { "--gtlrImportPrefix PREFIX",
+    "Will generate sources that include GTLR's headers as if they are in the"
+    " given directory."
   },
   { "--apiLogDir DIR",
     "Write out a file into DIR for each JSON API description processed.  These"
@@ -204,6 +209,7 @@ typedef enum {
 @property(copy) NSString *outputDir;
 @property(copy) NSString *discoveryRootURLString;
 @property(copy) NSString *gtlrFrameworkName;
+@property(copy) NSString *gtlrImportPrefix;
 @property(copy) NSString *apiLogDir;
 @property(copy) NSString *httpLogDir;
 @property(copy) NSString *messageFilterPath;
@@ -278,6 +284,7 @@ static BOOL HaveFileStringsChanged(NSString *oldFile, NSString *newFile) {
             outputDir = _outputDir,
             discoveryRootURLString = _discoveryRootURLString,
             gtlrFrameworkName = _gtlrFrameworkName,
+            gtlrImportPrefix = _gtlrImportPrefix,
             apiLogDir = _apiLogDir,
             httpLogDir = _httpLogDir,
             messageFilterPath = _messageFilterPath,
@@ -743,6 +750,7 @@ static BOOL HaveFileStringsChanged(NSString *oldFile, NSString *newFile) {
     { "outputDir",           required_argument, NULL,                 'o' },
     { "discoveryRootURL",    required_argument, NULL,                 'd' },
     { "gtlrFrameworkName",   required_argument, NULL,                 'n' },
+    { "gtlrImportPrefix",    required_argument, NULL,                 'i' },
     { "apiLogDir",           required_argument, NULL,                 'a' },
     { "httpLogDir",          required_argument, NULL,                 'h' },
     { "generatePreferred",   no_argument,       &generatePreferred,   1 },
@@ -772,6 +780,9 @@ static BOOL HaveFileStringsChanged(NSString *oldFile, NSString *newFile) {
         break;
       case 'n':
         self.gtlrFrameworkName = @(optarg);
+        break;
+      case 'i':
+        self.gtlrImportPrefix = @(optarg);
         break;
       case 'a':
         self.apiLogDir = @(optarg);
@@ -886,6 +897,18 @@ static BOOL HaveFileStringsChanged(NSString *oldFile, NSString *newFile) {
 
   if (self.gtlrFrameworkName.length == 0) {
     self.gtlrFrameworkName = nil;
+  }
+  while ([self.gtlrImportPrefix hasSuffix:@"/"]) {
+    self.gtlrImportPrefix = [self.gtlrImportPrefix substringToIndex:self.gtlrImportPrefix.length - 1];
+  }
+  if (self.gtlrImportPrefix.length == 0) {
+    self.gtlrImportPrefix = nil;
+  }
+
+  if (self.gtlrFrameworkName && self.gtlrImportPrefix) {
+    [self reportError:@"Cannot use both --gtlrFrameworkName and --gtlrImportPrefix."];
+    [self printUsage:stderr brief:NO];
+    return;
   }
 
   // Make sure output dir exists.
@@ -1116,12 +1139,12 @@ static BOOL HaveFileStringsChanged(NSString *oldFile, NSString *newFile) {
         // Collect the server version pairs to describe.
         NSMutableSet *apisLeftToSkip = [self.apisToSkip mutableCopy];
         NSArray *sortedAPIItems = [apiList.items sortedArrayUsingComparator:
-          ^NSComparisonResult(GTLRDiscovery_DirectoryListItemsItem *api1,
-                              GTLRDiscovery_DirectoryListItemsItem *api2) {
+          ^NSComparisonResult(GTLRDiscovery_DirectoryList_Items_Item *api1,
+                              GTLRDiscovery_DirectoryList_Items_Item *api2) {
             return [api1.name caseInsensitiveCompare:api2.name];
           }];
 
-        for (GTLRDiscovery_DirectoryListItemsItem *listItem in sortedAPIItems) {
+        for (GTLRDiscovery_DirectoryList_Items_Item *listItem in sortedAPIItems) {
           NSString *apiName = listItem.name;
           NSString *apiVersion =
               [NSString stringWithFormat:@"%@:%@", apiName, listItem.version];
@@ -1339,11 +1362,17 @@ static BOOL HaveFileStringsChanged(NSString *oldFile, NSString *newFile) {
           options |= kSGGeneratorOptionLegacyObjectNaming;
         }
 
+        NSString *importPrefix = self.gtlrImportPrefix;
+        if (self.gtlrFrameworkName) {
+          importPrefix = self.gtlrFrameworkName;
+          options |= kSGGeneratorOptionImportPrefixIsFramework;
+        }
+
         SGGenerator *aGenerator = [SGGenerator generatorForApi:api
                                                        options:options
                                                   verboseLevel:self.verboseLevel
                                          formattedNameOverride:formattedNameOverride
-                                              useFrameworkName:self.gtlrFrameworkName];
+                                                  importPrefix:importPrefix];
 
         NSDictionary *generatedFiles =
           [aGenerator generateFilesWithHandler:^(SGGeneratorHandlerMessageType msgType,

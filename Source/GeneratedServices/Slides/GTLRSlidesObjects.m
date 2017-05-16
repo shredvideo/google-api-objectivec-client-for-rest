@@ -304,9 +304,11 @@ NSString * const kGTLRSlides_Outline_PropertyState_NotRendered = @"NOT_RENDERED"
 NSString * const kGTLRSlides_Outline_PropertyState_Rendered    = @"RENDERED";
 
 // GTLRSlides_Page.pageType
-NSString * const kGTLRSlides_Page_PageType_Layout = @"LAYOUT";
-NSString * const kGTLRSlides_Page_PageType_Master = @"MASTER";
-NSString * const kGTLRSlides_Page_PageType_Slide  = @"SLIDE";
+NSString * const kGTLRSlides_Page_PageType_Layout      = @"LAYOUT";
+NSString * const kGTLRSlides_Page_PageType_Master      = @"MASTER";
+NSString * const kGTLRSlides_Page_PageType_Notes       = @"NOTES";
+NSString * const kGTLRSlides_Page_PageType_NotesMaster = @"NOTES_MASTER";
+NSString * const kGTLRSlides_Page_PageType_Slide       = @"SLIDE";
 
 // GTLRSlides_PageBackgroundFill.propertyState
 NSString * const kGTLRSlides_PageBackgroundFill_PropertyState_Inherit = @"INHERIT";
@@ -355,9 +357,40 @@ NSString * const kGTLRSlides_Range_Type_FixedRange           = @"FIXED_RANGE";
 NSString * const kGTLRSlides_Range_Type_FromStartIndex       = @"FROM_START_INDEX";
 NSString * const kGTLRSlides_Range_Type_RangeTypeUnspecified = @"RANGE_TYPE_UNSPECIFIED";
 
+// GTLRSlides_Recolor.name
+NSString * const kGTLRSlides_Recolor_Name_Custom    = @"CUSTOM";
+NSString * const kGTLRSlides_Recolor_Name_Dark1     = @"DARK1";
+NSString * const kGTLRSlides_Recolor_Name_Dark10    = @"DARK10";
+NSString * const kGTLRSlides_Recolor_Name_Dark2     = @"DARK2";
+NSString * const kGTLRSlides_Recolor_Name_Dark3     = @"DARK3";
+NSString * const kGTLRSlides_Recolor_Name_Dark4     = @"DARK4";
+NSString * const kGTLRSlides_Recolor_Name_Dark5     = @"DARK5";
+NSString * const kGTLRSlides_Recolor_Name_Dark6     = @"DARK6";
+NSString * const kGTLRSlides_Recolor_Name_Dark7     = @"DARK7";
+NSString * const kGTLRSlides_Recolor_Name_Dark8     = @"DARK8";
+NSString * const kGTLRSlides_Recolor_Name_Dark9     = @"DARK9";
+NSString * const kGTLRSlides_Recolor_Name_Grayscale = @"GRAYSCALE";
+NSString * const kGTLRSlides_Recolor_Name_Light1    = @"LIGHT1";
+NSString * const kGTLRSlides_Recolor_Name_Light10   = @"LIGHT10";
+NSString * const kGTLRSlides_Recolor_Name_Light2    = @"LIGHT2";
+NSString * const kGTLRSlides_Recolor_Name_Light3    = @"LIGHT3";
+NSString * const kGTLRSlides_Recolor_Name_Light4    = @"LIGHT4";
+NSString * const kGTLRSlides_Recolor_Name_Light5    = @"LIGHT5";
+NSString * const kGTLRSlides_Recolor_Name_Light6    = @"LIGHT6";
+NSString * const kGTLRSlides_Recolor_Name_Light7    = @"LIGHT7";
+NSString * const kGTLRSlides_Recolor_Name_Light8    = @"LIGHT8";
+NSString * const kGTLRSlides_Recolor_Name_Light9    = @"LIGHT9";
+NSString * const kGTLRSlides_Recolor_Name_Negative  = @"NEGATIVE";
+NSString * const kGTLRSlides_Recolor_Name_None      = @"NONE";
+NSString * const kGTLRSlides_Recolor_Name_Sepia     = @"SEPIA";
+
 // GTLRSlides_ReplaceAllShapesWithImageRequest.replaceMethod
 NSString * const kGTLRSlides_ReplaceAllShapesWithImageRequest_ReplaceMethod_CenterCrop = @"CENTER_CROP";
 NSString * const kGTLRSlides_ReplaceAllShapesWithImageRequest_ReplaceMethod_CenterInside = @"CENTER_INSIDE";
+
+// GTLRSlides_ReplaceAllShapesWithSheetsChartRequest.linkingMode
+NSString * const kGTLRSlides_ReplaceAllShapesWithSheetsChartRequest_LinkingMode_Linked = @"LINKED";
+NSString * const kGTLRSlides_ReplaceAllShapesWithSheetsChartRequest_LinkingMode_NotLinkedImage = @"NOT_LINKED_IMAGE";
 
 // GTLRSlides_Shadow.alignment
 NSString * const kGTLRSlides_Shadow_Alignment_BottomCenter     = @"BOTTOM_CENTER";
@@ -595,7 +628,7 @@ NSString * const kGTLRSlides_Video_Source_Youtube           = @"YOUTUBE";
 //
 
 @implementation GTLRSlides_BatchUpdatePresentationRequest
-@dynamic requests;
+@dynamic requests, writeControl;
 
 + (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
   NSDictionary<NSString *, Class> *map = @{
@@ -759,7 +792,15 @@ NSString * const kGTLRSlides_Video_Source_Youtube           = @"YOUTUBE";
 //
 
 @implementation GTLRSlides_CreateSlideRequest
-@dynamic insertionIndex, objectId, slideLayoutReference;
+@dynamic insertionIndex, objectId, placeholderIdMappings, slideLayoutReference;
+
++ (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
+  NSDictionary<NSString *, Class> *map = @{
+    @"placeholderIdMappings" : [GTLRSlides_LayoutPlaceholderIdMapping class]
+  };
+  return map;
+}
+
 @end
 
 
@@ -835,6 +876,16 @@ NSString * const kGTLRSlides_Video_Source_Youtube           = @"YOUTUBE";
 
 @implementation GTLRSlides_DeleteObjectRequest
 @dynamic objectId;
+@end
+
+
+// ----------------------------------------------------------------------------
+//
+//   GTLRSlides_DeleteParagraphBulletsRequest
+//
+
+@implementation GTLRSlides_DeleteParagraphBulletsRequest
+@dynamic cellLocation, objectId, textRange;
 @end
 
 
@@ -946,7 +997,7 @@ NSString * const kGTLRSlides_Video_Source_Youtube           = @"YOUTUBE";
 //
 
 @implementation GTLRSlides_ImageProperties
-@dynamic brightness, contrast, cropProperties, outline, recolor, shadow,
+@dynamic brightness, contrast, cropProperties, link, outline, recolor, shadow,
          transparency;
 @end
 
@@ -978,6 +1029,16 @@ NSString * const kGTLRSlides_Video_Source_Youtube           = @"YOUTUBE";
 
 @implementation GTLRSlides_InsertTextRequest
 @dynamic cellLocation, insertionIndex, objectId, text;
+@end
+
+
+// ----------------------------------------------------------------------------
+//
+//   GTLRSlides_LayoutPlaceholderIdMapping
+//
+
+@implementation GTLRSlides_LayoutPlaceholderIdMapping
+@dynamic layoutPlaceholder, layoutPlaceholderObjectId, objectId;
 @end
 
 
@@ -1027,7 +1088,7 @@ NSString * const kGTLRSlides_Video_Source_Youtube           = @"YOUTUBE";
 //
 
 @implementation GTLRSlides_LineProperties
-@dynamic dashStyle, endArrow, lineFill, startArrow, weight;
+@dynamic dashStyle, endArrow, lineFill, link, startArrow, weight;
 @end
 
 
@@ -1077,6 +1138,16 @@ NSString * const kGTLRSlides_Video_Source_Youtube           = @"YOUTUBE";
 
 // ----------------------------------------------------------------------------
 //
+//   GTLRSlides_NotesProperties
+//
+
+@implementation GTLRSlides_NotesProperties
+@dynamic speakerNotesObjectId;
+@end
+
+
+// ----------------------------------------------------------------------------
+//
 //   GTLRSlides_OpaqueColor
 //
 
@@ -1121,8 +1192,8 @@ NSString * const kGTLRSlides_Video_Source_Youtube           = @"YOUTUBE";
 //
 
 @implementation GTLRSlides_Page
-@dynamic layoutProperties, objectId, pageElements, pageProperties, pageType,
-         slideProperties;
+@dynamic layoutProperties, notesProperties, objectId, pageElements,
+         pageProperties, pageType, revisionId, slideProperties;
 
 + (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
   NSDictionary<NSString *, Class> *map = @{
@@ -1217,7 +1288,8 @@ NSString * const kGTLRSlides_Video_Source_Youtube           = @"YOUTUBE";
 //
 
 @implementation GTLRSlides_Presentation
-@dynamic layouts, locale, masters, pageSize, presentationId, slides, title;
+@dynamic layouts, locale, masters, notesMaster, pageSize, presentationId,
+         revisionId, slides, title;
 
 + (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
   NSDictionary<NSString *, Class> *map = @{
@@ -1247,7 +1319,7 @@ NSString * const kGTLRSlides_Video_Source_Youtube           = @"YOUTUBE";
 //
 
 @implementation GTLRSlides_Recolor
-@dynamic recolorStops;
+@dynamic name, recolorStops;
 
 + (NSDictionary<NSString *, Class> *)arrayPropertyToClassMap {
   NSDictionary<NSString *, Class> *map = @{
@@ -1291,6 +1363,26 @@ NSString * const kGTLRSlides_Video_Source_Youtube           = @"YOUTUBE";
 
 // ----------------------------------------------------------------------------
 //
+//   GTLRSlides_ReplaceAllShapesWithSheetsChartRequest
+//
+
+@implementation GTLRSlides_ReplaceAllShapesWithSheetsChartRequest
+@dynamic chartId, containsText, linkingMode, spreadsheetId;
+@end
+
+
+// ----------------------------------------------------------------------------
+//
+//   GTLRSlides_ReplaceAllShapesWithSheetsChartResponse
+//
+
+@implementation GTLRSlides_ReplaceAllShapesWithSheetsChartResponse
+@dynamic occurrencesChanged;
+@end
+
+
+// ----------------------------------------------------------------------------
+//
 //   GTLRSlides_ReplaceAllTextRequest
 //
 
@@ -1317,12 +1409,13 @@ NSString * const kGTLRSlides_Video_Source_Youtube           = @"YOUTUBE";
 @implementation GTLRSlides_Request
 @dynamic createImage, createLine, createParagraphBullets, createShape,
          createSheetsChart, createSlide, createTable, createVideo, deleteObject,
-         deleteTableColumn, deleteTableRow, deleteText, duplicateObject,
-         insertTableColumns, insertTableRows, insertText, refreshSheetsChart,
-         replaceAllShapesWithImage, replaceAllText, updateImageProperties,
+         deleteParagraphBullets, deleteTableColumn, deleteTableRow, deleteText,
+         duplicateObject, insertTableColumns, insertTableRows, insertText,
+         refreshSheetsChart, replaceAllShapesWithImage,
+         replaceAllShapesWithSheetsChart, replaceAllText, updateImageProperties,
          updateLineProperties, updatePageElementTransform, updatePageProperties,
-         updateShapeProperties, updateSlidesPosition, updateTableCellProperties,
-         updateTextStyle, updateVideoProperties;
+         updateParagraphStyle, updateShapeProperties, updateSlidesPosition,
+         updateTableCellProperties, updateTextStyle, updateVideoProperties;
 @end
 
 
@@ -1334,7 +1427,7 @@ NSString * const kGTLRSlides_Video_Source_Youtube           = @"YOUTUBE";
 @implementation GTLRSlides_Response
 @dynamic createImage, createLine, createShape, createSheetsChart, createSlide,
          createTable, createVideo, duplicateObject, replaceAllShapesWithImage,
-         replaceAllText;
+         replaceAllShapesWithSheetsChart, replaceAllText;
 @end
 
 
@@ -1385,7 +1478,7 @@ NSString * const kGTLRSlides_Video_Source_Youtube           = @"YOUTUBE";
 //
 
 @implementation GTLRSlides_ShapeProperties
-@dynamic outline, shadow, shapeBackgroundFill;
+@dynamic link, outline, shadow, shapeBackgroundFill;
 @end
 
 
@@ -1425,7 +1518,7 @@ NSString * const kGTLRSlides_Video_Source_Youtube           = @"YOUTUBE";
 //
 
 @implementation GTLRSlides_SlideProperties
-@dynamic layoutObjectId, masterObjectId;
+@dynamic layoutObjectId, masterObjectId, notesPage;
 @end
 
 
@@ -1615,7 +1708,8 @@ NSString * const kGTLRSlides_Video_Source_Youtube           = @"YOUTUBE";
 
 @implementation GTLRSlides_TextStyle
 @dynamic backgroundColor, baselineOffset, bold, fontFamily, fontSize,
-         foregroundColor, italic, link, smallCaps, strikethrough, underline;
+         foregroundColor, italic, link, smallCaps, strikethrough, underline,
+         weightedFontFamily;
 @end
 
 
@@ -1626,6 +1720,16 @@ NSString * const kGTLRSlides_Video_Source_Youtube           = @"YOUTUBE";
 
 @implementation GTLRSlides_ThemeColorPair
 @dynamic color, type;
+@end
+
+
+// ----------------------------------------------------------------------------
+//
+//   GTLRSlides_Thumbnail
+//
+
+@implementation GTLRSlides_Thumbnail
+@dynamic contentUrl, height, width;
 @end
 
 
@@ -1666,6 +1770,16 @@ NSString * const kGTLRSlides_Video_Source_Youtube           = @"YOUTUBE";
 
 @implementation GTLRSlides_UpdatePagePropertiesRequest
 @dynamic fields, objectId, pageProperties;
+@end
+
+
+// ----------------------------------------------------------------------------
+//
+//   GTLRSlides_UpdateParagraphStyleRequest
+//
+
+@implementation GTLRSlides_UpdateParagraphStyleRequest
+@dynamic cellLocation, fields, objectId, style, textRange;
 @end
 
 
@@ -1754,9 +1868,29 @@ NSString * const kGTLRSlides_Video_Source_Youtube           = @"YOUTUBE";
 
 // ----------------------------------------------------------------------------
 //
+//   GTLRSlides_WeightedFontFamily
+//
+
+@implementation GTLRSlides_WeightedFontFamily
+@dynamic fontFamily, weight;
+@end
+
+
+// ----------------------------------------------------------------------------
+//
 //   GTLRSlides_WordArt
 //
 
 @implementation GTLRSlides_WordArt
 @dynamic renderedText;
+@end
+
+
+// ----------------------------------------------------------------------------
+//
+//   GTLRSlides_WriteControl
+//
+
+@implementation GTLRSlides_WriteControl
+@dynamic requiredRevisionId;
 @end

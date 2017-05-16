@@ -4,8 +4,7 @@
 // API:
 //   Google Dataflow API (dataflow/v1b3)
 // Description:
-//   Develops and executes data processing patterns like ETL, batch computation,
-//   and continuous computation.
+//   Manages Google Cloud Dataflow projects on Google Cloud Platform.
 // Documentation:
 //   https://cloud.google.com/dataflow
 
@@ -32,6 +31,12 @@ NS_ASSUME_NONNULL_BEGIN
  */
 GTLR_EXTERN NSString * const kGTLRAuthScopeDataflowCloudPlatform;
 /**
+ *  Authorization scope: View and manage your Google Compute Engine resources
+ *
+ *  Value "https://www.googleapis.com/auth/compute"
+ */
+GTLR_EXTERN NSString * const kGTLRAuthScopeDataflowCompute;
+/**
  *  Authorization scope: View your email address
  *
  *  Value "https://www.googleapis.com/auth/userinfo.email"
@@ -45,8 +50,7 @@ GTLR_EXTERN NSString * const kGTLRAuthScopeDataflowUserinfoEmail;
 /**
  *  Service for executing Google Dataflow API queries.
  *
- *  Develops and executes data processing patterns like ETL, batch computation,
- *  and continuous computation.
+ *  Manages Google Cloud Dataflow projects on Google Cloud Platform.
  */
 @interface GTLRDataflowService : GTLRService
 

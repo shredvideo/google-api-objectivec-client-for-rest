@@ -22,8 +22,10 @@
 @class GTLRStorage_BucketAccessControl;
 @class GTLRStorage_Channel;
 @class GTLRStorage_ComposeRequest;
+@class GTLRStorage_Notification;
 @class GTLRStorage_Object;
 @class GTLRStorage_ObjectAccessControl;
+@class GTLRStorage_Policy;
 
 NS_ASSUME_NONNULL_BEGIN
 
@@ -493,6 +495,38 @@ GTLR_EXTERN NSString * const kGTLRStorageProjectionNoAcl;
 @end
 
 /**
+ *  Returns an IAM policy for the specified bucket.
+ *
+ *  Method: storage.buckets.getIamPolicy
+ *
+ *  Authorization scope(s):
+ *    @c kGTLRAuthScopeStorageCloudPlatform
+ *    @c kGTLRAuthScopeStorageCloudPlatformReadOnly
+ *    @c kGTLRAuthScopeStorageDevstorageFullControl
+ *    @c kGTLRAuthScopeStorageDevstorageReadOnly
+ *    @c kGTLRAuthScopeStorageDevstorageReadWrite
+ */
+@interface GTLRStorageQuery_BucketsGetIamPolicy : GTLRStorageQuery
+// Previous library name was
+//   +[GTLQueryStorage queryForBucketsGetIamPolicyWithbucket:]
+
+/** Name of a bucket. */
+@property(nonatomic, copy, nullable) NSString *bucket;
+
+/**
+ *  Fetches a @c GTLRStorage_Policy.
+ *
+ *  Returns an IAM policy for the specified bucket.
+ *
+ *  @param bucket Name of a bucket.
+ *
+ *  @returns GTLRStorageQuery_BucketsGetIamPolicy
+ */
++ (instancetype)queryWithBucket:(NSString *)bucket;
+
+@end
+
+/**
  *  Creates a new bucket.
  *
  *  Method: storage.buckets.insert
@@ -593,7 +627,12 @@ GTLR_EXTERN NSString * const kGTLRStorageProjectionNoAcl;
 // Previous library name was
 //   +[GTLQueryStorage queryForBucketsListWithproject:]
 
-/** Maximum number of buckets to return. */
+/**
+ *  Maximum number of buckets to return in a single response. The service will
+ *  use this parameter or 1,000 items, whichever is smaller.
+ *
+ *  @note If not set, the documented server-side default will be 1000.
+ */
 @property(nonatomic, assign) NSUInteger maxResults;
 
 /**
@@ -731,6 +770,77 @@ GTLR_EXTERN NSString * const kGTLRStorageProjectionNoAcl;
  */
 + (instancetype)queryWithObject:(GTLRStorage_Bucket *)object
                          bucket:(NSString *)bucket;
+
+@end
+
+/**
+ *  Updates an IAM policy for the specified bucket.
+ *
+ *  Method: storage.buckets.setIamPolicy
+ *
+ *  Authorization scope(s):
+ *    @c kGTLRAuthScopeStorageCloudPlatform
+ *    @c kGTLRAuthScopeStorageDevstorageFullControl
+ *    @c kGTLRAuthScopeStorageDevstorageReadWrite
+ */
+@interface GTLRStorageQuery_BucketsSetIamPolicy : GTLRStorageQuery
+// Previous library name was
+//   +[GTLQueryStorage queryForBucketsSetIamPolicyWithObject:bucket:]
+
+/** Name of a bucket. */
+@property(nonatomic, copy, nullable) NSString *bucket;
+
+/**
+ *  Fetches a @c GTLRStorage_Policy.
+ *
+ *  Updates an IAM policy for the specified bucket.
+ *
+ *  @param object The @c GTLRStorage_Policy to include in the query.
+ *  @param bucket Name of a bucket.
+ *
+ *  @returns GTLRStorageQuery_BucketsSetIamPolicy
+ */
++ (instancetype)queryWithObject:(GTLRStorage_Policy *)object
+                         bucket:(NSString *)bucket;
+
+@end
+
+/**
+ *  Tests a set of permissions on the given bucket to see which, if any, are
+ *  held by the caller.
+ *
+ *  Method: storage.buckets.testIamPermissions
+ *
+ *  Authorization scope(s):
+ *    @c kGTLRAuthScopeStorageCloudPlatform
+ *    @c kGTLRAuthScopeStorageCloudPlatformReadOnly
+ *    @c kGTLRAuthScopeStorageDevstorageFullControl
+ *    @c kGTLRAuthScopeStorageDevstorageReadOnly
+ *    @c kGTLRAuthScopeStorageDevstorageReadWrite
+ */
+@interface GTLRStorageQuery_BucketsTestIamPermissions : GTLRStorageQuery
+// Previous library name was
+//   +[GTLQueryStorage queryForBucketsTestIamPermissionsWithbucket:permissions:]
+
+/** Name of a bucket. */
+@property(nonatomic, copy, nullable) NSString *bucket;
+
+/** Permissions to test. */
+@property(nonatomic, strong, nullable) NSArray<NSString *> *permissions;
+
+/**
+ *  Fetches a @c GTLRStorage_TestIamPermissionsResponse.
+ *
+ *  Tests a set of permissions on the given bucket to see which, if any, are
+ *  held by the caller.
+ *
+ *  @param bucket Name of a bucket.
+ *  @param permissions Permissions to test.
+ *
+ *  @returns GTLRStorageQuery_BucketsTestIamPermissions
+ */
++ (instancetype)queryWithBucket:(NSString *)bucket
+                    permissions:(NSArray<NSString *> *)permissions;
 
 @end
 
@@ -1100,6 +1210,143 @@ GTLR_EXTERN NSString * const kGTLRStorageProjectionNoAcl;
 + (instancetype)queryWithObject:(GTLRStorage_ObjectAccessControl *)object
                          bucket:(NSString *)bucket
                          entity:(NSString *)entity;
+
+@end
+
+/**
+ *  Permanently deletes a notification subscription.
+ *
+ *  Method: storage.notifications.delete
+ *
+ *  Authorization scope(s):
+ *    @c kGTLRAuthScopeStorageCloudPlatform
+ *    @c kGTLRAuthScopeStorageDevstorageFullControl
+ *    @c kGTLRAuthScopeStorageDevstorageReadWrite
+ */
+@interface GTLRStorageQuery_NotificationsDelete : GTLRStorageQuery
+// Previous library name was
+//   +[GTLQueryStorage queryForNotificationsDeleteWithbucket:notification:]
+
+/** The parent bucket of the notification. */
+@property(nonatomic, copy, nullable) NSString *bucket;
+
+/** ID of the notification to delete. */
+@property(nonatomic, copy, nullable) NSString *notification;
+
+/**
+ *  Upon successful completion, the callback's object and error parameters will
+ *  be nil. This query does not fetch an object.
+ *
+ *  Permanently deletes a notification subscription.
+ *
+ *  @param bucket The parent bucket of the notification.
+ *  @param notification ID of the notification to delete.
+ *
+ *  @returns GTLRStorageQuery_NotificationsDelete
+ */
++ (instancetype)queryWithBucket:(NSString *)bucket
+                   notification:(NSString *)notification;
+
+@end
+
+/**
+ *  View a notification configuration.
+ *
+ *  Method: storage.notifications.get
+ *
+ *  Authorization scope(s):
+ *    @c kGTLRAuthScopeStorageCloudPlatform
+ *    @c kGTLRAuthScopeStorageCloudPlatformReadOnly
+ *    @c kGTLRAuthScopeStorageDevstorageFullControl
+ *    @c kGTLRAuthScopeStorageDevstorageReadOnly
+ *    @c kGTLRAuthScopeStorageDevstorageReadWrite
+ */
+@interface GTLRStorageQuery_NotificationsGet : GTLRStorageQuery
+// Previous library name was
+//   +[GTLQueryStorage queryForNotificationsGetWithbucket:notification:]
+
+/** The parent bucket of the notification. */
+@property(nonatomic, copy, nullable) NSString *bucket;
+
+/** Notification ID */
+@property(nonatomic, copy, nullable) NSString *notification;
+
+/**
+ *  Fetches a @c GTLRStorage_Notification.
+ *
+ *  View a notification configuration.
+ *
+ *  @param bucket The parent bucket of the notification.
+ *  @param notification Notification ID
+ *
+ *  @returns GTLRStorageQuery_NotificationsGet
+ */
++ (instancetype)queryWithBucket:(NSString *)bucket
+                   notification:(NSString *)notification;
+
+@end
+
+/**
+ *  Creates a notification subscription for a given bucket.
+ *
+ *  Method: storage.notifications.insert
+ *
+ *  Authorization scope(s):
+ *    @c kGTLRAuthScopeStorageCloudPlatform
+ *    @c kGTLRAuthScopeStorageDevstorageFullControl
+ *    @c kGTLRAuthScopeStorageDevstorageReadWrite
+ */
+@interface GTLRStorageQuery_NotificationsInsert : GTLRStorageQuery
+// Previous library name was
+//   +[GTLQueryStorage queryForNotificationsInsertWithObject:bucket:]
+
+/** The parent bucket of the notification. */
+@property(nonatomic, copy, nullable) NSString *bucket;
+
+/**
+ *  Fetches a @c GTLRStorage_Notification.
+ *
+ *  Creates a notification subscription for a given bucket.
+ *
+ *  @param object The @c GTLRStorage_Notification to include in the query.
+ *  @param bucket The parent bucket of the notification.
+ *
+ *  @returns GTLRStorageQuery_NotificationsInsert
+ */
++ (instancetype)queryWithObject:(GTLRStorage_Notification *)object
+                         bucket:(NSString *)bucket;
+
+@end
+
+/**
+ *  Retrieves a list of notification subscriptions for a given bucket.
+ *
+ *  Method: storage.notifications.list
+ *
+ *  Authorization scope(s):
+ *    @c kGTLRAuthScopeStorageCloudPlatform
+ *    @c kGTLRAuthScopeStorageCloudPlatformReadOnly
+ *    @c kGTLRAuthScopeStorageDevstorageFullControl
+ *    @c kGTLRAuthScopeStorageDevstorageReadOnly
+ *    @c kGTLRAuthScopeStorageDevstorageReadWrite
+ */
+@interface GTLRStorageQuery_NotificationsList : GTLRStorageQuery
+// Previous library name was
+//   +[GTLQueryStorage queryForNotificationsListWithbucket:]
+
+/** Name of a GCS bucket. */
+@property(nonatomic, copy, nullable) NSString *bucket;
+
+/**
+ *  Fetches a @c GTLRStorage_Notifications.
+ *
+ *  Retrieves a list of notification subscriptions for a given bucket.
+ *
+ *  @param bucket Name of a GCS bucket.
+ *
+ *  @returns GTLRStorageQuery_NotificationsList
+ */
++ (instancetype)queryWithBucket:(NSString *)bucket;
 
 @end
 
@@ -1865,6 +2112,53 @@ GTLR_EXTERN NSString * const kGTLRStorageProjectionNoAcl;
 @end
 
 /**
+ *  Returns an IAM policy for the specified object.
+ *
+ *  Method: storage.objects.getIamPolicy
+ *
+ *  Authorization scope(s):
+ *    @c kGTLRAuthScopeStorageCloudPlatform
+ *    @c kGTLRAuthScopeStorageCloudPlatformReadOnly
+ *    @c kGTLRAuthScopeStorageDevstorageFullControl
+ *    @c kGTLRAuthScopeStorageDevstorageReadOnly
+ *    @c kGTLRAuthScopeStorageDevstorageReadWrite
+ */
+@interface GTLRStorageQuery_ObjectsGetIamPolicy : GTLRStorageQuery
+// Previous library name was
+//   +[GTLQueryStorage queryForObjectsGetIamPolicyWithbucket:object:]
+
+/** Name of the bucket in which the object resides. */
+@property(nonatomic, copy, nullable) NSString *bucket;
+
+/**
+ *  If present, selects a specific revision of this object (as opposed to the
+ *  latest version, the default).
+ */
+@property(nonatomic, assign) long long generation;
+
+/**
+ *  Name of the object. For information about how to URL encode object names to
+ *  be path safe, see Encoding URI Path Parts.
+ */
+@property(nonatomic, copy, nullable) NSString *object;
+
+/**
+ *  Fetches a @c GTLRStorage_Policy.
+ *
+ *  Returns an IAM policy for the specified object.
+ *
+ *  @param bucket Name of the bucket in which the object resides.
+ *  @param object Name of the object. For information about how to URL encode
+ *    object names to be path safe, see Encoding URI Path Parts.
+ *
+ *  @returns GTLRStorageQuery_ObjectsGetIamPolicy
+ */
++ (instancetype)queryWithBucket:(NSString *)bucket
+                         object:(NSString *)object;
+
+@end
+
+/**
  *  Stores a new object and metadata.
  *
  *  Method: storage.objects.insert
@@ -2023,9 +2317,12 @@ GTLR_EXTERN NSString * const kGTLRStorageProjectionNoAcl;
 @property(nonatomic, copy, nullable) NSString *delimiter;
 
 /**
- *  Maximum number of items plus prefixes to return. As duplicate prefixes are
- *  omitted, fewer total results may be returned than requested. The default
- *  value of this parameter is 1,000 items.
+ *  Maximum number of items plus prefixes to return in a single page of
+ *  responses. As duplicate prefixes are omitted, fewer total results may be
+ *  returned than requested. The service will use this parameter or 1,000 items,
+ *  whichever is smaller.
+ *
+ *  @note If not set, the documented server-side default will be 1000.
  */
 @property(nonatomic, assign) NSUInteger maxResults;
 
@@ -2348,6 +2645,107 @@ GTLR_EXTERN NSString * const kGTLRStorageProjectionNoAcl;
 @end
 
 /**
+ *  Updates an IAM policy for the specified object.
+ *
+ *  Method: storage.objects.setIamPolicy
+ *
+ *  Authorization scope(s):
+ *    @c kGTLRAuthScopeStorageCloudPlatform
+ *    @c kGTLRAuthScopeStorageDevstorageFullControl
+ *    @c kGTLRAuthScopeStorageDevstorageReadWrite
+ */
+@interface GTLRStorageQuery_ObjectsSetIamPolicy : GTLRStorageQuery
+// Previous library name was
+//   +[GTLQueryStorage queryForObjectsSetIamPolicyWithObject:bucket:object:]
+
+/** Name of the bucket in which the object resides. */
+@property(nonatomic, copy, nullable) NSString *bucket;
+
+/**
+ *  If present, selects a specific revision of this object (as opposed to the
+ *  latest version, the default).
+ */
+@property(nonatomic, assign) long long generation;
+
+/**
+ *  Name of the object. For information about how to URL encode object names to
+ *  be path safe, see Encoding URI Path Parts.
+ */
+@property(nonatomic, copy, nullable) NSString *object;
+
+/**
+ *  Fetches a @c GTLRStorage_Policy.
+ *
+ *  Updates an IAM policy for the specified object.
+ *
+ *  @param object The @c GTLRStorage_Policy to include in the query.
+ *  @param bucket Name of the bucket in which the object resides.
+ *  @param object Name of the object. For information about how to URL encode
+ *    object names to be path safe, see Encoding URI Path Parts.
+ *
+ *  @returns GTLRStorageQuery_ObjectsSetIamPolicy
+ */
++ (instancetype)queryWithObject:(GTLRStorage_Policy *)object
+                         bucket:(NSString *)bucket
+                         object:(NSString *)object;
+
+@end
+
+/**
+ *  Tests a set of permissions on the given object to see which, if any, are
+ *  held by the caller.
+ *
+ *  Method: storage.objects.testIamPermissions
+ *
+ *  Authorization scope(s):
+ *    @c kGTLRAuthScopeStorageCloudPlatform
+ *    @c kGTLRAuthScopeStorageCloudPlatformReadOnly
+ *    @c kGTLRAuthScopeStorageDevstorageFullControl
+ *    @c kGTLRAuthScopeStorageDevstorageReadOnly
+ *    @c kGTLRAuthScopeStorageDevstorageReadWrite
+ */
+@interface GTLRStorageQuery_ObjectsTestIamPermissions : GTLRStorageQuery
+// Previous library name was
+//   +[GTLQueryStorage queryForObjectsTestIamPermissionsWithbucket:object:permissions:]
+
+/** Name of the bucket in which the object resides. */
+@property(nonatomic, copy, nullable) NSString *bucket;
+
+/**
+ *  If present, selects a specific revision of this object (as opposed to the
+ *  latest version, the default).
+ */
+@property(nonatomic, assign) long long generation;
+
+/**
+ *  Name of the object. For information about how to URL encode object names to
+ *  be path safe, see Encoding URI Path Parts.
+ */
+@property(nonatomic, copy, nullable) NSString *object;
+
+/** Permissions to test. */
+@property(nonatomic, strong, nullable) NSArray<NSString *> *permissions;
+
+/**
+ *  Fetches a @c GTLRStorage_TestIamPermissionsResponse.
+ *
+ *  Tests a set of permissions on the given object to see which, if any, are
+ *  held by the caller.
+ *
+ *  @param bucket Name of the bucket in which the object resides.
+ *  @param object Name of the object. For information about how to URL encode
+ *    object names to be path safe, see Encoding URI Path Parts.
+ *  @param permissions Permissions to test.
+ *
+ *  @returns GTLRStorageQuery_ObjectsTestIamPermissions
+ */
++ (instancetype)queryWithBucket:(NSString *)bucket
+                         object:(NSString *)object
+                    permissions:(NSArray<NSString *> *)permissions;
+
+@end
+
+/**
  *  Updates an object's metadata.
  *
  *  Method: storage.objects.update
@@ -2495,9 +2893,12 @@ GTLR_EXTERN NSString * const kGTLRStorageProjectionNoAcl;
 @property(nonatomic, copy, nullable) NSString *delimiter;
 
 /**
- *  Maximum number of items plus prefixes to return. As duplicate prefixes are
- *  omitted, fewer total results may be returned than requested. The default
- *  value of this parameter is 1,000 items.
+ *  Maximum number of items plus prefixes to return in a single page of
+ *  responses. As duplicate prefixes are omitted, fewer total results may be
+ *  returned than requested. The service will use this parameter or 1,000 items,
+ *  whichever is smaller.
+ *
+ *  @note If not set, the documented server-side default will be 1000.
  */
 @property(nonatomic, assign) NSUInteger maxResults;
 
@@ -2538,6 +2939,38 @@ GTLR_EXTERN NSString * const kGTLRStorageProjectionNoAcl;
  */
 + (instancetype)queryWithObject:(GTLRStorage_Channel *)object
                          bucket:(NSString *)bucket;
+
+@end
+
+/**
+ *  Get the email address of this project's GCS service account.
+ *
+ *  Method: storage.projects.serviceAccount.get
+ *
+ *  Authorization scope(s):
+ *    @c kGTLRAuthScopeStorageCloudPlatform
+ *    @c kGTLRAuthScopeStorageCloudPlatformReadOnly
+ *    @c kGTLRAuthScopeStorageDevstorageFullControl
+ *    @c kGTLRAuthScopeStorageDevstorageReadOnly
+ *    @c kGTLRAuthScopeStorageDevstorageReadWrite
+ */
+@interface GTLRStorageQuery_ProjectsServiceAccountGet : GTLRStorageQuery
+// Previous library name was
+//   +[GTLQueryStorage queryForProjectsServiceAccountGetWithprojectId:]
+
+/** Project ID */
+@property(nonatomic, copy, nullable) NSString *projectId;
+
+/**
+ *  Fetches a @c GTLRStorage_ServiceAccount.
+ *
+ *  Get the email address of this project's GCS service account.
+ *
+ *  @param projectId Project ID
+ *
+ *  @returns GTLRStorageQuery_ProjectsServiceAccountGet
+ */
++ (instancetype)queryWithProjectId:(NSString *)projectId;
 
 @end
 

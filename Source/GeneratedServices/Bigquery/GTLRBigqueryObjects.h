@@ -22,10 +22,10 @@
 @class GTLRBigquery_BigtableColumnFamily;
 @class GTLRBigquery_BigtableOptions;
 @class GTLRBigquery_CsvOptions;
-@class GTLRBigquery_DatasetAccessItem;
-@class GTLRBigquery_DatasetLabels;
-@class GTLRBigquery_DatasetListDatasetsItem;
-@class GTLRBigquery_DatasetListDatasetsItemLabels;
+@class GTLRBigquery_Dataset_Access_Item;
+@class GTLRBigquery_Dataset_Labels;
+@class GTLRBigquery_DatasetList_Datasets_Item;
+@class GTLRBigquery_DatasetList_Datasets_Item_Labels;
 @class GTLRBigquery_DatasetReference;
 @class GTLRBigquery_ErrorProto;
 @class GTLRBigquery_ExplainQueryStage;
@@ -34,13 +34,13 @@
 @class GTLRBigquery_GoogleSheetsOptions;
 @class GTLRBigquery_Job;
 @class GTLRBigquery_JobConfiguration;
+@class GTLRBigquery_JobConfiguration_Labels;
 @class GTLRBigquery_JobConfigurationExtract;
-@class GTLRBigquery_JobConfigurationLabels;
 @class GTLRBigquery_JobConfigurationLoad;
 @class GTLRBigquery_JobConfigurationQuery;
-@class GTLRBigquery_JobConfigurationQueryTableDefinitions;
+@class GTLRBigquery_JobConfigurationQuery_TableDefinitions;
 @class GTLRBigquery_JobConfigurationTableCopy;
-@class GTLRBigquery_JobListJobsItem;
+@class GTLRBigquery_JobList_Jobs_Item;
 @class GTLRBigquery_JobReference;
 @class GTLRBigquery_JobStatistics;
 @class GTLRBigquery_JobStatistics2;
@@ -48,19 +48,22 @@
 @class GTLRBigquery_JobStatistics4;
 @class GTLRBigquery_JobStatus;
 @class GTLRBigquery_JsonObject;
-@class GTLRBigquery_ProjectListProjectsItem;
+@class GTLRBigquery_ProjectList_Projects_Item;
 @class GTLRBigquery_ProjectReference;
 @class GTLRBigquery_QueryParameter;
 @class GTLRBigquery_QueryParameterType;
-@class GTLRBigquery_QueryParameterTypeStructTypesItem;
+@class GTLRBigquery_QueryParameterType_StructTypes_Item;
 @class GTLRBigquery_QueryParameterValue;
-@class GTLRBigquery_QueryParameterValueStructValues;
+@class GTLRBigquery_QueryParameterValue_StructValues;
 @class GTLRBigquery_Streamingbuffer;
+@class GTLRBigquery_Table_Labels;
 @class GTLRBigquery_TableCell;
-@class GTLRBigquery_TableDataInsertAllRequestRowsItem;
-@class GTLRBigquery_TableDataInsertAllResponseInsertErrorsItem;
+@class GTLRBigquery_TableDataInsertAllRequest_Rows_Item;
+@class GTLRBigquery_TableDataInsertAllResponse_InsertErrors_Item;
 @class GTLRBigquery_TableFieldSchema;
-@class GTLRBigquery_TableListTablesItem;
+@class GTLRBigquery_TableList_Tables_Item;
+@class GTLRBigquery_TableList_Tables_Item_Labels;
+@class GTLRBigquery_TableList_Tables_Item_View;
 @class GTLRBigquery_TableReference;
 @class GTLRBigquery_TableRow;
 @class GTLRBigquery_TableSchema;
@@ -297,7 +300,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  access.specialGroup: projectOwners; access.role: OWNER; access.userByEmail:
  *  [dataset creator email]; access.role: OWNER;
  */
-@property(nonatomic, strong, nullable) NSArray<GTLRBigquery_DatasetAccessItem *> *access;
+@property(nonatomic, strong, nullable) NSArray<GTLRBigquery_Dataset_Access_Item *> *access;
 
 /**
  *  [Output-only] The time when this dataset was created, in milliseconds since
@@ -353,11 +356,11 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *kind;
 
 /**
- *  [Experimental] The labels associated with this dataset. You can use these to
- *  organize and group your datasets. You can set this property when inserting
- *  or updating a dataset. See Labeling Datasets for more information.
+ *  The labels associated with this dataset. You can use these to organize and
+ *  group your datasets. You can set this property when inserting or updating a
+ *  dataset. See Labeling Datasets for more information.
  */
-@property(nonatomic, strong, nullable) GTLRBigquery_DatasetLabels *labels;
+@property(nonatomic, strong, nullable) GTLRBigquery_Dataset_Labels *labels;
 
 /**
  *  [Output-only] The date when this dataset or any of its tables was last
@@ -368,8 +371,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong, nullable) NSNumber *lastModifiedTime;
 
 /**
- *  [Experimental] The geographic location where the dataset should reside.
- *  Possible values include EU and US. The default value is US.
+ *  The geographic location where the dataset should reside. Possible values
+ *  include EU and US. The default value is US.
  */
 @property(nonatomic, copy, nullable) NSString *location;
 
@@ -383,9 +386,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- *  GTLRBigquery_DatasetAccessItem
+ *  GTLRBigquery_Dataset_Access_Item
  */
-@interface GTLRBigquery_DatasetAccessItem : GTLRObject
+@interface GTLRBigquery_Dataset_Access_Item : GTLRObject
 
 /**
  *  [Pick one] A domain to grant access to. Any users signed in with the domain
@@ -430,16 +433,16 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- *  [Experimental] The labels associated with this dataset. You can use these to
- *  organize and group your datasets. You can set this property when inserting
- *  or updating a dataset. See Labeling Datasets for more information.
+ *  The labels associated with this dataset. You can use these to organize and
+ *  group your datasets. You can set this property when inserting or updating a
+ *  dataset. See Labeling Datasets for more information.
  *
  *  @note This class is documented as having more properties of NSString. Use @c
  *        -additionalJSONKeys and @c -additionalPropertyForName: to get the list
  *        of properties and then fetch them; or @c -additionalProperties to
  *        fetch them all at once.
  */
-@interface GTLRBigquery_DatasetLabels : GTLRObject
+@interface GTLRBigquery_Dataset_Labels : GTLRObject
 @end
 
 
@@ -462,7 +465,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @note This property is used to support NSFastEnumeration and indexed
  *        subscripting on this class.
  */
-@property(nonatomic, strong, nullable) NSArray<GTLRBigquery_DatasetListDatasetsItem *> *datasets;
+@property(nonatomic, strong, nullable) NSArray<GTLRBigquery_DatasetList_Datasets_Item *> *datasets;
 
 /**
  *  A hash value of the results page. You can use this property to determine if
@@ -486,9 +489,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- *  GTLRBigquery_DatasetListDatasetsItem
+ *  GTLRBigquery_DatasetList_Datasets_Item
  */
-@interface GTLRBigquery_DatasetListDatasetsItem : GTLRObject
+@interface GTLRBigquery_DatasetList_Datasets_Item : GTLRObject
 
 /**
  *  The dataset reference. Use this property to access specific parts of the
@@ -513,24 +516,24 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *kind;
 
 /**
- *  [Experimental] The labels associated with this dataset. You can use these to
- *  organize and group your datasets.
+ *  The labels associated with this dataset. You can use these to organize and
+ *  group your datasets.
  */
-@property(nonatomic, strong, nullable) GTLRBigquery_DatasetListDatasetsItemLabels *labels;
+@property(nonatomic, strong, nullable) GTLRBigquery_DatasetList_Datasets_Item_Labels *labels;
 
 @end
 
 
 /**
- *  [Experimental] The labels associated with this dataset. You can use these to
- *  organize and group your datasets.
+ *  The labels associated with this dataset. You can use these to organize and
+ *  group your datasets.
  *
  *  @note This class is documented as having more properties of NSString. Use @c
  *        -additionalJSONKeys and @c -additionalPropertyForName: to get the list
  *        of properties and then fetch them; or @c -additionalProperties to
  *        fetch them all at once.
  */
-@interface GTLRBigquery_DatasetListDatasetsItemLabels : GTLRObject
+@interface GTLRBigquery_DatasetList_Datasets_Item_Labels : GTLRObject
 @end
 
 
@@ -634,6 +637,9 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, strong, nullable) NSNumber *recordsWritten;
 
+/** Current status for the stage. */
+@property(nonatomic, copy, nullable) NSString *status;
+
 /**
  *  List of operations within the stage in dependency order (approximately
  *  chronological).
@@ -691,8 +697,8 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GTLRBigquery_ExternalDataConfiguration : GTLRObject
 
 /**
- *  [Experimental] Try to detect schema and format options automatically. Any
- *  option specified explicitly will be honored.
+ *  Try to detect schema and format options automatically. Any option specified
+ *  explicitly will be honored.
  *
  *  Uses NSNumber of boolValue.
  */
@@ -751,10 +757,8 @@ NS_ASSUME_NONNULL_BEGIN
  *  [Required] The data format. For CSV files, specify "CSV". For Google sheets,
  *  specify "GOOGLE_SHEETS". For newline-delimited JSON, specify
  *  "NEWLINE_DELIMITED_JSON". For Avro files, specify "AVRO". For Google Cloud
- *  Datastore backups, specify "DATASTORE_BACKUP". [Experimental] For Google
- *  Cloud Bigtable, specify "BIGTABLE". Please note that reading from Google
- *  Cloud Bigtable is experimental and has to be enabled for your project.
- *  Please contact Google Cloud Support to enable this for your project.
+ *  Datastore backups, specify "DATASTORE_BACKUP". [Beta] For Google Cloud
+ *  Bigtable, specify "BIGTABLE".
  */
 @property(nonatomic, copy, nullable) NSString *sourceFormat;
 
@@ -816,8 +820,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *kind;
 
 /**
- *  [Output-only, Experimental] The number of rows affected by a DML statement.
- *  Present only for DML statements INSERT, UPDATE or DELETE.
+ *  [Output-only] The number of rows affected by a DML statement. Present only
+ *  for DML statements INSERT, UPDATE or DELETE.
  *
  *  Uses NSNumber of longLongValue.
  */
@@ -971,13 +975,12 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  [Experimental] The labels associated with this job. You can use these to
  *  organize and group your jobs. Label keys and values can be no longer than 63
- *  characters, can only contain letters, numeric characters, underscores and
- *  dashes. International characters are allowed. Label values are optional.
- *  Label keys must start with a letter and must be unique within a dataset.
- *  Both keys and values are additionally constrained to be <= 128 bytes in
- *  size.
+ *  characters, can only contain lowercase letters, numeric characters,
+ *  underscores and dashes. International characters are allowed. Label values
+ *  are optional. Label keys must start with a letter and each label in the list
+ *  must have a different key.
  */
-@property(nonatomic, strong, nullable) GTLRBigquery_JobConfigurationLabels *labels;
+@property(nonatomic, strong, nullable) GTLRBigquery_JobConfiguration_Labels *labels;
 
 /** [Pick one] Configures a load job. */
 @property(nonatomic, strong, nullable) GTLRBigquery_JobConfigurationLoad *load;
@@ -991,18 +994,17 @@ NS_ASSUME_NONNULL_BEGIN
 /**
  *  [Experimental] The labels associated with this job. You can use these to
  *  organize and group your jobs. Label keys and values can be no longer than 63
- *  characters, can only contain letters, numeric characters, underscores and
- *  dashes. International characters are allowed. Label values are optional.
- *  Label keys must start with a letter and must be unique within a dataset.
- *  Both keys and values are additionally constrained to be <= 128 bytes in
- *  size.
+ *  characters, can only contain lowercase letters, numeric characters,
+ *  underscores and dashes. International characters are allowed. Label values
+ *  are optional. Label keys must start with a letter and each label in the list
+ *  must have a different key.
  *
  *  @note This class is documented as having more properties of NSString. Use @c
  *        -additionalJSONKeys and @c -additionalPropertyForName: to get the list
  *        of properties and then fetch them; or @c -additionalProperties to
  *        fetch them all at once.
  */
-@interface GTLRBigquery_JobConfigurationLabels : GTLRObject
+@interface GTLRBigquery_JobConfiguration_Labels : GTLRObject
 @end
 
 
@@ -1082,8 +1084,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong, nullable) NSNumber *allowQuotedNewlines;
 
 /**
- *  [Experimental] Indicates if we should automatically infer the options and
- *  schema for CSV and JSON sources.
+ *  Indicates if we should automatically infer the options and schema for CSV
+ *  and JSON sources.
  *
  *  Uses NSNumber of boolValue.
  */
@@ -1145,12 +1147,22 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong, nullable) NSNumber *maxBadRecords;
 
 /**
- *  [Experimental] If sourceFormat is set to "DATASTORE_BACKUP", indicates which
- *  entity properties to load into BigQuery from a Cloud Datastore backup.
- *  Property names are case sensitive and must be top-level properties. If no
- *  properties are specified, BigQuery loads all properties. If any named
- *  property isn't found in the Cloud Datastore backup, an invalid error is
- *  returned in the job result.
+ *  [Optional] Specifies a string that represents a null value in a CSV file.
+ *  For example, if you specify "\\N", BigQuery interprets "\\N" as a null value
+ *  when loading a CSV file. The default value is the empty string. If you set
+ *  this property to a custom value, BigQuery throws an error if an empty string
+ *  is present for all data types except for STRING and BYTE. For STRING and
+ *  BYTE columns, BigQuery interprets the empty string as an empty value.
+ */
+@property(nonatomic, copy, nullable) NSString *nullMarker;
+
+/**
+ *  If sourceFormat is set to "DATASTORE_BACKUP", indicates which entity
+ *  properties to load into BigQuery from a Cloud Datastore backup. Property
+ *  names are case sensitive and must be top-level properties. If no properties
+ *  are specified, BigQuery loads all properties. If any named property isn't
+ *  found in the Cloud Datastore backup, an invalid error is returned in the job
+ *  result.
  */
 @property(nonatomic, strong, nullable) NSArray<NSString *> *projectionFields;
 
@@ -1241,8 +1253,10 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GTLRBigquery_JobConfigurationQuery : GTLRObject
 
 /**
- *  If true, allows the query to produce arbitrarily large result tables at a
- *  slight cost in performance. Requires destinationTable to be set.
+ *  [Optional] If true and query uses legacy SQL dialect, allows the query to
+ *  produce arbitrarily large result tables at a slight cost in performance.
+ *  Requires destinationTable to be set. For standard SQL queries, this flag is
+ *  ignored and large results are always allowed.
  *
  *  Uses NSNumber of boolValue.
  */
@@ -1271,9 +1285,10 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong, nullable) GTLRBigquery_TableReference *destinationTable;
 
 /**
- *  [Optional] Flattens all nested and repeated fields in the query results. The
- *  default value is true. allowLargeResults must be true if this is set to
- *  false.
+ *  [Optional] If true and query uses legacy SQL dialect, flattens all nested
+ *  and repeated fields in the query results. allowLargeResults must be true if
+ *  this is set to false. For standard SQL queries, this flag is ignored and
+ *  results are never flattened.
  *
  *  Uses NSNumber of boolValue.
  */
@@ -1298,8 +1313,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong, nullable) NSNumber *maximumBytesBilled;
 
 /**
- *  [Experimental] Standard SQL only. Whether to use positional (?) or named
- *  (\@myparam) query parameters in this query.
+ *  Standard SQL only. Set to POSITIONAL to use positional (?) query parameters
+ *  or to NAMED to use named (\@myparam) query parameters in this query.
  */
 @property(nonatomic, copy, nullable) NSString *parameterMode;
 
@@ -1341,7 +1356,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  By defining these properties, the data source can then be queried as if it
  *  were a standard BigQuery table.
  */
-@property(nonatomic, strong, nullable) GTLRBigquery_JobConfigurationQueryTableDefinitions *tableDefinitions;
+@property(nonatomic, strong, nullable) GTLRBigquery_JobConfigurationQuery_TableDefinitions *tableDefinitions;
 
 /**
  *  Specifies whether to use BigQuery's legacy SQL dialect for this query. The
@@ -1365,9 +1380,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, strong, nullable) NSNumber *useQueryCache;
 
-/**
- *  [Experimental] Describes user-defined function resources used in the query.
- */
+/** Describes user-defined function resources used in the query. */
 @property(nonatomic, strong, nullable) NSArray<GTLRBigquery_UserDefinedFunctionResource *> *userDefinedFunctionResources;
 
 /**
@@ -1397,7 +1410,7 @@ NS_ASSUME_NONNULL_BEGIN
  *        @c -additionalPropertyForName: to get the list of properties and then
  *        fetch them; or @c -additionalProperties to fetch them all at once.
  */
-@interface GTLRBigquery_JobConfigurationQueryTableDefinitions : GTLRObject
+@interface GTLRBigquery_JobConfigurationQuery_TableDefinitions : GTLRObject
 @end
 
 
@@ -1460,7 +1473,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @note This property is used to support NSFastEnumeration and indexed
  *        subscripting on this class.
  */
-@property(nonatomic, strong, nullable) NSArray<GTLRBigquery_JobListJobsItem *> *jobs;
+@property(nonatomic, strong, nullable) NSArray<GTLRBigquery_JobList_Jobs_Item *> *jobs;
 
 /** The resource type of the response. */
 @property(nonatomic, copy, nullable) NSString *kind;
@@ -1472,9 +1485,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- *  GTLRBigquery_JobListJobsItem
+ *  GTLRBigquery_JobList_Jobs_Item
  */
-@interface GTLRBigquery_JobListJobsItem : GTLRObject
+@interface GTLRBigquery_JobList_Jobs_Item : GTLRObject
 
 /** [Full-projection-only] Specifies the job configuration. */
 @property(nonatomic, strong, nullable) GTLRBigquery_JobConfiguration *configuration;
@@ -1604,14 +1617,14 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong, nullable) NSNumber *cacheHit;
 
 /**
- *  [Output-only, Experimental] The number of rows affected by a DML statement.
- *  Present only for DML statements INSERT, UPDATE or DELETE.
+ *  [Output-only] The number of rows affected by a DML statement. Present only
+ *  for DML statements INSERT, UPDATE or DELETE.
  *
  *  Uses NSNumber of longLongValue.
  */
 @property(nonatomic, strong, nullable) NSNumber *numDmlAffectedRows;
 
-/** [Output-only, Experimental] Describes execution plan for the query. */
+/** [Output-only] Describes execution plan for the query. */
 @property(nonatomic, strong, nullable) NSArray<GTLRBigquery_ExplainQueryStage *> *queryPlan;
 
 /**
@@ -1625,6 +1638,9 @@ NS_ASSUME_NONNULL_BEGIN
  *  successful dry run of non-legacy SQL queries.
  */
 @property(nonatomic, strong, nullable) GTLRBigquery_TableSchema *schema;
+
+/** [Output-only, Experimental] The type of query statement, if valid. */
+@property(nonatomic, copy, nullable) NSString *statementType;
 
 /**
  *  [Output-only] Total bytes billed for the job.
@@ -1764,7 +1780,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @note This property is used to support NSFastEnumeration and indexed
  *        subscripting on this class.
  */
-@property(nonatomic, strong, nullable) NSArray<GTLRBigquery_ProjectListProjectsItem *> *projects;
+@property(nonatomic, strong, nullable) NSArray<GTLRBigquery_ProjectList_Projects_Item *> *projects;
 
 /**
  *  The total number of projects in the list.
@@ -1777,9 +1793,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- *  GTLRBigquery_ProjectListProjectsItem
+ *  GTLRBigquery_ProjectList_Projects_Item
  */
-@interface GTLRBigquery_ProjectListProjectsItem : GTLRObject
+@interface GTLRBigquery_ProjectList_Projects_Item : GTLRObject
 
 /** A descriptive name for this project. */
 @property(nonatomic, copy, nullable) NSString *friendlyName;
@@ -1853,7 +1869,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  [Optional] The types of the fields of this struct, in order, if this is a
  *  struct.
  */
-@property(nonatomic, strong, nullable) NSArray<GTLRBigquery_QueryParameterTypeStructTypesItem *> *structTypes;
+@property(nonatomic, strong, nullable) NSArray<GTLRBigquery_QueryParameterType_StructTypes_Item *> *structTypes;
 
 /** [Required] The top level type of this field. */
 @property(nonatomic, copy, nullable) NSString *type;
@@ -1862,9 +1878,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- *  GTLRBigquery_QueryParameterTypeStructTypesItem
+ *  GTLRBigquery_QueryParameterType_StructTypes_Item
  */
-@interface GTLRBigquery_QueryParameterTypeStructTypesItem : GTLRObject
+@interface GTLRBigquery_QueryParameterType_StructTypes_Item : GTLRObject
 
 /**
  *  [Optional] Human-oriented description of the field.
@@ -1894,7 +1910,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  [Optional] The struct field values, in order of the struct type's
  *  declaration.
  */
-@property(nonatomic, strong, nullable) GTLRBigquery_QueryParameterValueStructValues *structValues;
+@property(nonatomic, strong, nullable) GTLRBigquery_QueryParameterValue_StructValues *structValues;
 
 /** [Optional] The value of this value, if a simple scalar type. */
 @property(nonatomic, copy, nullable) NSString *value;
@@ -1911,7 +1927,7 @@ NS_ASSUME_NONNULL_BEGIN
  *        -additionalPropertyForName: to get the list of properties and then
  *        fetch them; or @c -additionalProperties to fetch them all at once.
  */
-@interface GTLRBigquery_QueryParameterValueStructValues : GTLRObject
+@interface GTLRBigquery_QueryParameterValue_StructValues : GTLRObject
 @end
 
 
@@ -1952,8 +1968,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, strong, nullable) NSNumber *maxResults;
 
 /**
- *  [Experimental] Standard SQL only. Whether to use positional (?) or named
- *  (\@myparam) query parameters in this query.
+ *  Standard SQL only. Set to POSITIONAL to use positional (?) query parameters
+ *  or to NAMED to use named (\@myparam) query parameters in this query.
  */
 @property(nonatomic, copy, nullable) NSString *parameterMode;
 
@@ -1971,7 +1987,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, copy, nullable) NSString *query;
 
-/** [Experimental] Query parameters for Standard SQL queries. */
+/** Query parameters for Standard SQL queries. */
 @property(nonatomic, strong, nullable) NSArray<GTLRBigquery_QueryParameter *> *queryParameters;
 
 /**
@@ -2051,8 +2067,8 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *kind;
 
 /**
- *  [Output-only, Experimental] The number of rows affected by a DML statement.
- *  Present only for DML statements INSERT, UPDATE or DELETE.
+ *  [Output-only] The number of rows affected by a DML statement. Present only
+ *  for DML statements INSERT, UPDATE or DELETE.
  *
  *  Uses NSNumber of longLongValue.
  */
@@ -2180,6 +2196,16 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *kind;
 
 /**
+ *  [Experimental] The labels associated with this table. You can use these to
+ *  organize and group your tables. Label keys and values can be no longer than
+ *  63 characters, can only contain lowercase letters, numeric characters,
+ *  underscores and dashes. International characters are allowed. Label values
+ *  are optional. Label keys must start with a letter and each label in the list
+ *  must have a different key.
+ */
+@property(nonatomic, strong, nullable) GTLRBigquery_Table_Labels *labels;
+
+/**
  *  [Output-only] The time when this table was last modified, in milliseconds
  *  since the epoch.
  *
@@ -2254,6 +2280,23 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
+ *  [Experimental] The labels associated with this table. You can use these to
+ *  organize and group your tables. Label keys and values can be no longer than
+ *  63 characters, can only contain lowercase letters, numeric characters,
+ *  underscores and dashes. International characters are allowed. Label values
+ *  are optional. Label keys must start with a letter and each label in the list
+ *  must have a different key.
+ *
+ *  @note This class is documented as having more properties of NSString. Use @c
+ *        -additionalJSONKeys and @c -additionalPropertyForName: to get the list
+ *        of properties and then fetch them; or @c -additionalProperties to
+ *        fetch them all at once.
+ */
+@interface GTLRBigquery_Table_Labels : GTLRObject
+@end
+
+
+/**
  *  GTLRBigquery_TableCell
  */
 @interface GTLRBigquery_TableCell : GTLRObject
@@ -2286,7 +2329,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property(nonatomic, copy, nullable) NSString *kind;
 
 /** The rows to insert. */
-@property(nonatomic, strong, nullable) NSArray<GTLRBigquery_TableDataInsertAllRequestRowsItem *> *rows;
+@property(nonatomic, strong, nullable) NSArray<GTLRBigquery_TableDataInsertAllRequest_Rows_Item *> *rows;
 
 /**
  *  [Optional] Insert all valid rows of a request, even if invalid rows exist.
@@ -2311,9 +2354,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- *  GTLRBigquery_TableDataInsertAllRequestRowsItem
+ *  GTLRBigquery_TableDataInsertAllRequest_Rows_Item
  */
-@interface GTLRBigquery_TableDataInsertAllRequestRowsItem : GTLRObject
+@interface GTLRBigquery_TableDataInsertAllRequest_Rows_Item : GTLRObject
 
 /**
  *  [Optional] A unique ID for each row. BigQuery uses this property to detect
@@ -2336,7 +2379,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface GTLRBigquery_TableDataInsertAllResponse : GTLRObject
 
 /** An array of errors for rows that were not inserted. */
-@property(nonatomic, strong, nullable) NSArray<GTLRBigquery_TableDataInsertAllResponseInsertErrorsItem *> *insertErrors;
+@property(nonatomic, strong, nullable) NSArray<GTLRBigquery_TableDataInsertAllResponse_InsertErrors_Item *> *insertErrors;
 
 /** The resource type of the response. */
 @property(nonatomic, copy, nullable) NSString *kind;
@@ -2345,9 +2388,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- *  GTLRBigquery_TableDataInsertAllResponseInsertErrorsItem
+ *  GTLRBigquery_TableDataInsertAllResponse_InsertErrors_Item
  */
-@interface GTLRBigquery_TableDataInsertAllResponseInsertErrorsItem : GTLRObject
+@interface GTLRBigquery_TableDataInsertAllResponse_InsertErrors_Item : GTLRObject
 
 /** Error information for the row indicated by the index property. */
 @property(nonatomic, strong, nullable) NSArray<GTLRBigquery_ErrorProto *> *errors;
@@ -2426,8 +2469,10 @@ NS_ASSUME_NONNULL_BEGIN
 
 /**
  *  [Required] The field data type. Possible values include STRING, BYTES,
- *  INTEGER, FLOAT, BOOLEAN, TIMESTAMP, DATE, TIME, DATETIME, or RECORD (where
- *  RECORD indicates that the field contains a nested schema).
+ *  INTEGER, INT64 (same as INTEGER), FLOAT, FLOAT64 (same as FLOAT), BOOLEAN,
+ *  BOOL (same as BOOLEAN), TIMESTAMP, DATE, TIME, DATETIME, RECORD (where
+ *  RECORD indicates that the field contains a nested schema) or STRUCT (same as
+ *  RECORD).
  */
 @property(nonatomic, copy, nullable) NSString *type;
 
@@ -2459,7 +2504,7 @@ NS_ASSUME_NONNULL_BEGIN
  *  @note This property is used to support NSFastEnumeration and indexed
  *        subscripting on this class.
  */
-@property(nonatomic, strong, nullable) NSArray<GTLRBigquery_TableListTablesItem *> *tables;
+@property(nonatomic, strong, nullable) NSArray<GTLRBigquery_TableList_Tables_Item *> *tables;
 
 /**
  *  The total number of tables in the dataset.
@@ -2472,9 +2517,9 @@ NS_ASSUME_NONNULL_BEGIN
 
 
 /**
- *  GTLRBigquery_TableListTablesItem
+ *  GTLRBigquery_TableList_Tables_Item
  */
-@interface GTLRBigquery_TableListTablesItem : GTLRObject
+@interface GTLRBigquery_TableList_Tables_Item : GTLRObject
 
 /** The user-friendly name for this table. */
 @property(nonatomic, copy, nullable) NSString *friendlyName;
@@ -2489,11 +2534,48 @@ NS_ASSUME_NONNULL_BEGIN
 /** The resource type. */
 @property(nonatomic, copy, nullable) NSString *kind;
 
+/**
+ *  [Experimental] The labels associated with this table. You can use these to
+ *  organize and group your tables.
+ */
+@property(nonatomic, strong, nullable) GTLRBigquery_TableList_Tables_Item_Labels *labels;
+
 /** A reference uniquely identifying the table. */
 @property(nonatomic, strong, nullable) GTLRBigquery_TableReference *tableReference;
 
 /** The type of table. Possible values are: TABLE, VIEW. */
 @property(nonatomic, copy, nullable) NSString *type;
+
+/** Additional details for a view. */
+@property(nonatomic, strong, nullable) GTLRBigquery_TableList_Tables_Item_View *view;
+
+@end
+
+
+/**
+ *  [Experimental] The labels associated with this table. You can use these to
+ *  organize and group your tables.
+ *
+ *  @note This class is documented as having more properties of NSString. Use @c
+ *        -additionalJSONKeys and @c -additionalPropertyForName: to get the list
+ *        of properties and then fetch them; or @c -additionalProperties to
+ *        fetch them all at once.
+ */
+@interface GTLRBigquery_TableList_Tables_Item_Labels : GTLRObject
+@end
+
+
+/**
+ *  Additional details for a view.
+ */
+@interface GTLRBigquery_TableList_Tables_Item_View : GTLRObject
+
+/**
+ *  True if view is defined in legacy SQL dialect, false if in standard SQL.
+ *
+ *  Uses NSNumber of boolValue.
+ */
+@property(nonatomic, strong, nullable) NSNumber *useLegacySql;
 
 @end
 
@@ -2603,9 +2685,7 @@ NS_ASSUME_NONNULL_BEGIN
  */
 @property(nonatomic, strong, nullable) NSNumber *useLegacySql;
 
-/**
- *  [Experimental] Describes user-defined function resources used in the query.
- */
+/** Describes user-defined function resources used in the query. */
 @property(nonatomic, strong, nullable) NSArray<GTLRBigquery_UserDefinedFunctionResource *> *userDefinedFunctionResources;
 
 @end
